@@ -47,6 +47,7 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
 </transition>
 
 
+
 <transition name="modalAnim">
     <logout :logoutModal="logoutModal" @close="togglelogoutModal"></logout>
 </transition>
@@ -285,7 +286,7 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
                     <table v-else class="table table-hover table-borderless text-center w-100">
                         <thead style="background-color: #04b4738d;">
                             <tr>
-                                <!-- <th scope="col" class="fw-bold">Image</th> -->
+                                <th scope="col" class="fw-bold">Image</th>
                                 <th scope="col" class="fw-bold">Serial Number</th>
                                 <th scope="col" class="fw-bold">Manufacturer</th>
                                 <th scope="col" class="fw-bold">Category</th>
@@ -298,18 +299,19 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
                         </thead>
                     <tbody v-for="product in product_lists.data" :key="product.id">
 
-        
+                        <img src="" alt="">
                         
                         <tr>
-                            <!-- <td class="fw-bold"><img v-bind:src="'./public/storage/images/' + product.image"></td> -->
-                            <td hidden>{{product.id}}</td>
-                            <td class="fw-bold">{{product.serial_number}}</td>
-                            <td class="fw-bold">{{product.manufacturer}}</td>
-                            <td class="fw-bold">{{product.category.category}}</td>
-                            <td class="fw-bold">{{product.product_name}}</td>
-                            <td class="fw-bold">{{product.description}}</td>
-                            <td class="fw-bold">{{product.size}}</td>
+                            <td class="fw-bold"><img v-bind:src="storageLink + product.image" 
+                            class="img-fluid" width="100" height="100"></td>
 
+                            <td hidden>{{product.id}}</td>
+                                <td class="fw-bold">{{product.serial_number}}</td>
+                                <td class="fw-bold">{{product.manufacturer}}</td>
+                                <td class="fw-bold">{{product.category.category}}</td>
+                                <td class="fw-bold">{{product.product_name}}</td>
+                                <td class="fw-bold">{{product.description}}</td>
+                                <td class="fw-bold">{{product.size}}</td>
                             <td class="m-3">
 
                                 <RouterLink :to="{name: 'edit_product', params:{id:product.id} }">
@@ -357,10 +359,13 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
                             <td class="m-3">
 
                                 <RouterLink :to="{name: 'edit_product', params:{id:cat.id} }">
-                                    <button class="btn btn-success"><i class="bi bi-pencil-square"></i></button>
+                                    <button class="btn btn-success" data-mdb-toggle="tooltip" 
+                                    data-mdb-placement="left" title="Edit"><i class="bi bi-pencil-square">
+                                    </i></button>
                                 </RouterLink>
                                 
-                                <button type="button" class="btn btn-warning mx-1 mt-2" @click.prevent="del_cat(cat.id)">
+                                <button type="button" class="btn btn-warning mx-1 mt-2" data-mdb-toggle="tooltip" 
+                                data-mdb-placement="left" title="Edit" @click.prevent="del_cat(cat.id)">
                                 <i class="fas fa-box-archive"></i></button>
 
                             </td>
@@ -439,6 +444,8 @@ export default {
         const isSidebar = ref(false);
         const loading = ref(true);
         const modalActive = ref(false);
+
+        const storageLink = ref('http://127.0.0.1:8000/storage/images/');
 
 
 
@@ -539,9 +546,6 @@ export default {
             .then(response=>{
                 product_lists.value = response.data;
 
-                console.log(response.data)
-
-
                 loading.value = false;
             }).catch(error =>{
                 console.log(error.response.data)
@@ -586,7 +590,7 @@ export default {
         return {
             product_lists,del_prod,getProduct,typing,loading,isSidebar,
             modalActive,toggleModal,create_category,category,getCat,category_lists,del_cat,isOpen,formatDate
-            ,logoutModal,togglelogoutModal
+            ,logoutModal,togglelogoutModal,storageLink
         }
 
     }

@@ -10,6 +10,7 @@ use App\Models\product_info;
 use App\Models\category;
 use App\Models\inventory;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class product_crud extends Controller
 {
@@ -17,6 +18,9 @@ class product_crud extends Controller
     /* READ ALL PRODUCT */
     public function index(){
 /*         return category::orderBy('id')->paginate(5); */
+
+
+        
         return product_info::with('category')->where('isArchived',0)->paginate(5);
         
         /* return response()->json([
@@ -105,10 +109,13 @@ class product_crud extends Controller
 
         if ($request->hasFile('image')){
             $image = $request->file('image');
+
             $ext = $image->extension();
             $file = time().'.'.$ext;
+
+
             $image->storeAs('public/images', $file);
-            $product->image = 'public/images/'.$file;
+            $product->image = $file;
         }
 
        /*  $image = $request->file('image')->store('images','public'); */

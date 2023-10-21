@@ -106,7 +106,12 @@ Route::get('/relation', [product_crud::class, 'sample']);
 
 
 /* ARCHIVE */
-Route::get('/archive', [archive::class, 'indexProduct']);
+Route::get('/archive/product', [archive::class, 'indexProduct']);
+Route::get('/archive/category', [archive::class, 'indexCategory']);
+
+Route::put('/restore/{id}', [archive::class, 'restoreProduct']);
+Route::put('/restore/cat/{id}', [archive::class, 'restoreCategory']);
+
 
 
 /* NOTIFICATIONS */
