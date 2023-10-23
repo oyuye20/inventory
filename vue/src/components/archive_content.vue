@@ -129,7 +129,7 @@ export default {
 
         /* GET CATEGORY ARCHIVE TABLE */
         const getArchivedProduct = async(page = 1) => {
-            axios_client.get('http://127.0.0.1:8000/api/archive/category?page=' + page).then(response=>{
+            axios_client.get('/archive/category?page=' + page).then(response=>{
                 archivedCategory.value = response.data
             }).catch(error =>{
                 console.log(error.response.data)
@@ -141,7 +141,7 @@ export default {
 
         /* GET PRODUCT ARCHIVE TABLE */
         const getArchivedCategory = async(page = 1) => {
-            axios_client.get('http://127.0.0.1:8000/api/archive/product?page=' + page).then(response=>{
+            axios_client.get('/archive/product?page=' + page).then(response=>{
                 archivedProduct.value = response.data
             }).catch(error =>{
                 console.log(error.response.data)
@@ -153,7 +153,7 @@ export default {
 
         /* RESTORE A PRODUCT */
         function restore(id){
-            let url = 'http://127.0.0.1:8000/api/restore/' + id;
+            let url = '/restore/' + id;
             axios_client.put(url).then(response => {
                 this.getArchivedProduct()
                 this.getArchivedCategory()
@@ -165,7 +165,7 @@ export default {
 
         /* RESTORE A CATEGORY */
         function restoreCat(id){
-            let url = 'http://127.0.0.1:8000/api/restore/cat/' + id;
+            let url = '/restore/cat/' + id;
             axios_client.put(url).then(response => {
                 this.getArchivedCategory()
                 this.getArchivedProduct()

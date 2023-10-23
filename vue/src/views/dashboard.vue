@@ -404,7 +404,7 @@ Chart.register(...registerables); */
 
 
         const sold_items = async() => {
-            axios_client.get('http://127.0.0.1:8000/api/sold').then(response=>{       
+            axios_client.get('/sold').then(response=>{       
 
             items_sold.value = response.data
             isloaded.value = true;
@@ -495,7 +495,7 @@ Chart.register(...registerables); */
                 onvalidate(()=>{
                     clearInterval(typing_stats)
 
-                    axios_client.get('http://127.0.0.1:8000/api/search/' + search_box.value).then((res)=>{
+                    axios_client.get('/search/' + search_box.value).then((res)=>{
                     product_lists.value = res.data
 
                 
@@ -522,7 +522,7 @@ Chart.register(...registerables); */
 
         /* GET PRODUCT TABLE */
         const getProduct = async() => {
-            axios_client.get('http://127.0.0.1:8000/api/products').then(response=>{
+            axios_client.get('/products').then(response=>{
                 product_lists.value = response.data.products
             }).catch(error =>{
 
@@ -532,7 +532,7 @@ Chart.register(...registerables); */
 
         /* TOTAL OF PRODUCTS IN DASHBOARD */
         const total_products = () => {
-            axios_client.get('http://127.0.0.1:8000/api/stats').then(response=>{
+            axios_client.get('/stats').then(response=>{
                 product_total.value = response.data.product_count
 
                 isloaded.value = true
@@ -544,7 +544,7 @@ Chart.register(...registerables); */
 
         /* NUMBER OF STOCKS */
         const stock_total = async() => {
-            axios_client.get('http://127.0.0.1:8000/api/stock_total').then(response=>{
+            axios_client.get('/stock_total').then(response=>{
                 num_total_stock.value = response.data.stock_total
             }).catch(error =>{
 
@@ -556,7 +556,7 @@ Chart.register(...registerables); */
 
         /* EXPIRED PRODUCT COUNT */
         const exp_count_f = async() => {
-            axios_client.get('http://127.0.0.1:8000/api/exp_count').then(response=>{
+            axios_client.get('/exp_count').then(response=>{
                 exp_list_count.value = response.data.exp_count
             }).catch(error =>{
 
@@ -566,7 +566,7 @@ Chart.register(...registerables); */
 
         /* TOTAL SALES */
         const total_sales = async() => {
-            axios_client.get('http://127.0.0.1:8000/api/sales').then(response=>{
+            axios_client.get('/sales').then(response=>{
                 sale_total.value = response.data.total_sales
             }).catch(error =>{
 
@@ -579,7 +579,7 @@ Chart.register(...registerables); */
 
         /* LISTS OF EXPIRED PRODUCT */
         const expired_prod = async() => {
-            axios_client.get('http://127.0.0.1:8000/api/expiration').then(response=>{
+            axios_client.get('/expiration').then(response=>{
                 /* console.log(response.data.expiration_date) */
 
                 expired_lists.value = response.data.expiration_date;
@@ -592,7 +592,7 @@ Chart.register(...registerables); */
 
         /* LISTS OF LOW STOCKS PRODUCT */
         /* const low_stocks = async() => {
-            axios_client.get('http://127.0.0.1:8000/api/stocks').then(response=>{
+            axios_client.get('/stocks').then(response=>{
                 
                 stock_lists.value = response.data.stocks
             }).catch(error =>{
@@ -603,7 +603,7 @@ Chart.register(...registerables); */
 
         /* CRITICAL STOCKS IN DASHBOARD */
         const crit_stocks = async() => {
-            axios_client.get('http://127.0.0.1:8000/api/crit_stocks').then(response=>{
+            axios_client.get('/crit_stocks').then(response=>{
                 /* console.log(response.data.stocks) */
                 crit_stocks1.value = response.data.crit
             }).catch(error =>{

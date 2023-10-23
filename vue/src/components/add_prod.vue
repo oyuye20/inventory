@@ -318,7 +318,7 @@ export default {
             formData.append('category', category.value);
             formData.append('image', imageFile.value);
 
-            let url = 'http://127.0.0.1:8000/api/add_product';
+            let url = '/add_product';
             axios_client.post(url,formData, config).then(response => {
 
             console.log(response.data)
@@ -339,7 +339,7 @@ export default {
 
 
     const getCat = async() => {
-        axios_client.get('http://127.0.0.1:8000/api/select/category')
+        axios_client.get('/select/category')
         .then(response=>{
             category_lists.value = response.data;
         }).catch(error =>{

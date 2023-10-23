@@ -670,7 +670,7 @@ export default {
                 onvalidate(()=>{
                     clearInterval(typing_stats)
 
-                    axios_client.get('http://127.0.0.1:8000/api/search/' + search_box.value).then((res)=>{
+                    axios_client.get('/search/' + search_box.value).then((res)=>{
                     product_lists.value = res.data
 
                 
@@ -756,7 +756,7 @@ export default {
                 form.append('purchase_date', dateTime)
 
 
-                axios_client.post("http://127.0.0.1:8000/api/checkout", form).then(response=>{
+                axios_client.post("/checkout", form).then(response=>{
                     console.log(response.data)     
                     customer_name.value = ''
                     show_alert.value = true

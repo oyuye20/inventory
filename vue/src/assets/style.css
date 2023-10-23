@@ -1,10 +1,7 @@
 .main {
     display: flex;
     min-height: 100vh;
-    justify-content: center;
-    align-items: center;
-    background-color: rgb(4, 180, 116);
-    flex-direction: column;
+    background-color: #22D694;
     margin: 0;
     padding: 0;
 }
@@ -71,5 +68,18 @@ textarea {
 
 .loading {
     min-height: 10rem;
+}
+
+.nopadding {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+
+
+@media (max-width: 768px) {
+    .dog {
+        display: none;
+    }
 }
 

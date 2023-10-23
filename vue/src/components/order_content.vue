@@ -409,7 +409,7 @@ export default{
                 form.append('purchase_date', dateTime)
 
 
-                axios_client.post("http://127.0.0.1:8000/api/checkout", form).then(response=>{
+                axios_client.post("/checkout", form).then(response=>{
                     console.log(response.data)     
                     customer_name.value = ''
                     show_alert.value = true
@@ -429,7 +429,7 @@ export default{
         function btn_search(search_data){
 
             /* console.log(search_data) */
-            axios_client.get('http://127.0.0.1:8000/api/search/' + search_data).then(response=>{
+            axios_client.get('/search/' + search_data).then(response=>{
                 console.log(response.data);
             }).catch(error =>{
 

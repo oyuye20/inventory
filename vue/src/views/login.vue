@@ -1,47 +1,145 @@
 <template>
     <div>
-        <div class="row container-fluid main d-flex" @submit.prevent="login"  >
 
-            <div class="row m-0 p-0 d-flex justify-content-end">
 
-                <div class="col-6">
-                    <img src="../assets/dog.png" alt="">
+
+
+        <div class="row container-fluid main d-flex justify-content-center align-items-center p-3" @submit.prevent="login">
+
+            <div class="col-xxl-4 col-xl-5 col-lg-6 col-md-8 col-sm-9 bg-light m-4 p-0 rounded-8 h-100">
+
+                <div class="col-12 p-5">
+                    <h1 class="fw-bold text-center">LOGIN</h1>
+                </div>
+
+                <div class="col-12 border border-light-subtle">
+                </div>
+
+
+                <div class="col-12 d-flex justify-content-center align-items-center" style="height: 28rem;">
+
+                    <form class="col-10 p-4">
+
+                        <div v-if="errorMsg" class="alert alert-danger text-center mt-4 fw-bold p-3">
+                            <span>{{ errorMsg }}</span>
+                        </div>
+
+                        <input type="text" v-model="user.email" 
+                        class="form-control rounded-5 mb-4 p-2 fs-5" 
+                        style="box-shadow: 3px 3px 3px rgb(197, 197, 197); 
+                        border: 1.9px solid rgb(215, 214, 214);" 
+                        placeholder="Enter Username">
+
+                    
+                        <input type="password" v-model="user.password" 
+                        class="form-control rounded-5 p-2 fs-5" 
+                        style="box-shadow: 3px 3px 3px rgb(197, 197, 197); 
+                        border: 1.9px solid rgb(215, 214, 214);" 
+                        placeholder="Enter Password">
+
+                        <button class="btn btn-success w-100 fw-bold mb-3"  type="submit"
+                        style="box-shadow: 3px 3px 2px rgb(197, 197, 197); 
+                        margin-top: 2.1rem; font-size: 1rem; background-color: #04B474;"
+                        :disabled="loading">
+                        <span v-if="loading" class="spinner-border spinner-border-sm me-3" 
+                        aria-hidden="true"></span>Sign In</button>
+
+
+                        <div class="d-flex justify-content-center">
+                            <a role="button" class="mb-2 fw-bold">Forgot Password?</a>
+                        </div>
+                        
+                        
+                    </form>
+                    
+                </div>
+
+
+
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+            <!-- <div class="row m-0 p-0 d-flex justify-content-end border border-dark">
+
+                <div class="dog col-6">
+
+                    <div class="col-12 h-50 d-flex justify-content-center align-items-center">
+
+                        <div class="col-8 d-flex">
+                            <span class="text-light fw-bold fs-1 text-center">
+                            J.R. AMADOR PET AND POULTRY SUPPLIES</span>
+                        </div>
+                        
+                    </div>
+
+                    <div class="col-12 h-50 d-flex align-items-end">
+                        <img src="../assets/dog2.png" alt="" class="img-fluid w-100">
+                    </div>
+ 
                 </div>
                 
 
-                <div class="col-xxl-6 col-lg-12 bg-light rounded-start-5  
-                d-flex justify-content-center align-items-center p-3 flex-column" style="height: 100vh;">
+                <div class="col-6 bg-light rounded-start-5  
+                d-flex justify-content-center align-items-center p-3 flex-column">
 
                     <div class="col-12 d-flex justify-content-center" >               
-                        <span class="fs-1 fw-bold text-black">LOGIN</span>
+                        <span class="fs-1 fw-bold text-dark">LOGIN</span>
                     </div>    
 
 
                     <form class="col-8">
-                        <div v-for="e in errorMsg" class="alert alert-danger text-center" role="alert">
-                        <p>{{e.email}}</p>
-                        <p>{{e.password}}</p>
+
+                        <div class="div" v-if="errorMsg.email">
+                            {{ errorMsg.email[0] }}
                         </div>
+                
+                        
 
                         <input type="text" placeholder="Enter Username" 
-                        v-model="user.email" class="form-control p-2 mb-3 shadow-sm" 
-                        id="username" style="border-radius: 10px;">
+                        v-model="user.email" class="form-control p-2 mb-3 rounded-7" 
+                        id="username" style="box-shadow: 3px 3px 2px rgba(175, 175, 175, 0.443);
+                        border: 1.5px solid rgb(158, 157, 157)">
 
                         <input type="password" placeholder="Enter Password" 
-                        v-model="user.password" class="form-control p-2" 
-                        style="border-radius: 10px;">
+                        v-model="user.password" class="form-control p-2 rounded-7" 
+                        style="box-shadow: 3px 3px 2px rgba(175, 175, 175, 0.443);
+                        border: 1.5px solid rgb(158, 157, 157)">
 
                         <button class="btn btn-success w-100" type="submit" 
                         :disabled="loading" style="width: 60%; margin-top: 50px;">
-                            <span v-if="loading" class="spinner-border spinner-border-sm" 
-                            aria-hidden="true"></span>
-                            <span role="status" class="mx-1">Login</span>
+                        <span v-if="loading" class="spinner-border spinner-border-sm" 
+                        aria-hidden="true"></span>
+                        <span role="status" class="mx-1">Login</span>
                         </button>
+                        
                     </form>   
                 </div>
 
 
-            </div>
+            </div> -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
           
             <!-- <form class="col-xxl-3 col-lg-6 col-md-8 col-sm-9 form">
 
@@ -172,13 +270,11 @@ export default {
             loading.value = false;
 
             if(error.response.status === 422){
-                errorMsg.value  = error.response.data.errorMsg
+                errorMsg.value  = error.response.data
+
+                console.log(error.response.data)
             }
 
-
-            console.log(error.response.data)
-
-            errorMsg.value = error.response.data
         })
 
     }

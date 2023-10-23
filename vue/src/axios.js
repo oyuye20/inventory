@@ -3,6 +3,12 @@ import store from './store';
 
 const axios_client = axios.create({
     baseURL: 'http://127.0.0.1:8000/api'
+
+    /* https://api.amadorpetsuppliesinventory.online/api */
+
+    /* baseURL: '' */
+
+    /* http://127.0.0.1:8000/api */
 })
 
 axios_client.interceptors.request.use(config => {

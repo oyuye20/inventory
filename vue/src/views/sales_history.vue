@@ -472,7 +472,7 @@ export default {
 
 
         const getDaily = async(page = 1) => {
-            axios_client.get('http://127.0.0.1:8000/api/daily?page=' + page).then(response=>{
+            axios_client.get('/daily?page=' + page).then(response=>{
                 daily.value = response.data;
             }).catch(error =>{
                 console.log(error.response.data)
@@ -481,7 +481,7 @@ export default {
 
 
         const getMonthly = async(page = 1) => {
-            axios_client.get('http://127.0.0.1:8000/api/monthly?page=' + page).then(response=>{
+            axios_client.get('/monthly?page=' + page).then(response=>{
                 montly.value = response.data;
             }).catch(error =>{
                 console.log(error.response.data)

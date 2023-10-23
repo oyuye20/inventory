@@ -61,7 +61,7 @@ export const useCartStore = defineStore('CartStore', () =>{
 
 
     const getProduct = async(page = 1) => {
-        axios_client.get('http://127.0.0.1:8000/api/inventory?page=' + page).then(response=>{
+        axios_client.get('/inventory?page=' + page).then(response=>{
             list_product.value = response.data;
 
             /* console.log(response.data) */

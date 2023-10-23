@@ -90,7 +90,7 @@ export default {
 
     /* GET PRODUCT TABLE */
     const getProduct = async() => {
-        axios_client.get(`http://127.0.0.1:8000/api/product/edit/` 
+        axios_client.get(`/product/edit/` 
         + route.params.id).then(response=>{
             edit_prod_val.value = response.data.edit_prod;
 
@@ -107,7 +107,7 @@ export default {
 
         /* console.log(edit_prod_val.value) */
 
-        axios_client.put(`http://127.0.0.1:8000/api/update_product/`
+        axios_client.put(`/update_product/`
          + route.params.id, edit_prod_val.value).then(response=>{
             loading.value = true;
             router.push({name: 'products'})

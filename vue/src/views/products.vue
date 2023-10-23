@@ -266,19 +266,26 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
                 <div v-if="loading" class="p-3 d-flex justify-content-center align-items-center container-fluid h-100 mt-3">
                     <span class="spinner-border spinner-border-lg  p-3" aria-hidden="true" style="font-size: ;"></span>
                  </div>  
+
+
+
+                 
                 
                  <!-- PRODUCT TABLE -->
                 <div v-else class="table-responsive">
                     <h4 class="mt-3 mb-3 w-100 bg-light p-3"><i class="fas fa-box-open me-2"></i>Product Info Lists</h4>
 
-                    <!-- <div class="container-fluid d-flex mb-3 mt-3">
-                        <input type="text" role="searchbox" class="form-control me-3" placeholder="search a product"
-                        style=""
-                        >
+                    <div class="container-fluid d-flex justify-content-center mb-3 mt-3">
+                        <div class="col-10">
+                            <input type="text" role="searchbox" v-model="search_box" class="form-control rounded-5 p-2" 
+                            style="box-shadow: 3px 3px 3px rgb(197, 197, 197); 
+                            border: 1.9px solid rgb(215, 214, 214);" placeholder="Search Product">
+                        </div>
 
-                        <a role="button" class="d-flex justify-content-center align-items-center"><i class="fas fa-magnifying-glass"></i></a>
-
-                    </div> -->
+                        <div class="col-1 d-flex justify-content-center p-0 m-0 mx-4">
+                            <button class="btn btn-success" @click="search"><i class="fas fa-magnifying-glass"></i></button>
+                        </div>                 
+                    </div>
 
 
                     <h4 v-if="typing" class="w-100 text-center d-flex justify-content-center align-items-center loading">Loading....</h4>
@@ -329,7 +336,7 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
 
                     <div class="d-flex justify-content-end align-items-center" >
                         <Bootstrap5Pagination :limit="1" :keepLength="true" :data="product_lists" class="shadow-sm"  
-                        @pagination-change-page="getProduct"
+                        @pagination-change-page="getProduct, search"
                         />
                     </div>            
                 </div>
@@ -440,12 +447,51 @@ export default {
         const isOpen = ref(false);
 
         const search_box = ref('');
+
+
         const typing = ref(false);
         const isSidebar = ref(false);
         const loading = ref(true);
         const modalActive = ref(false);
 
         const storageLink = ref('http://127.0.0.1:8000/storage/images/');
+
+
+        /* SEARCH FUNCTION */
+
+        const search  = async(page = 1) => {
+
+            if(search_box.value == ''){
+                axios_client.get('/products?page=' + page)
+                .then(response=>{
+                    product_lists.value = response.data;
+
+                    loading.value = false;
+                }).catch(error =>{
+                    console.log(error.response.data)
+                })
+            }
+
+            else {
+                axios_client.get('/search/' + search_box.value + '?page=')
+                .then(response=>{           
+
+                    if(response.data == 'deleted'){
+                                 
+                    }
+
+                    else {
+                        product_lists.value = response.data;
+                    }
+                    
+                    
+                    
+
+                }).catch(error =>{
+                    console.log(error.response.data)
+                })
+            }
+        }
 
 
 
@@ -471,7 +517,7 @@ export default {
         }
 
 
-        watchEffect((onvalidate) =>{
+        /* watchEffect((onvalidate) =>{
         search_box.value
 
             if(search_box.value.length>0)
@@ -485,7 +531,7 @@ export default {
                 onvalidate(()=>{
                     clearInterval(typing_stats)
 
-                    axios_client.get('http://127.0.0.1:8000/api/search/' + search_box.value).then((res)=>{
+                    axios_client.get('/search/' + search_box.value).then((res)=>{
                     product_lists.value = res.data
 
                 
@@ -507,7 +553,7 @@ export default {
                 })
             }
 
-        })
+        }) */
 
 
 
@@ -521,7 +567,7 @@ export default {
 
         /* DELETE A PRODUCT */
         function del_prod(id){
-            let url = 'http://127.0.0.1:8000/api/delete/' + id;
+            let url = '/delete/' + id;
             axios_client.put(url).then(response => {
                 this.getProduct()
             })
@@ -531,7 +577,7 @@ export default {
 
         /* DELETE A CATEGORY */
          function del_cat(id){
-            let url = 'http://127.0.0.1:8000/api/delete/category/' + id;
+            let url = '/delete/category/' + id;
             axios_client.put(url).then(response => {
                 this.getCat()
             }).catch(error => {
@@ -542,7 +588,7 @@ export default {
 
         /* GET PRODUCT TABLE */
         const getProduct = async(page = 1) => {
-            axios_client.get('http://127.0.0.1:8000/api/products?page=' + page)
+            axios_client.get('/products?page=' + page)
             .then(response=>{
                 product_lists.value = response.data;
 
@@ -554,7 +600,7 @@ export default {
 
         /* GET CATEGORY TABLE */
         const getCat = async(page = 1) => {
-            axios_client.get('http://127.0.0.1:8000/api/index/category?page=' + page)
+            axios_client.get('/index/category?page=' + page)
             .then(response=>{
                 category_lists.value = response.data;
             }).catch(error =>{
@@ -570,7 +616,7 @@ export default {
             formData.append('category', this.category.catname);
             formData.append('desc', this.category.desc);
 
-            axios_client.post('http://127.0.0.1:8000/api/category', formData)
+            axios_client.post('/category', formData)
             .then(response=>{
                 console.log(response.data);
                 this.getCat();
@@ -590,7 +636,7 @@ export default {
         return {
             product_lists,del_prod,getProduct,typing,loading,isSidebar,
             modalActive,toggleModal,create_category,category,getCat,category_lists,del_cat,isOpen,formatDate
-            ,logoutModal,togglelogoutModal,storageLink
+            ,logoutModal,togglelogoutModal,storageLink,search,search_box
         }
 
     }

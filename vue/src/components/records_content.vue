@@ -353,7 +353,7 @@ export default {
 
         /* GET PRODUCT TABLE */
         const getProduct = async(page = 1) => {
-            axios_client.get('http://127.0.0.1:8000/api/products?page=' + page).then(response=>{
+            axios_client.get('/products?page=' + page).then(response=>{
                 product_lists.value = response.data;
                 loading.value = false;
             }).catch(error =>{
@@ -364,7 +364,7 @@ export default {
 
         /* LISTS OF EXPIRED PRODUCT */
         const expired_prod = async(page = 1) => {
-            axios_client.get('http://127.0.0.1:8000/api/expiration?page=' + page).then(response=>{
+            axios_client.get('/expiration?page=' + page).then(response=>{
                 /* console.log(response.data.expiration_date) */
 
                 expired_lists.value = response.data;
@@ -377,7 +377,7 @@ export default {
 
         /* LISTS OF SOLD ITEMS */
         const sold_items = async() => {
-            axios_client.get('http://127.0.0.1:8000/api/sold').then(response=>{       
+            axios_client.get('/sold').then(response=>{       
                 items_sold.value = response.data.sold;
             }).catch(error =>{
                 console.log(error.response.data)
@@ -389,7 +389,7 @@ export default {
 
         /* LISTS OF LOW STOCKS PRODUCT */
         const low_stocks = async() => {
-            axios_client.get('http://127.0.0.1:8000/api/stocks').then(response=>{
+            axios_client.get('/stocks').then(response=>{
                 /* console.log(response.data.stocks) */
                 stock_lists.value = response.data.stocks
                 loading.value = false;
@@ -399,7 +399,7 @@ export default {
         }
 
         function del_prod(id){
-            let url = 'http://127.0.0.1:8000/api/delete/' + id;
+            let url = '/delete/' + id;
             axios_client.delete(url).then(response => {
                 this.getProduct()
             })

@@ -141,7 +141,7 @@ export default {
           formData.append('exp_date', this.inventory.exp_date);
 
 
-          let url = 'http://127.0.0.1:8000/api/inventory/add';
+          let url = '/inventory/add';
           axios_client.post(url,formData).then(response => {
 
             console.log(response.data)
@@ -157,7 +157,7 @@ export default {
     
         /* GET PRODUCT TABLE */
         const getInventory = async(page = 1) => {
-            axios_client.get('http://127.0.0.1:8000/api/inventory?page=' + page).then(response=>{
+            axios_client.get('/inventory?page=' + page).then(response=>{
                 inv_lists.value = response.data
 
             }).catch(error =>{
@@ -169,7 +169,7 @@ export default {
 
 
         const getCat = async() => {
-            axios_client.get('http://127.0.0.1:8000/api/select/category')
+            axios_client.get('/select/category')
             .then(response=>{
                 category_lists.value = response.data;
             }).catch(error =>{
@@ -180,7 +180,7 @@ export default {
 
 
         const getProductInfo = async() => {
-            axios_client.get('http://127.0.0.1:8000/api/select/product/info')
+            axios_client.get('/select/product/info')
             .then(response=>{
                 productinfo.value = response.data;
             }).catch(error =>{
