@@ -16,15 +16,27 @@ class filter extends Controller
     /* SEARCH BOX FOR PRODUCT NAME */
     public function search($data){
 
-        return DB::table('product_infos')
-           ->where('isArchived', 0)
-
+        /* return DB::table('product_infos')
+            ->where('product_infos.isArchived', 0)
+            ->leftJoin('categories', 'product_infos.category_id', '=', 'categories.id')
+            
            ->where(function (Builder $query) use($data) {
                $query->where('manufacturer','LIKE','%'.$data.'%')
                ->orWhere('product_name','LIKE','%'.$data.'%');
            })
 
-        ->get();
+        ->paginate(5); */
+
+
+        return product_info::with('category')->where('isArchived', '=', 0)
+        ->where(function($query) use($data)  {
+              return $query
+                ->where('manufacturer','LIKE','%'.$data.'%')
+                ->orWhere('product_name','LIKE','%'.$data.'%');
+        })
+        ->paginate(5);
+
+
 
 
         /* return product_info::with('category')

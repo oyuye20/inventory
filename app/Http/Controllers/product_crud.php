@@ -22,6 +22,8 @@ class product_crud extends Controller
 
         
         return product_info::with('category')->where('isArchived',0)->paginate(5);
+
+
         
         /* return response()->json([
             'products' => $product,

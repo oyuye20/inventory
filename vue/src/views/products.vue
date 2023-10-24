@@ -277,7 +277,7 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
 
                     <div class="container-fluid d-flex justify-content-center mb-3 mt-3">
                         <div class="col-10">
-                            <input type="text" role="searchbox" v-model="search_box" class="form-control rounded-5 p-2" 
+                            <input type="text" @keydown.enter="search" role="searchbox" v-model="search_box" class="form-control rounded-5 p-2" 
                             style="box-shadow: 3px 3px 3px rgb(197, 197, 197); 
                             border: 1.9px solid rgb(215, 214, 214);" placeholder="Search Product">
                         </div>
@@ -474,19 +474,11 @@ export default {
 
             else {
                 axios_client.get('/search/' + search_box.value + '?page=')
-                .then(response=>{           
-
-                    if(response.data == 'deleted'){
-                                 
-                    }
-
-                    else {
-                        product_lists.value = response.data;
-                    }
-                    
-                    
+                .then(response=>{    
                     
 
+                    product_lists.value = response.data;
+                  
                 }).catch(error =>{
                     console.log(error.response.data)
                 })
