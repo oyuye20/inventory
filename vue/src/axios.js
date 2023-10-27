@@ -9,7 +9,7 @@ const axios_client = axios.create({
 
     /* http://127.0.0.1:8000/api */
 
-    /* baseURL: '' */
+    /* baseURL: 'api.amadorpetsuppliesinventory.online/api' */
 
     /* http://127.0.0.1:8000/api */
 })

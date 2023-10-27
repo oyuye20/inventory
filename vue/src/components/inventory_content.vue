@@ -5,9 +5,11 @@
   <thead style="background-color: #04b4738d;">
     <tr>
             <th class="fw-bold fs-6" style="color: rgba(0, 0, 0, 0.915);">Product Name</th>
+            <th class="fw-bold fs-6" style="color: rgba(0, 0, 0, 0.915);">Supplier</th>
             <th class="fw-bold fs-6" style="color: rgba(0, 0, 0, 0.915);">Category</th>
             <th class="fw-bold fs-6" style="color: rgba(0, 0, 0, 0.915);">Price</th>
             <th class="fw-bold fs-6" style="color: rgba(0, 0, 0, 0.915);">Stocks</th>
+            <th class="fw-bold fs-6" style="color: rgba(0, 0, 0, 0.915);">Safety Stocks</th>
             <th class="fw-bold fs-6" style="color: rgba(0, 0, 0, 0.915);">Production Date</th>
             <th class="fw-bold fs-6" style="color: rgba(0, 0, 0, 0.915);">Expiration Date</th>
     </tr>
@@ -21,15 +23,27 @@
       </td>
 
       <td>
-          <p class="fw-bold">{{i.category}}</p>
+          <p class="fw-bold">{{i.supplier}}</p>
       </td>
 
       <td>
-          <p class="fw-bold">{{i.product.price}}</p>
+          <p class="fw-bold">{{i.category}}</p>
+      </td>
+
+      
+      <td>
+          <p class="fw-bold">  
+            {{Intl.NumberFormat('en-PH', { style: 'currency', 
+            currency: 'PHP' }).format((i.product.price))}}      
+          </p>
       </td>
 
       <td>
           <p class="fw-bold">{{i.stocks}}</p>
+      </td>
+
+      <td>
+          <p class="fw-bold">{{i.safety_stocks}}</p>
       </td>
 
       <td>
@@ -57,7 +71,7 @@
 </div>
 
 
-<div class="container-fluid">
+<div class="container-fluid mb-4">
 
   <h4>Add new stocks</h4>
 
@@ -66,6 +80,10 @@
     <option selected v-for="cat in category_lists" >{{cat.category}}</option>
   </select>
 
+
+  <label for="" class="fw-bold mb-2">Supplier Name</label>
+  <input type="text" class="form-control mb-3" v-model="inventory.supplier">
+
   <label for="" class="fw-bold mb-2">Product Name</label>
   <select class="form-control mb-3" v-model="inventory.product_info">
     <option v-for="prod in productinfo" :key="prod.id" :value="prod.id">{{prod.product_name}}</option>
@@ -73,6 +91,10 @@
 
   <label for="" class="fw-bold mb-2">Number of Stocks</label>
   <input type="text" class="form-control mb-3" placeholder="Stocks" @input="filter_input" v-model="inventory.stocks">
+
+  <label for="" class="fw-bold mb-2">Safety Stocks</label>
+  <input type="text" class="form-control mb-3" placeholder="Stocks" @input="filter_input" v-model="inventory.safetyStocks">
+
 
   <label for="" class="fw-bold mb-2">Date of Production</label>
   <input type="date" class="form-control mb-3" placeholder="Production Date" v-model="inventory.prod_date">
@@ -103,6 +125,8 @@ import {reactive, onMounted} from 'vue';
 import axios_client from '../axios';
 import { ref, watchEffect, defineComponent } from 'vue';
 import { Bootstrap5Pagination } from 'laravel-vue-pagination';
+import Swal from 'sweetalert2'
+import {useToast} from 'vue-toast-notification';
 
 
 export default {
@@ -117,6 +141,7 @@ export default {
         const inv_lists = ref([]);
         const category_lists = ref([]);
         const productinfo = ref([]);
+        const $toast = useToast();
 
         const inventory  = reactive({
           category: '',
@@ -124,6 +149,8 @@ export default {
           stocks: '',
           prod_date: '',
           exp_date: '',
+          supplier: '',
+          safetyStocks: ''
         })
 
         
@@ -135,8 +162,10 @@ export default {
         function add_inventory(){
           let formData = new FormData();
           formData.append('category', this.inventory.category);
+          formData.append('supplier', this.inventory.supplier);
           formData.append('product_info', this.inventory.product_info);
           formData.append('stocks', this.inventory.stocks);
+          formData.append('safetyStocks', this.inventory.safetyStocks);
           formData.append('prod_date', this.inventory.prod_date);
           formData.append('exp_date', this.inventory.exp_date);
 
@@ -145,7 +174,17 @@ export default {
           axios_client.post(url,formData).then(response => {
 
             console.log(response.data)
+
+            this.inventory.category = ''
+            this.inventory.product_info = ''
+            this.inventory.stocks = ''
+            this.inventory.prod_date = ''
+            this.inventory.exp_date = ''
+            this.inventory.supplier = ''
+            this.inventory.safetyStocks = ''
             this.getInventory();
+
+            $toast.success("Inventory added successfully", {position: 'top'}); 
 
           }).catch(error =>{
              

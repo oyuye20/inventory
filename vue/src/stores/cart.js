@@ -2,6 +2,7 @@ import {defineStore} from 'pinia'
 import { ref } from 'vue';
 import axios_client from '../axios';
 import { computed, toHandlers } from "vue";
+import Swal from 'sweetalert2'
 
 export const useCartStore = defineStore('CartStore', () =>{
 
@@ -39,8 +40,16 @@ export const useCartStore = defineStore('CartStore', () =>{
         {
             if(find_id.quantity >= stocks)
             {
-                deplete.value = true
-                message_stock.value =  "The " + find_id.product_name + " is out of stock"
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'The ' + find_id.product_name +  ' is out of stock',
+                    icon: 'error',
+                    confirmButtonText: 'OK',
+                    allowOutsideClick: false
+                  })
+
+                /* deplete.value = true
+                message_stock.value =  "The " + find_id.product_name + " is out of stock" */
             }
 
             else 
@@ -64,11 +73,15 @@ export const useCartStore = defineStore('CartStore', () =>{
         axios_client.get('/inventory?page=' + page).then(response=>{
             list_product.value = response.data;
 
-            /* console.log(response.data) */
+            console.log(response.data)
         }).catch(error =>{
 
         })
     }
+
+
+
+    
 
 
     const grand_total = computed(() => {
@@ -79,16 +92,25 @@ export const useCartStore = defineStore('CartStore', () =>{
 
 
     const remove_cart = (i) => {
+
+        Swal.fire({
+            title: 'Removed Item successfully',
+            icon: 'success',
+            confirmButtonText: 'OK'
+          })
+
+          
         cart.value.splice(i, 1)
         deplete.value = false
-        message_stock.value = ''
+        /* message_stock.value = '' */
     }
 
 
     const clear_cart = () => {
+
         cart.value = [];
-        deplete.value = false
-        message_stock.value = ''
+        /* deplete.value = false
+        message_stock.value = '' */
     }
 
 
@@ -109,7 +131,17 @@ export const useCartStore = defineStore('CartStore', () =>{
 
         if(cart.value[i].quantity >= stocks){
             deplete.value = true
-            message_stock.value =  "The " + find_id.product_name + " is out of stock"
+
+            Swal.fire({
+                title: 'Error!',
+                text: 'The ' + find_id.product_name +  ' is out of stock',
+                icon: 'error',
+                confirmButtonText: 'OK',
+                allowOutsideClick: false
+              })
+
+
+            /* message_stock.value =  "The " + find_id.product_name + " is out of stock" */
         }
 
         else {

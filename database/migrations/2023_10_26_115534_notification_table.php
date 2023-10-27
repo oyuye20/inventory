@@ -11,8 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('product_infos', function (Blueprint $table) {
-            $table->string('image')->after('category_id');
+        Schema::create('notification_tables', function (Blueprint $table) {
+            $table->id();
+            $table->string('message');
+            $table->boolean('isReaded');
+            $table->timestamp('read_by');
+            $table->timestamps();
         });
     }
 
@@ -21,8 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('product_infos', function (Blueprint $table) {
-            $table->dropColumn('image');
-        });
+        Schema::dropIfExists('notification_tables');
     }
 };

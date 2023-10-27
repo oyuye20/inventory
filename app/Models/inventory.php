@@ -11,10 +11,11 @@ class inventory extends Model
     use HasFactory;
 
     protected $fillable = [
-        'product_id','category','stocks','production_date','expiration_date','status'
+        'product_id','category','stocks','production_date','expiration_date','status',
+        'supplier','safety_stocks'
     ];
 
-    public function product() : BelongsTo{
+    public function product() /* : BelongsTo */{
         return $this->belongsTo(product_info::class);
     }
 }

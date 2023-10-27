@@ -171,11 +171,11 @@
 
         <div id="page-content-wrapper">
 
-            <nav class="navbar navbar-expand-lg navbar-light bg-transparent py-4 px-4">
+            <nav class="navbar navbar-expand-lg navbar-light bg-transparent py-4 px-4 shadow-none">
                 <div class="d-flex align-items-center">
                     <!-- <button class="btn btn-primary" @click="toggle_sidebar = !toggle_sidebar">close</button> -->
                     <a v-on:click="isSidebar =! isSidebar" role="button" id="toggle_icon"><i class="fas fa-bars me-3 fa-2x"></i></a>
-                    <h2 class="fs-2 m-0">Records</h2>
+                    <h2 class="fs-4 fw-bold"><i class="bi bi-database-fill me-2"></i>Records</h2>
                 </div>
 
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"

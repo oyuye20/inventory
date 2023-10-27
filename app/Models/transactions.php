@@ -13,7 +13,7 @@ class transactions extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'customer_name','gross_total','discount','net_total','status','purchase_date'
+        'customer_name','gross_total','discount','net_total','status','purchase_date','change'
     ];
 
     public function customer(): HasMany{

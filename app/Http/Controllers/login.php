@@ -43,15 +43,19 @@ class login extends Controller
     public function register (Request $request)
     {
         $data = $request->validate([
-            'name' => 'required',
+            'username' => 'required',
             'email' => 'required',
-            'password' => 'required'
+            'password' => 'required',
+            'role' => 'required',
+            'image' => 'required'
         ]);
 
 
         $user = User::create([
-            'name' => $data['name'],
+            'username' => $data['username'],
             'email' => $data['email'],
+            'role' => $data['role'],
+            'image' => $data['image'],
             'password' => bcrypt($data['password'])
         ]);
 

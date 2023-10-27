@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('gross_total');
             $table->string('discount');
             $table->string('net_total');
+            $table->string('change');
             $table->timestamp('purchase_date');
             $table->string('status');
         });

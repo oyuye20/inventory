@@ -10,6 +10,8 @@ import {useVuelidate} from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 import 'mdb-vue-ui-kit/css/mdb.min.css';
 import { Bootstrap5Pagination } from 'laravel-vue-pagination';
+import ToastPlugin from 'vue-toast-notification';
+import 'vue-toast-notification/dist/theme-bootstrap.css';
 
 
 
@@ -21,5 +23,6 @@ const app = createApp(App)
 
 
 app.use(createPinia())
+app.use(ToastPlugin);
 app.use(router).use(store)
 app.mount('#app')

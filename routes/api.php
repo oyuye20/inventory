@@ -9,6 +9,7 @@ use App\Http\Controllers\filter;
 use App\Http\Controllers\inventory1;
 use App\Http\Controllers\archive;
 use App\Http\Controllers\notifications_user;
+use App\Http\Controllers\notify;
 
 /*
 |--------------------------------------------------------------------------
@@ -84,12 +85,29 @@ Route::put('/delete/category/{id}', [inventory1::class, 'delete_category']);
 
 /* STATISTICS AND NOTIFICATIONS*/
 Route::get('/stats', [stats::class, 'total_prod']);
-Route::get('/expiration', [stats::class, 'expiration']);
+Route::get('/expiration', [stats::class, 'expProduct']);
+
+Route::get('/expiration/count', [stats::class, 'expired_count']);
+
+
 Route::get('/stocks', [stats::class, 'stocks']);
 Route::get('/stock_total', [stats::class, 'stock_total']);
-Route::get('/crititcal/stocks', [stats::class, 'critical_stocks']);
 
-Route::get('/exp_count', [stats::class, 'expired_count']);
+
+Route::get('/orders', [stats::class, 'orders']);
+
+
+
+Route::get('/critical/stocks', [stats::class, 'criticalStocks']);
+
+
+Route::get('/critical/count', [stats::class, 'criticalStocksCount']);
+
+
+
+
+
+
 Route::get('/sales', [stats::class, 'total_sales']);
 Route::get('/sold', [stats::class, 'sold_items']);
 
@@ -98,8 +116,21 @@ Route::get('/daily', [stats::class, 'dailyItems']);
 Route::get('/monthly', [stats::class, 'monthlyItems']);
 
 
+Route::get('/notification/stocks', [notify::class, 'checkStocks']);
+
+
+
+
 /* SEARCH AND FILTER */
 Route::get('/search/{data}', [filter::class, 'search']);
+Route::get('/filter/month/{date}', [filter::class, 'filterMonth']);
+
+Route::get('/inventory/search/{data}', [filter::class, 'searchInventory']);
+
+
+
+
+
 
 Route::get('/relation', [product_crud::class, 'sample']);
 

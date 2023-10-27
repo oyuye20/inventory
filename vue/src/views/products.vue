@@ -251,7 +251,9 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
                 </div>
             </nav>
 
-            <div class="container-fluid px-4">
+        <div class="container-fluid px-4">
+
+                <button class="btn btn-dark mt-3 modal-add" @click="toggleModal">Add new category</button>
 
                 <router-link :to="{name: 'add_product'}">
                     <button type="button" class="btn btn-dark mt-3 modal-add">
@@ -259,20 +261,15 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
                     </button>
                 </router-link>
 
-                <button class="btn btn-dark mt-3 modal-add" @click="toggleModal">Add new category</button>
-
-
+            
 
                 <div v-if="loading" class="p-3 d-flex justify-content-center align-items-center container-fluid h-100 mt-3">
                     <span class="spinner-border spinner-border-lg  p-3" aria-hidden="true" style="font-size: ;"></span>
                  </div>  
-
-
-
-                 
+       
                 
                  <!-- PRODUCT TABLE -->
-                <div v-else class="table-responsive">
+                <div v-else class="table-responsive mt-3">
                     <h4 class="mt-3 mb-3 w-100 bg-light p-3"><i class="fas fa-box-open me-2"></i>Product Info Lists</h4>
 
                     <div class="container-fluid d-flex justify-content-center mb-3 mt-3">
@@ -288,63 +285,62 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
                     </div>
 
 
-                    <h4 v-if="typing" class="w-100 text-center d-flex justify-content-center align-items-center loading">Loading....</h4>
+                    <div class="div">
+                        <table class="table table-hover table-borderless text-center w-100">
+                            <thead style="background-color: #04b4738d;">
+                                <tr>
+                                    <th scope="col" class="fw-bold">Image</th>
+                                    <th scope="col" class="fw-bold">Serial Number</th>
+                                    <th scope="col" class="fw-bold">Manufacturer</th>
+                                    <th scope="col" class="fw-bold">Category</th>
+                                    <th scope="col" class="fw-bold">Product Name</th>
+                                    <th scope="col" class="fw-bold">Description</th>
+                                    <th scope="col" class="fw-bold">Size Name</th>
+                                    <th class="fw-bold" >Actions</th>
+                                </tr>
 
-                    <table v-else class="table table-hover table-borderless text-center w-100">
-                        <thead style="background-color: #04b4738d;">
+                            </thead>
+                        <tbody v-for="product in product_lists.data" :key="product.id">
+            
                             <tr>
-                                <th scope="col" class="fw-bold">Image</th>
-                                <th scope="col" class="fw-bold">Serial Number</th>
-                                <th scope="col" class="fw-bold">Manufacturer</th>
-                                <th scope="col" class="fw-bold">Category</th>
-                                <th scope="col" class="fw-bold">Product Name</th>
-                                <th scope="col" class="fw-bold">Description</th>
-                                <th scope="col" class="fw-bold">Size Name</th>
-                                <th class="fw-bold" >Actions</th>
+                                <td class="fw-bold"><img v-bind:src="storageLink + product.image" 
+                                class="img-fluid" width="100" height="100"></td>
+
+                                <td hidden>{{product.id}}</td>
+                                    <td class="fw-bold">{{product.serial_number}}</td>
+                                    <td class="fw-bold">{{product.manufacturer}}</td>
+                                    <td class="fw-bold">{{product.category.category}}</td>
+                                    <td class="fw-bold">{{product.product_name}}</td>
+                                    <td class="fw-bold">{{product.description}}</td>
+                                    <td class="fw-bold">{{product.size}}</td>
+                                <td class="m-3">
+
+                                    <RouterLink :to="{name: 'edit_product', params:{id:product.id} }">
+                                        <button class="btn btn-success"><i class="bi bi-pencil-square"></i></button>
+                                    </RouterLink>
+                                    
+                                    <button type="button" class="btn btn-warning mx-1 mt-2" @click.prevent="del_prod(product.id, product.product_name)">
+                                    <i class="fas fa-box-archive"></i></button>
+
+                                </td>
                             </tr>
+                            
+                        </tbody>
+                        </table>
 
-                        </thead>
-                    <tbody v-for="product in product_lists.data" :key="product.id">
+                        <div class="d-flex justify-content-end align-items-center" >
+                            <Bootstrap5Pagination :limit="1" :keepLength="true" :data="product_lists" class="shadow-sm"  
+                            @pagination-change-page="search"/>
+                        </div>   
+                    </div>
+               
 
-                        <img src="" alt="">
-                        
-                        <tr>
-                            <td class="fw-bold"><img v-bind:src="storageLink + product.image" 
-                            class="img-fluid" width="100" height="100"></td>
-
-                            <td hidden>{{product.id}}</td>
-                                <td class="fw-bold">{{product.serial_number}}</td>
-                                <td class="fw-bold">{{product.manufacturer}}</td>
-                                <td class="fw-bold">{{product.category.category}}</td>
-                                <td class="fw-bold">{{product.product_name}}</td>
-                                <td class="fw-bold">{{product.description}}</td>
-                                <td class="fw-bold">{{product.size}}</td>
-                            <td class="m-3">
-
-                                <RouterLink :to="{name: 'edit_product', params:{id:product.id} }">
-                                    <button class="btn btn-success"><i class="bi bi-pencil-square"></i></button>
-                                </RouterLink>
-                                
-                                <button type="button" class="btn btn-warning mx-1 mt-2" @click.prevent="del_prod(product.id)">
-                                <i class="fas fa-box-archive"></i></button>
-
-                            </td>
-                        </tr>
-                    </tbody>
-                    </table>
-
-
-                    <div class="d-flex justify-content-end align-items-center" >
-                        <Bootstrap5Pagination :limit="1" :keepLength="true" :data="product_lists" class="shadow-sm"  
-                        @pagination-change-page="getProduct, search"
-                        />
-                    </div>            
                 </div>
                 <!-- END OF PRODUCT TABLE -->
 
 
                 <!-- CATEGORY TABLE -->
-                <div class="table-responsive">
+                <div class="table-responsive mt-4">
                     <h4 class="mt-3 w-100 bg-light p-3"><i class="fas fa-filter me-2"></i>Category Lists</h4>
     
                     <table class="table table-hover table-borderless text-center w-100">
@@ -428,6 +424,8 @@ import { required, email } from '@vuelidate/validators'
 import  modalComponent  from '@/components/modalComponent.vue';
 import { StreamBarcodeReader } from "vue-barcode-reader";
 import logout from '../components/modal/logout.vue';
+import Swal from 'sweetalert2'
+
 
 export default {
     name: 'products',
@@ -443,7 +441,18 @@ export default {
     setup(){
         
         let product_lists = ref([]);
+        let productSearchResults = ref([]);
+
+
+
+
+
+
         let category_lists = ref([]);
+
+
+
+
         const isOpen = ref(false);
 
         const search_box = ref('');
@@ -457,8 +466,20 @@ export default {
         const storageLink = ref('http://127.0.0.1:8000/storage/images/');
 
 
-        /* SEARCH FUNCTION */
+          /* GET PRODUCT TABLE */
+        const getProduct = async(page = 1) => {
+            axios_client.get('/products?page=' + page)
+            .then(response=>{
+                product_lists.value = response.data;
 
+                loading.value = false;
+            }).catch(error =>{
+                console.log(error.response.data)
+            })
+        }
+
+
+        /* SEARCH FUNCTION */
         const search  = async(page = 1) => {
 
             if(search_box.value == ''){
@@ -473,17 +494,18 @@ export default {
             }
 
             else {
-                axios_client.get('/search/' + search_box.value + '?page=')
-                .then(response=>{    
+                axios_client.get('/search/' + search_box.value + '?page=' + page)
+                .then(response=>{ 
                     
-
                     product_lists.value = response.data;
-                  
+                                   
                 }).catch(error =>{
                     console.log(error.response.data)
                 })
             }
         }
+
+
 
 
 
@@ -495,8 +517,7 @@ export default {
         /* END OF FOR LOGOUT MODAL */
 
 
-        
-
+    
         const category  = reactive({
             desc: '',
             catname: '',
@@ -556,13 +577,53 @@ export default {
         /* END OF DATE TIME */
 
 
+        const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+            confirmButton: 'btn btn-success',
+            cancelButton: 'btn btn-danger'
+        },
+        buttonsStyling: false
+        })
+
+
 
         /* DELETE A PRODUCT */
-        function del_prod(id){
-            let url = '/delete/' + id;
-            axios_client.put(url).then(response => {
-                this.getProduct()
+        function del_prod(id, product){
+
+            swalWithBootstrapButtons.fire({
+            title: 'Are you sure you want to archive ' + product + '?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No',
+            reverseButtons: true
+
+            }).then((result) => {
+
+            if (result.isConfirmed) {
+
+                let url = '/delete/' + id;
+                axios_client.put(url).then(response => {
+                    this.search()
+                }).catch(error => {
+                    console.log(error.response.data)
+                })
+
+                swalWithBootstrapButtons.fire(
+                'Deleted!',
+                'Your file has been archived successfuly.',
+                'success'
+                )
+            } 
+            
+            else (result.dismiss === Swal.DismissReason.cancel) 
             })
+
+
+
+
+            
         }
 
 
@@ -578,17 +639,7 @@ export default {
         }
 
 
-        /* GET PRODUCT TABLE */
-        const getProduct = async(page = 1) => {
-            axios_client.get('/products?page=' + page)
-            .then(response=>{
-                product_lists.value = response.data;
-
-                loading.value = false;
-            }).catch(error =>{
-                console.log(error.response.data)
-            })
-        }
+      
 
         /* GET CATEGORY TABLE */
         const getCat = async(page = 1) => {
@@ -621,14 +672,14 @@ export default {
 
     
         onMounted(()=> {
-            getProduct()
+            search()
             getCat()
         })
 
         return {
-            product_lists,del_prod,getProduct,typing,loading,isSidebar,
+            product_lists,del_prod,typing,loading,isSidebar,
             modalActive,toggleModal,create_category,category,getCat,category_lists,del_cat,isOpen,formatDate
-            ,logoutModal,togglelogoutModal,storageLink,search,search_box
+            ,logoutModal,togglelogoutModal,storageLink,search,search_box,productSearchResults,getProduct
         }
 
     }

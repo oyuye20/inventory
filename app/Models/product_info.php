@@ -11,7 +11,7 @@ class product_info extends Model
     use HasFactory;
 
     protected $fillable = [
-        'category_id','serial_number','manufacturer','product_name','description','size'
+        'category_id','serial_number','manufacturer','product_name','description','size','images'
     ];
 
     public function category(){
@@ -20,7 +20,7 @@ class product_info extends Model
 
 
 
-    public function inventory(): HasMany{
+    public function inventory()/* : HasMany */{
         return $this->hasMany(inventory::class);
     }
 

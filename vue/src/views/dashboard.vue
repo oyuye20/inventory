@@ -1,12 +1,19 @@
 <template>
 
-<transition name="modalAnim">
-    <logout :logoutModal="logoutModal" @close="togglelogoutModal"></logout>
+<transition name="modalAnim" >
+    <logout :logoutModal="logoutModal" @close="togglelogoutModal" style="position: relative; z-index: 3;"></logout>
 </transition>
+
+<transition name="modalAnim">
+    <notification :notification="notification" @close="toggleNotif" 
+    style="position: relative; z-index: 3;"></notification>
+</transition>
+    
+
 
 
 <body>
-    
+
 <div class="d-flex" id="wrapper">
     <!-- Sidebar -->
 
@@ -174,14 +181,30 @@
 
             <div class="d-flex justify-content-between w-100">
                 <a v-on:click="isSidebar =! isSidebar" role="button" id="toggle_icon"><i class="fas fa-bars me-3 fa-2x"></i></a>
-                <h2 class="fs-4 fw-bold"><i class="fas fa-warehouse me-2"></i>Welcome to Inventory Management</h2>
+                <h2 class="fs-4 fw-bold"><i class="fas fa-chart-pie me-2"></i>Dashboard</h2>
+
+
                 
-                <div class="div">
+                <div class="div d-flex justify-content-center align-items-center" >
+                
+                    <a role="button" @click="toggleNotif" class="position-relative me-4" aria-expanded="false"> 
+                        <i class="fas fa-bell fs-4 text-dark"></i>
+
+                        <span class="position-absolute top-0 start-100
+                            translate-middle badge rounded-pill bg-danger" style="z-index: 0;" v-if="notifCount" >
+                            {{notifCount}}
+                            <span class="visually-hidden">unread messages</span>
+                        </span>
+                    </a>          
+                        
                     <a role="button" class="fw-bold text-dark fs-5" 
                     @click="togglelogoutModal">
                     <i class="fas fa-arrow-right-from-bracket me-2"></i>
                     Logout</a>
+
                 </div> 
+
+                
             </div>
 
             <!-- <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -284,7 +307,7 @@
                                     <i class="fas fa-arrow-turn-down me-2"></i>
                                     Critical Stocks</h3>
 
-                                    <p class="fs-2 text-light fw-bold">{{ crit_stocks1 }}</p>
+                                    <p class="fs-2 text-light fw-bold">{{ lowStocks }}</p>
                                     
                                 </div>
                             </div>
@@ -321,12 +344,12 @@
             </div>           
 
 
-            <p>{{ items_sold }}</p>
         </div>
     </div>
 </div>
     <!-- /#page-content-wrapper -->
 
+    
 </body>
 
 </template>
@@ -343,7 +366,7 @@ import axios_client from '../axios';
 import { ref, watchEffect, defineComponent } from 'vue';
 
 import logout from '../components/modal/logout.vue';
-
+import notification from '../components/notification.vue';
 
 import { Bar } from 'vue-chartjs'
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
@@ -367,7 +390,7 @@ Chart.register(...registerables); */
 
  export default {
     name: 'Dashboard',
-    components: {Bar,logout},
+    components: {Bar,logout,notification},
 
 
     setup(){
@@ -379,11 +402,17 @@ Chart.register(...registerables); */
             logoutModal.value = !logoutModal.value
         }
 
+
+        const notification = ref(false);
+
+        const toggleNotif = () => {
+            notification.value = !notification.value
+        }
+
       
 
 
         const product_lists = ref([]);
-
 
         const expired_lists = ref([]);
         let stock_lists = ref([]);
@@ -393,15 +422,12 @@ Chart.register(...registerables); */
         let sale_total = ref('');
         const isSidebar = ref(true);
         
-
         const isloaded = ref(false)
-
 
         const items_sold = ref([]);
 
 
-       
-
+    
 
         const sold_items = async() => {
             axios_client.get('/sold').then(response=>{       
@@ -414,8 +440,6 @@ Chart.register(...registerables); */
                 console.log(error.response.data)
             })
         }
-
-
 
 
 
@@ -434,21 +458,21 @@ Chart.register(...registerables); */
       chartData,
     }); */
 
-   
 
 
-
-       
-
-
-
-        let exp_list_count = ref('');
+        const exp_list_count = ref('');
+        const lowStocks = ref('');
 
         const search_box = ref('');
         const typing = ref(false);
 
 
         const timestamp = ref();
+
+
+        /* FOR NOTIFICATION */
+        const notifCount = ref('');
+        const notifLists = ref([]);
 
 
         
@@ -476,48 +500,17 @@ Chart.register(...registerables); */
 
 
 
+        const getNotifications = async() => {
+            axios_client.get('/notification/stocks').then(response=>{
+                notifCount.value = response.data.count
+                notifLists.value = response.data.notification
+
+            }).catch(error =>{
+                console.log(error.response.data)
+            })
+        }
 
 
-        watchEffect(() =>{
-
-           
-        
-      /*   search_box.value
-
-            if(search_box.value.length>0)
-            {
-                typing.value = true
-
-                const typing_stats = setTimeout(()=>{
-                    typing.value = false
-                }, 700)
-
-                onvalidate(()=>{
-                    clearInterval(typing_stats)
-
-                    axios_client.get('/search/' + search_box.value).then((res)=>{
-                    product_lists.value = res.data
-
-                
-                    }).catch(error => {
-                        console.log(error)
-                    })
-                })
-
-            }
-
-            else 
-            {
-                const typing_stats = setTimeout(()=>{
-                    typing.value = false
-                }, 1000)
-
-                onvalidate(()=>{
-                    clearInterval(typing_stats)
-                })
-            } */
-
-        })
 
 
         /* GET PRODUCT TABLE */
@@ -556,13 +549,28 @@ Chart.register(...registerables); */
 
         /* EXPIRED PRODUCT COUNT */
         const exp_count_f = async() => {
-            axios_client.get('/exp_count').then(response=>{
-                exp_list_count.value = response.data.exp_count
+            axios_client.get('/expiration/count').then(response=>{
+                exp_list_count.value = response.data
             }).catch(error =>{
-
+                console.log(error.response.data)
             })
         }
 
+
+
+
+
+        /* LISTS OF LOW STOCKS PRODUCT */
+        const lowStocksCount = async() => {
+            axios_client.get('/critical/count').then(response=>{
+                lowStocks.value = response.data
+            }).catch(error =>{
+                console.log(error.response.data)
+            })
+        }
+
+
+        
 
         /* TOTAL SALES */
         const total_sales = async() => {
@@ -590,39 +598,17 @@ Chart.register(...registerables); */
         }
 
 
-        /* LISTS OF LOW STOCKS PRODUCT */
-        /* const low_stocks = async() => {
-            axios_client.get('/stocks').then(response=>{
-                
-                stock_lists.value = response.data.stocks
-            }).catch(error =>{
-
-            })
-        } */
-
-
-        /* CRITICAL STOCKS IN DASHBOARD */
-        const crit_stocks = async() => {
-            axios_client.get('/crit_stocks').then(response=>{
-                /* console.log(response.data.stocks) */
-                crit_stocks1.value = response.data.crit
-            }).catch(error =>{
-
-            })
-        }
-
     
+
         onMounted(()=> {
+            getNotifications()
             getProduct()
             expired_prod()
             total_products()
             stock_total()
-            crit_stocks()
             exp_count_f()
             total_sales()
-
-            const items_sold = ref([]);
-
+            lowStocksCount()
             sold_items()
         })
 
@@ -631,11 +617,13 @@ Chart.register(...registerables); */
         return {
             product_lists,getProduct,close,expired_prod,expired_lists
             ,stock_lists,search_box,typing,product_total,total_products,stock_total
-            ,num_total_stock,crit_stocks1,crit_stocks,exp_count_f,exp_list_count,isSidebar,dateTime,sale_total,total_sales
+            ,num_total_stock,crit_stocks1,exp_count_f,exp_list_count,isSidebar,dateTime,sale_total,total_sales
 
             ,chartData,chartOptions,sold_items,items_sold,isloaded
 
-            ,togglelogoutModal,logoutModal
+            ,togglelogoutModal,logoutModal,getNotifications,notifCount,notifLists,lowStocksCount,lowStocks
+
+            ,notification,toggleNotif
 
             /* , barChartProps, barChartRef,isloaded */
         }

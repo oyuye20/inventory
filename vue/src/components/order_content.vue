@@ -330,6 +330,7 @@ import { Bootstrap5Pagination } from 'laravel-vue-pagination';
 import {useCartStore} from '../stores/cart'
 import { computed, toHandlers } from "vue";
 import { faker } from '@faker-js/faker';
+import Swal from 'sweetalert2'
 
 export default{
     name: 'order_content',
@@ -364,8 +365,12 @@ export default{
         const deplete1 = computed(()=> CartStore.deplete2)
 
 
+        
 
-    
+
+
+
+        
         onMounted(()=> {
          CartStore.getProduct()
         })

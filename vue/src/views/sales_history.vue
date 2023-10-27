@@ -5,41 +5,33 @@
             <div class="sidebar_wrapper" :class ="{side: isSidebar}">
                 
                 <div class="sidebar-heading text-center py-4 fs-4 fw-bold d-flex justify-content-center ">
-
                     <div class="div d-flex justify-content-center align-items-center me-2">
                         <i class="fas fa-circle-user fa-2x"></i>
                     </div>
                     
-
                     <div class="div d-flex flex-column justify-content-end">
                         Admin
-
                         <span class="text-secondary fs-6">Administrator</span>
                     </div>
-
                 </div>
 
 
                 <div class="list-group list-group-flush my-3 w-100 p-3">
-
-                
+                    
                     <router-link :to="{name: 'dashboard'}">
-
                         <div id="sidebtn" class="list-group-item fs-5 list-group-item-action 
-                        d-flex justify-content-center rounded-5" >
+                            d-flex justify-content-center rounded-5" >
 
-                        <div class="div d-flex justify-content-center align-items-center">
-                            <i class="fas fa-chart-pie me-4"></i>
-                        </div>
-                            
-                        <div class="div w-100">
-                            <span class="fs-4">Dashboard</span>
-                        </div>
+                            <div class="div d-flex justify-content-center align-items-center">
+                                <i class="fas fa-chart-pie me-4"></i>
+                            </div>
+                                
+                            <div class="div w-100">
+                                <span class="fs-4">Dashboard</span>
+                            </div>
 
-                    </div>
-                        
+                        </div>                  
                     </router-link>
-
 
 
                     <router-link :to="{name: 'products'}">               
@@ -58,7 +50,6 @@
                     </router-link>
 
 
-
                     <router-link :to="{name: 'inventory'}">          
                         <div id="sidebtn" class="list-group-item fs-5 list-group-item-action 
                             d-flex justify-content-center rounded-5 mt-2">
@@ -75,8 +66,6 @@
                     </router-link>
 
                     
-                    
-
                     <router-link :to="{name: 'transaction'}">
                         <div id="sidebtn" class="list-group-item fs-5 list-group-item-action 
                         d-flex justify-content-center rounded-5 mt-2">
@@ -91,8 +80,6 @@
 
                         </div>
                     </router-link>
-
-
 
 
                     <div id="sidebtn" class="list-group-item fs-5 list-group-item-action 
@@ -110,9 +97,7 @@
                     </div>
 
 
-                    
-
-                
+                         
                     <router-link :to="{name: 'records'}">
                         <div id="sidebtn" class="list-group-item fs-5 list-group-item-action 
                         d-flex justify-content-center rounded-5 mt-2" >
@@ -127,6 +112,7 @@
 
                         </div>
                     </router-link>
+
 
 
                     <router-link :to="{name: 'archive'}">
@@ -144,7 +130,6 @@
                         </div>
                     </router-link>
                     
-
 
                     <router-link :to="{}">
                         <div id="sidebtn" class="list-group-item fs-5 list-group-item-action 
@@ -344,6 +329,12 @@
 
         </div>
 
+
+
+        <div class="mt-3 w-100 mb-3">
+            <input type="month" class="form-control" v-model="filterMonth" @change="filterMonthly">
+        </div>
+
             <div class="table-responsive">     
                 <table class="table table-hover table-borderless text-center">
                     <thead class="" style="background-color: rgb(4, 180, 116);">
@@ -387,7 +378,7 @@
 
                 <div class="d-flex justify-content-end align-items-center" >
                     <Bootstrap5Pagination :limit="1" :keepLength="true" :data="montly" class="shadow-sm"  
-                    @pagination-change-page="getMonthly"
+                    @pagination-change-page="getMonthly, filterMonthly"
                     />
                 </div>
 
@@ -395,7 +386,8 @@
         
         </div>
 
-        <div class="tab-pane fade show" id="pills-cancel" role="tabpanel" aria-labelledby="pills-cancel-tab" tabindex="0">Cancelled Order</div>
+        <div class="tab-pane fade show" id="pills-cancel" role="tabpanel" 
+        aria-labelledby="pills-cancel-tab" tabindex="0">Cancelled Order</div>
 
 
 
@@ -434,8 +426,12 @@ import { computed, toHandlers } from "vue";
 import { useRouter } from "vue-router";
 import {reactive, onMounted} from 'vue';
 import tutorial from '../components/tutorial.vue'
-import { ref } from 'vue'
+import { ref, watchEffect } from 'vue'
 import axios_client from '../axios';
+
+
+import {useToast} from 'vue-toast-notification';
+import 'vue-toast-notification/dist/theme-sugar.css';
 
 export default {
     name: 'inventory',
@@ -454,21 +450,38 @@ export default {
         const isSidebar = ref(false);
         const daily = ref([]);
         const montly = ref([]);
+        const filterMonth = ref('');
 
-
-    
+        
         onMounted(()=> {
             getDaily()
             getMonthly()
         })
 
 
+        const filterMonthly = async(page = 1) => {
+            if(filterMonth.value == ''){
+                axios_client.get('/monthly?page=' + page).then(response=>{
+                    montly.value = response.data;
+                }).catch(error =>{
+                    console.log(error.response.data)
+                })       
+            }
+
+            else {
+                axios_client.get('/filter/month/' + filterMonth.value + '?page=').then(response=>{
+                    montly.value = response.data;
+                }).catch(error =>{
+                    console.log(error.response.data)
+                })
+            }         
+        }
+    
+
         var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
         const date = new Date();
 
         const formatDate = date.toLocaleDateString("en-US", options)
-
-
 
 
         const getDaily = async(page = 1) => {
@@ -479,7 +492,6 @@ export default {
             })
         }
 
-
         const getMonthly = async(page = 1) => {
             axios_client.get('/monthly?page=' + page).then(response=>{
                 montly.value = response.data;
@@ -489,15 +501,13 @@ export default {
         }
 
 
-
-
         function logout(){
             store.commit('logout');
             router.push({name: 'login'})
         }
 
         return {
-            user: computed(() => store.state.user.data),logout,isSidebar,getDaily,daily,formatDate,montly,getMonthly
+            user: computed(() => store.state.user.data),logout,isSidebar,getDaily,daily,formatDate,montly,getMonthly,filterMonth,filterMonthly
         }
 
 

@@ -26,27 +26,18 @@ class stats extends Controller
 
 
     /* REMINDER OF EXPIRED PRODUCTS WITH PAGINATION*/
-    public function expiration(){
-        return inventory::whereDate('expiration_date', '<', now())->paginate(5);
-
-       /*  return response()->json([
-            'expiration_date' => $p,
-            'code' => 200
-        ]); */
-
+    public function expProduct(){
+        return inventory::with('product')->whereDate('expiration_date', '<', now())->paginate(5);
     }
 
 
     /* NUMBER OF EXPIRED PRODUCTS */
     public function expired_count(){
-        $p = inventory::whereDate('expiration_date', '<', now())->count();
-
-        return response()->json([
-            'exp_count' => $p,
-            'code' => 200
-        ]);
-
+        return inventory::with('product')->whereDate('expiration_date', '<', now())->count();
     }
+
+
+
 
 
     /* TOTAL OF SUM STOCKS IN DASHBOARD*/
@@ -59,14 +50,32 @@ class stats extends Controller
         ]);
     }
 
-
-
-    /* NUMBER OF CRITICAL STOCKS IN DASHBOARD*/
-    public function critical_stocks(){
-        $safe_stocks = 30;
-        return inventory::where('stocks', '<', $safe_stocks)->get();
-
+    /* LISTS OF ORDERS   */
+    public function orders(){
+        return transactions::paginate(5);
     }
+
+
+
+    /* LISTS OF CRITICAL STOCKS*/
+    public function criticalStocks(){
+        return inventory::with('product')->whereColumn('stocks', '<', 'safety_stocks')->paginate(5);
+    }
+
+
+    /* COUNT OF CRITICAL STOCKS*/
+    public function criticalStocksCount(){
+        return inventory::with('product')->whereColumn('stocks', '<', 'safety_stocks')->count();
+    }
+
+
+
+
+
+
+
+
+
 
 
 

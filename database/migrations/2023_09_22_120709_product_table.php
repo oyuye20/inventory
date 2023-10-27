@@ -23,6 +23,7 @@ return new class extends Migration
         Schema::create('product_infos', function(Blueprint $table){
             $table->increments('id');
             $table->unsignedInteger('category_id');
+            $table->string('image');
             $table->string('serial_number');
             $table->string('manufacturer');
             $table->string('product_name');
@@ -43,7 +44,9 @@ return new class extends Migration
             $table->increments('id');
             $table->unsignedInteger('product_id');
             $table->string('category');
+            $table->string('supplier');
             $table->string('stocks');
+            $table->string('safety_stocks');
             $table->date('production_date');
             $table->date('expiration_date');
             $table->string('status');

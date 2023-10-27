@@ -16,19 +16,8 @@ class product_crud extends Controller
 {
 
     /* READ ALL PRODUCT */
-    public function index(){
-/*         return category::orderBy('id')->paginate(5); */
-
-
-        
-        return product_info::with('category')->where('isArchived',0)->paginate(5);
-
-
-        
-        /* return response()->json([
-            'products' => $product,
-            'code' => 200
-        ]); */
+    public function index(){     
+        return product_info::with('category')->where('isArchived',0)->paginate(2);
     }
 
 
@@ -52,6 +41,7 @@ class product_crud extends Controller
             "discount" => "0",
             "net_total" => $final_total,
             "purchase_date" => $request->input("purchase_date"),
+            "change" => $request->input("change"),
             "status" => "Paid",
         ]);
 

@@ -6,13 +6,24 @@ use Illuminate\Http\Request;
 use App\Models\product_info;
 use App\Models\category;
 use App\Models\inventory;
+use App\Models\transactions;
 use Illuminate\Support\Facades\DB;
 
 class inventory1 extends Controller
 {
     public function inventory_index()
     {
+        /* $r =  inventory::with('product')->where('stocks','>',20)->get();
+
+        foreach($r as $as) {
+            echo $as->stocks;
+        }
+ */
+        /* return inventory::with('product')->where('stocks','>', 100)->paginate(5); */
+
         return inventory::with('product')->paginate(5);
+
+
         /* return DB::table('product_infos')
         ->join('inventories','product_infos.id', '=','inventories.product_id')
 
@@ -28,6 +39,10 @@ class inventory1 extends Controller
     }
 
 
+
+
+
+
     public function inventory_add(Request $request)
     { 
         inventory::create([
@@ -36,14 +51,15 @@ class inventory1 extends Controller
             "stocks" => $request->stocks,
             "production_date" => $request->prod_date,
             "expiration_date" => $request->exp_date,
-            "status" => 'none'
+            "supplier" => $request->supplier,
+            "safety_stocks" => $request->safetyStocks,
+            "status" => 'Good'
         ]);
 
         return response()->json([
             "status" => 200
          ]);
     }
-
 
 
 

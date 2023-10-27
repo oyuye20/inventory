@@ -29,12 +29,9 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
             <div class="div p-3 m-1" v-for="(list, i) in cart_lists" :key="list.product_id">
 
                 <div class="col-12 d-flex">
-                    <div class="col-10">
-                        <span class="fw-bold">qweqweq</span>
-                    </div>
-
+              
                     
-                    <!-- <div class="col-8">
+                    <div class="col-8">
                         <span class="fw-bold">{{list.product_name}}</span>
                     </div>
 
@@ -44,7 +41,7 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
                     
                     <div class="col-2">
                         <span class="fw-bold">{{list.price}}</span>
-                    </div> --> 
+                    </div> 
                 </div>
          
             </div>
@@ -137,10 +134,10 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
 
 
             <div class="d-flex justify-content-end p-3">
-                <button class="btn btn-danger me-2" @click="modalActive =! modalActive">Close</button>
+                <!-- <button class="btn btn-danger me-2" @click="modalActive =! modalActive">Close</button> -->
 
-                <form @submit.prevent="create_category()">
-                    <button type="submit" class="btn btn-success">Save</button>
+                <form @submit.prevent="completeOrder()">
+                    <button type="submit" class="btn btn-success">Complete Order</button>
                 </form>
                 
             </div>
@@ -166,15 +163,15 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
 
             <div class="div p-4">          
                 <div class="col-12 mb-4">
+
                     <input type="text" class="form-control" 
-                    @input="filter_input()" v-model="CashAmount" 
+                    @input="filter_input()" v-model="CashAmount"  
+                    @keydown.enter="invoice()"
+
                     placeholder="Enter Amount">
                 </div>
             </div>
             
-
-            
-
 
             <div class="col-12 border border-black px-3">
                 
@@ -198,146 +195,146 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
     <div class="d-flex" id="wrapper">
         <!-- Sidebar -->
 
-            <div class="sidebar_wrapper" :class ="{side: isSidebar}">
+        <div class="sidebar_wrapper" :class ="{side: isSidebar}">
 
-                <div class="sidebar-heading text-center py-4 fs-4 fw-bold d-flex justify-content-center ">
-                    <div class="div d-flex justify-content-center align-items-center me-2">
-                        <i class="fas fa-circle-user fa-2x"></i>
-                    </div>
-                   
-                    <div class="div d-flex flex-column justify-content-end">
-                        Admin
-
-                        <span class="text-secondary fs-6">Administrator</span>
-                    </div>
+            <div class="sidebar-heading text-center py-4 fs-4 fw-bold d-flex justify-content-center ">
+                <div class="div d-flex justify-content-center align-items-center me-2">
+                    <i class="fas fa-circle-user fa-2x"></i>
                 </div>
+                
+                <div class="div d-flex flex-column justify-content-end">
+                    Admin
 
-
-                <div class="list-group list-group-flush my-3 w-100 p-3">
-                    <router-link :to="{name: 'dashboard'}">
-                        <div id="sidebtn" class="list-group-item fs-5 list-group-item-action d-flex justify-content-center rounded-5" >
-
-                            <div class="div d-flex justify-content-center align-items-center">
-                                <i class="fas fa-chart-pie me-4"></i>
-                            </div>
-                            
-                            <div class="div w-100">
-                                <span class="fs-4">Dashboard</span>
-                            </div>
-                        </div>                 
-                    </router-link>
-
-                    <router-link :to="{name: 'products'}">                 
-                        <div id="sidebtn" class="list-group-item fs-5 list-group-item-action d-flex justify-content-center rounded-5 mt-2" >
-
-                            <div class="div d-flex justify-content-center align-items-center">
-                                <i class="bi bi-box-seam-fill me-4"></i>
-                            </div>
-                            
-                            <div class="div w-100">
-                                <span class="fs-4">Products</span>
-                            </div>
-
-                        </div>
-                    </router-link>
-
-
-
-                    <router-link :to="{name: 'inventory'}">
-                        <div id="sidebtn" class="list-group-item fs-5 list-group-item-action 
-                            d-flex justify-content-center rounded-5 mt-2" >
-
-                            <div class="div d-flex justify-content-center align-items-center">
-                                <i class="fas fa-boxes-stacked me-4"></i>
-                            </div>
-                                
-                            <div class="div w-100">
-                                <span class="fs-4">Inventory</span>
-                            </div>
-
-                        </div>
-                    </router-link>
-
-          
-                    <router-link :to="{name: 'transaction'}">
-                        <div id="sidebtn" class="list-group-item fs-5 list-group-item-action d-flex justify-content-center rounded-5 mt-2" style="background-color: rgb(185, 232, 206); color: rgb(57, 164, 59);">
-
-                            <div class="div d-flex justify-content-center align-items-center">
-                                <i class="fas fa-receipt me-4 fa-lg"></i>
-                            </div>
-                            
-                            <div class="div w-100">
-                                <span class="fs-4">Transactions</span>
-                            </div>
-
-                        </div>
-                    </router-link>
-                    
-
-                    <router-link :to="{name: 'sales'}">       
-                        <div id="sidebtn" class="fs-5 list-group-item-action d-flex justify-content-center rounded-5 mt-2" >
-                            <div class="div d-flex justify-content-center align-items-center">
-                                <i class="fas fa-chart-line me-4"></i>
-                            </div>
-                            
-                            <div class="div w-100">
-                                <span class="fs-4">Sales History</span>
-                            </div>
-                        </div>
-                    </router-link>
-
-           
-                    <router-link :to="{name: 'records'}">
-                        <div id="sidebtn" class="list-group-item fs-5 list-group-item-action d-flex justify-content-center rounded-5 mt-2" >
-
-                            <div class="div d-flex justify-content-center align-items-center">
-                                <i class="bi bi-database-fill me-4"></i>
-                            </div>
-                            
-                            <div class="div w-100">
-                                <span class="fs-4">Records</span>
-                            </div>
-
-                        </div>
-                    </router-link>
-
-
-                    <router-link :to="{name: 'archive'}">
-                        <div id="sidebtn" class="list-group-item fs-5 list-group-item-action 
-                        d-flex justify-content-center rounded-5 mt-2" >
-
-                            <div class="div d-flex justify-content-center align-items-center">
-                                <i class="fas fa-trash me-4"></i>
-                            </div>
-                            
-                            <div class="div w-100">
-                                <span class="fs-4">Archive</span>
-                            </div>
-
-                        </div>
-                    </router-link>
-
-
-
-                    <router-link :to="{}">
-                        <div id="sidebtn" class="list-group-item fs-5 list-group-item-action 
-                        d-flex justify-content-center rounded-5 mt-2" >
-
-                            <div class="div d-flex justify-content-center align-items-center">
-                                <i class="fas fa-gear me-4"></i>
-                            </div>
-                            
-                            <div class="div w-100">
-                                <span class="fs-4">Settings</span>
-                            </div>
-
-                        </div>
-                    </router-link>
-
-
-              
+                    <span class="text-secondary fs-6">Administrator</span>
                 </div>
             </div>
+
+
+            <div class="list-group list-group-flush my-3 w-100 p-3">
+                <router-link :to="{name: 'dashboard'}">
+                    <div id="sidebtn" class="list-group-item fs-5 list-group-item-action d-flex justify-content-center rounded-5" >
+
+                        <div class="div d-flex justify-content-center align-items-center">
+                            <i class="fas fa-chart-pie me-4"></i>
+                        </div>
+                        
+                        <div class="div w-100">
+                            <span class="fs-4">Dashboard</span>
+                        </div>
+                    </div>                 
+                </router-link>
+
+                <router-link :to="{name: 'products'}">                 
+                    <div id="sidebtn" class="list-group-item fs-5 list-group-item-action d-flex justify-content-center rounded-5 mt-2" >
+
+                        <div class="div d-flex justify-content-center align-items-center">
+                            <i class="bi bi-box-seam-fill me-4"></i>
+                        </div>
+                        
+                        <div class="div w-100">
+                            <span class="fs-4">Products</span>
+                        </div>
+
+                    </div>
+                </router-link>
+
+
+
+                <router-link :to="{name: 'inventory'}">
+                    <div id="sidebtn" class="list-group-item fs-5 list-group-item-action 
+                        d-flex justify-content-center rounded-5 mt-2" >
+
+                        <div class="div d-flex justify-content-center align-items-center">
+                            <i class="fas fa-boxes-stacked me-4"></i>
+                        </div>
+                            
+                        <div class="div w-100">
+                            <span class="fs-4">Inventory</span>
+                        </div>
+
+                    </div>
+                </router-link>
+
+        
+                <router-link :to="{name: 'transaction'}">
+                    <div id="sidebtn" class="list-group-item fs-5 list-group-item-action d-flex justify-content-center rounded-5 mt-2" style="background-color: rgb(185, 232, 206); color: rgb(57, 164, 59);">
+
+                        <div class="div d-flex justify-content-center align-items-center">
+                            <i class="fas fa-receipt me-4 fa-lg"></i>
+                        </div>
+                        
+                        <div class="div w-100">
+                            <span class="fs-4">Transactions</span>
+                        </div>
+
+                    </div>
+                </router-link>
+                
+
+                <router-link :to="{name: 'sales'}">       
+                    <div id="sidebtn" class="fs-5 list-group-item-action d-flex justify-content-center rounded-5 mt-2" >
+                        <div class="div d-flex justify-content-center align-items-center">
+                            <i class="fas fa-chart-line me-4"></i>
+                        </div>
+                        
+                        <div class="div w-100">
+                            <span class="fs-4">Sales History</span>
+                        </div>
+                    </div>
+                </router-link>
+
+        
+                <router-link :to="{name: 'records'}">
+                    <div id="sidebtn" class="list-group-item fs-5 list-group-item-action d-flex justify-content-center rounded-5 mt-2" >
+
+                        <div class="div d-flex justify-content-center align-items-center">
+                            <i class="bi bi-database-fill me-4"></i>
+                        </div>
+                        
+                        <div class="div w-100">
+                            <span class="fs-4">Records</span>
+                        </div>
+
+                    </div>
+                </router-link>
+
+
+                <router-link :to="{name: 'archive'}">
+                    <div id="sidebtn" class="list-group-item fs-5 list-group-item-action 
+                    d-flex justify-content-center rounded-5 mt-2" >
+
+                        <div class="div d-flex justify-content-center align-items-center">
+                            <i class="fas fa-trash me-4"></i>
+                        </div>
+                        
+                        <div class="div w-100">
+                            <span class="fs-4">Archive</span>
+                        </div>
+
+                    </div>
+                </router-link>
+
+
+
+                <router-link :to="{}">
+                    <div id="sidebtn" class="list-group-item fs-5 list-group-item-action 
+                    d-flex justify-content-center rounded-5 mt-2" >
+
+                        <div class="div d-flex justify-content-center align-items-center">
+                            <i class="fas fa-gear me-4"></i>
+                        </div>
+                        
+                        <div class="div w-100">
+                            <span class="fs-4">Settings</span>
+                        </div>
+
+                    </div>
+                </router-link>
+
+
+            
+            </div>
+        </div>
      
 
         <!-- /#sidebar-wrapper -->
@@ -348,17 +345,15 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
 
             <nav class="navbar py-4 px-4 shadow-none">
                 <div class="d-flex align-items-center">
-
-                    <a v-on:click="isSidebar =! isSidebar" role="button" id="toggle_icon"><i class="fas fa-bars me-3 fa-2x"></i></a>
-                    
-                    <h2 class="fs-4 fw-bold"><i class="fas fa-cash-register me-2"></i>Create a new transaction</h2>
+                    <a v-on:click="isSidebar =! isSidebar" role="button" id="toggle_icon"><i class="fas fa-bars me-3 fa-2x"></i></a>    
+                    <h2 class="fs-4 fw-bold"><i class="fas fa-receipt me-2"></i>Transactions</h2>
                 </div>
 
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                <!-- <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
-                </button>
+                </button> -->
 
 
                 <div class="div">
@@ -392,147 +387,146 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
 
                 <div class="row gx-2 mt-3">
 
-                        <div v-if="show_alert" class="alert alert-success alert-dismissible fade show" role="alert">
-                            Ordered Successfully
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
+                    <!-- <div v-if="show_alert" class="alert alert-success alert-dismissible fade show" role="alert">
+                        Ordered Successfully
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div> -->
 
-                        <div v-if="msg" class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <i class="fas fa-circle-exclamation me-2"></i><span class="fs-6 fw-bold">{{ msg }}</span>
-                            <button type="button" class="btn-close" @click="CartStore.close_msg_stock()"></button>
-                        </div>
-
-
-
-                        <div class="col-xl-7 mt-3">
-                            <div class="bg-light w-100">
-                                <h4 class="p-3 text-light" style="background-color: rgb(4, 180, 116);"><i class="fas fa-cash-register me-2"></i>Transaction</h4>
+                    <!-- <div v-if="msg" class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="fas fa-circle-exclamation me-2"></i><span class="fs-6 fw-bold">{{ msg }}</span>
+                        <button type="button" class="btn-close" @click="CartStore.close_msg_stock()"></button>
+                    </div> -->
 
 
-                                <div class="d-flex justify-content-between p-3">
-                                    <!-- <h4 class="">Total</h4>
-                                    <h4 class="text-success fw-bold">1,000 Pesos</h4> -->
-                                    <h5>Transaction ID: 123213123123</h5>
-                                    <h5>Transaction Date: Saturday, July 22, 2023</h5>
-
-                    
-                                </div>
-
-
-                                <div class="div mt-3 p-3">
-                                    <input type="text" class="form-control mb-3" v-model="customer_name" placeholder="Customer Name">
-                                </div>
-
-                            
-                                
-
-
-                            
-                                <div class="table-responsive mt-3 mb-3" style="overflow: auto; height: 20rem; ">
-                                    <table class="table table-hover table-borderless text-center" >
-
-                                        <thead style="background-color: rgb(4, 180, 116);">
-                                            <tr c>
-                                            <th scope="col" class="fw-bold">Product Name</th>
-                                            <th scope="col" class="fw-bold">Quantity</th>
-                                            <th scope="col" class="fw-bold">Price</th>
-                                            <th scope="col" class="fw-bold">Total</th>
-                                            <th scope="col" class="fw-bold">Action</th>
-                                            </tr>
-                                        </thead>
-
-                                    <tbody v-for="(list, i) in cart_lists" :key="list.product_id">
-                                        <tr>
-                                            <td class="fw-bold">{{list.product_name}}</td>
-                                            <td class="fw-bold">{{list.quantity}}</td>
-                                            <td class="fw-bold">{{list.price}}</td>
-                    
-                                            <td class="fw-bold d-flex justify-content-center align-items-center">                    
-                                                <button :disabled="deplete1" @click="CartStore.increment(i,list.stocks,list.price,list.product_id)" 
-                                                class="btn btn-sm btn-success">+</button>
-
-                                                <span class="mx-2">{{list.total.toLocaleString('en-US')}}</span>
-
-                                                <button @click="CartStore.decrement(i,list.product_id)" class="btn btn-sm btn-danger">-</button>
-                                        
-                                            </td>
-
-
-                                            <td class="fw-bold"><button @click="CartStore.remove_cart(index)" 
-                                                role="button" class="btn btn-danger"><i class="fas fa-trash"></i></button>
-                                            </td>
-                                        
-                                        </tr>
-
-                                    </tbody>
-                                    </table>
-                                </div>
-
-
-                                <form @submit.prevent="checkout()">
-                                    <div class="p-3 mt-3" style="background-color: rgb(176, 230, 209);">
-
-                                        <h4 class="text-dark"><i class="fas fa-coins me-2 m-2 text-success"></i>
-                                            Sub Total: {{Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(CartStore.grand_total)}}
-                                        </h4>
-
-                                        <h4 class="text-dark"><i class="fas fa-coins me-2 m-2 text-success"></i>
-                                            VAT(12%): {{
-                                                Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format((CartStore.grand_total * 0.12))                           
-                                            }}
-                                        </h4>
-
-                                        <h4 class="text-dark"><i class="fas fa-coins me-2 m-2 text-success"></i>
-                                            Grand Total: {{
-                                                Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format((CartStore.grand_total + (CartStore.grand_total * .12)))                                                    
-                                                }}
-                                        </h4>
-
-                                        
-                                        
-                                        <button type="submit" class="btn btn-success" :disabled="submit_btn">         
-                                            <span role="status" class="mx-1">Check Out</span>
-                                            <span v-if="submit_btn" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
-                                        </button>
-
-                                    </div>
-                                </form>
-                        
-                                
-
-
-                            
-                            </div>        
-                        </div>
-
-
-                    <div class="col-xl-5 mt-3">
+                    <div class="col-xl-6 mt-3">
                         <div class="bg-light w-100">
-                            <h4 class="p-3 bg-dark text-light"><i class="fas fa-box me-2"></i>Products</h4>
+                            <h4 class="p-3 text-light" style="background-color: rgb(4, 180, 116);"><i class="fas fa-cash-register me-2"></i>Transaction</h4>
+
+
+                            <div class="d-flex justify-content-between p-3">
+                                <!-- <h4 class="">Total</h4>
+                                <h4 class="text-success fw-bold">1,000 Pesos</h4> -->
+                                <h5>Transaction ID: 123213123123</h5>
+                                <h5>Transaction Date: Saturday, July 22, 2023</h5>
+
+                
+                            </div>
+
+
+                            <div class="div mt-3 p-3">
+                                <input type="text" class="form-control mb-3" v-model="customer_name" placeholder="Customer Name">
+                            </div>
+
+                        
+                            
+
+
+                        
+                            <div class="table-responsive mt-3 mb-3" style="overflow: auto; height: 20rem; ">
+                                <table class="table table-hover table-borderless text-center" >
+
+                                    <thead style="background-color: rgb(4, 180, 116);">
+                                        <tr c>
+                                        <th scope="col" class="fw-bold">Product Name</th>
+                                        <th scope="col" class="fw-bold">Quantity</th>
+                                        <th scope="col" class="fw-bold">Price</th>
+                                        <th scope="col" class="fw-bold">Total</th>
+                                        <th scope="col" class="fw-bold">Action</th>
+                                        </tr>
+                                    </thead>
+
+                                <tbody v-for="(list, i) in cart_lists" :key="list.product_id">
+                                    <tr>
+                                        <td class="fw-bold">{{list.product_name}}</td>
+                                        <td class="fw-bold">{{list.quantity}}</td>
+                                        <td class="fw-bold">{{list.price}}</td>
+                
+                                        <td class="fw-bold d-flex justify-content-center align-items-center">                    
+                                            <button @click="CartStore.increment(i,list.stocks,list.price,list.product_id)" 
+                                            class="btn btn-sm btn-success">+</button>
+
+                                            <span class="mx-2">{{list.total.toLocaleString('en-US')}}</span>
+
+                                            <button @click="CartStore.decrement(i,list.product_id)" class="btn btn-sm btn-danger">-</button>
+                                    
+                                        </td>
+
+
+                                        <td class="fw-bold"><button @click="CartStore.remove_cart(index)" 
+                                            role="button" class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                    
+                                    </tr>
+
+                                </tbody>
+                                </table>
+                            </div>
+
+
+                            <form @submit.prevent="checkout()">
+                                <div class="p-3 mt-3" style="background-color: rgb(176, 230, 209);">
+
+                                    <h4 class="text-dark"><i class="fas fa-coins me-2 m-2 text-success"></i>
+                                        Sub Total: {{Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(CartStore.grand_total)}}
+                                    </h4>
+
+                                    <h4 class="text-dark"><i class="fas fa-coins me-2 m-2 text-success"></i>
+                                        VAT(12%): {{
+                                            Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format((CartStore.grand_total * 0.12))                           
+                                        }}
+                                    </h4>
+
+                                    <h4 class="text-dark"><i class="fas fa-coins me-2 m-2 text-success"></i>
+                                        Grand Total: {{
+                                            Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format((CartStore.grand_total + (CartStore.grand_total * .12)))                                                    
+                                            }}
+                                    </h4>
+
+                                    
+                                    
+                                    <button type="submit" class="btn btn-success" :disabled="submit_btn">         
+                                        <span role="status" class="mx-1">Check Out</span>
+                                        <span v-if="submit_btn" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                                    </button>
+
+                                </div>
+                            </form>
+                                    
+                        </div>        
+                    </div>
+
+
+                    <div class="col-xl-6 mt-3">
+                        <div class="bg-light w-100">
+
+                            <h4 class="p-3 text-light" style="background-color: rgb(4, 180, 116);">
+                            <i class="fas fa-box me-2"></i>Products</h4>
 
 
                             <!-- PRODUCT LISTS -->
                             <div class="row g-1">
 
-                                <div class="container d-flex mb-3 mt-3">
-                                    <input type="text" v-model="search_data" role="searchbox" class="form-control me-2" placeholder="search a product">
-                                    <button @click="btn_search(search_data)" class="btn btn-sm btn-primary"><i class="fas fa-magnifying-glass"></i></button>
+                                <div class="container-fluid d-flex justify-content-center mb-2 mt-2">
+                                    <div class="col-10">
+                                        <input type="text" @keydown.enter="search" role="searchbox" v-model="search_box" class="form-control rounded-5 p-2" 
+                                        style="box-shadow: 3px 3px 3px rgb(197, 197, 197); 
+                                        border: 1.9px solid rgb(215, 214, 214);" placeholder="Search Product">
+                                    </div>
+
+                                    <div class="col-1 d-flex justify-content-center p-0 m-0 mx-4">
+                                        <button class="btn btn-success" @click="search"><i class="fas fa-magnifying-glass"></i></button>
+                                    </div>                 
                                 </div>
-                                
+        
 
                             
-                                <div class="col-xl-6 p-2" v-for="p in lists.data" :key="p.id">
-                        
-                                    <div class="p-3">
-                                    
-
+                                <!-- <div class="col-xl-6 p-2" v-for="p in lists.data" :key="p.id">
+                                    <div class="p-3">              
                                         <div  class="d-flex justify-content-center flex-column align-items-center">
                                             <p>{{p.product.product_name}}</p>
                                             <p>{{p.stocks}}</p>
                                             <p>{{p.product.price}}</p>
                                         </div>
-
-
 
                                         <div v-if="p.stocks == 0" class="div">
                                             <button disabled class="btn btn-danger w-100 mt-3 fw-bold">Sold out</button>
@@ -543,11 +537,75 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
                                             @click="cart_add.add_cart(p.product_id,p.product.product_name,p.stocks,p.product.price,)" 
                                             class="btn btn-primary w-100 mt-3">add</button>
                                         </div>
-
-
                                     </div>
+                                </div> -->
 
+                                
+                                <div class="table-responsive mt-3 mb-3" style="overflow: auto; height: 20rem; ">
+                                    <table class="table table-hover table-borderless text-center" >
+                                        <thead style="background-color: rgb(4, 180, 116);">
+                                            <tr>
+                                            <th scope="col" class="fw-bold">Image</th>
+                                            <th scope="col" class="fw-bold">Product Name</th>
+                                            <th scope="col" class="fw-bold">Quantity</th>
+                                            <th scope="col" class="fw-bold">Price</th>
+                                            <th scope="col" class="fw-bold">Action</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody v-for="p in lists.data" :key="p.id">
+                                            <tr>
+                                                <td class="fw-bold"><img v-bind:src="storageLink + p.product.image" 
+                                                class="img-fluid" width="100" height="100"></td>
+
+                                                <td class="fw-bold">{{p.product.product_name}}</td>
+
+                                                
+                                                <td class="fw-bold" v-if="p.stocks ==0">
+                                                <span class="fw-bold text-danger">SOLD OUT</span></td>
+
+                                                <td v-else class="fw-bold">
+                                                    {{p.stocks}}
+                                                </td>
+
+
+
+                                                <td class="fw-bold">
+                                                    {{Intl.NumberFormat('en-PH', 
+                                                    { style: 'currency', currency: 'PHP' }).
+                                                    format(p.product.price)}}
+                                                </td>
+
+
+                                                <td v-if="p.stocks == 0">
+                                                    <button disabled class="btn btn-danger" 
+                                                    @click="cart_add.add_cart(p.product_id,p.product.
+                                                    product_name,p.stocks,p.product.price)">
+                                                    +</button>
+                                                </td>
+
+                                                <td v-else>
+                                                    <button class="btn btn-primary" 
+                                                    @click="cart_add.add_cart(p.product_id,p.product.
+                                                    product_name,p.stocks,p.product.price)">
+                                                    +</button>
+                                                </td>
+
+                                                <!-- <div v-if="p.stocks == 0" class="div">
+                                                
+                                                </div>
+
+                                                <div v-else class="div">
+                                                
+                                                </div> -->
+
+                                                
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
                                 </div>
+
 
                                 
                             </div>
@@ -561,6 +619,7 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
                             
                     </div>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -590,6 +649,11 @@ import {useVuelidate} from '@vuelidate/core'
 import { required, email } from '@vuelidate/validators'
 import order_content from '../components/order_content.vue';
 import { Bootstrap5Pagination } from 'laravel-vue-pagination';
+import Swal from 'sweetalert2'
+
+
+import {useToast} from 'vue-toast-notification';
+import 'vue-toast-notification/dist/theme-sugar.css';
 
 
 export default {
@@ -602,19 +666,16 @@ export default {
 
 
     setup(){
+        const storageLink = ref('http://127.0.0.1:8000/storage/images/');
+        const $toast = useToast();
+
         let product_lists = ref([]);
         let search_data = ref([]);
-
-
         const CartStore = useCartStore()
         const cart_add = useCartStore()
-
-
         const customer_name = ref("");
         const CashAmount = ref("");
         const changeMoney = ref("");
-
-
 
 
 
@@ -625,21 +686,15 @@ export default {
 
         const lists = computed(()=> CartStore.prod)
         const cart_lists = computed(()=> CartStore.cart)
-        const msg = computed(()=> CartStore.message2)
-        const deplete1 = computed(()=> CartStore.deplete2)
 
 
-        
 
         const modalActive = ref(false);
         const modalCash = ref(false);
 
 
-
         const isSidebar = ref(false);
         const quantity = ref('');
-
-
 
         const search_box = ref('');
         const typing = ref(false);
@@ -651,10 +706,6 @@ export default {
         const toggleModal = () =>{
             modalActive.value = !modalActive.value;
         }
-
-
-
-
 
         watchEffect((onvalidate) =>{
         search_box.value
@@ -700,14 +751,13 @@ export default {
         }
 
 
-
         function checkout(){
             if(CartStore.cart.length == 0){  
-                alert('Please add items')
+                $toast.error('Please add product in cart', {position: 'top'});      
             }
 
             else if (customer_name.value == ""){
-                alert('Please Enter Name')
+                 $toast.error('Please input customer name', {position: 'top'}); 
             }
 
             else{
@@ -716,40 +766,44 @@ export default {
         }
 
      
-
-
         function invoice(){
             let total = (CartStore.grand_total + (CartStore.grand_total * .12));
 
-            if(total > CashAmount.value)
+            if(CashAmount.value == '')
             {
-                alert('you dont have enough money')
+                $toast.error("Please Enter amount", {position: 'top'}); 
             }
+
+            else if (total > CashAmount.value) {
+                $toast.error("Not enough amount", {position: 'top'}); 
+            }
+
 
             else {
                 modalCash.value = !modalCash.value
                 modalActive.value = true
 
-                changeMoney.value = (CashAmount.value - total)
+                changeMoney.value = (CashAmount.value - total)       
+            }
+        }
 
-                submit_btn.value = true
-                const today = new Date();
+
+        function completeOrder(){
+            const today = new Date();
                 const date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
                 const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
                 const dateTime = date +' '+ time;
-
-
-                
+        
                 let form = new FormData();
                 form.append('sub_total', Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format((CartStore.grand_total)))
                 form.append('customer_name', customer_name.value)
+                form.append('change', changeMoney.value)
                 form.append('vat', Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(CartStore.grand_total * 0.12))
 
 
                 form.append('grand_total',  
                 Intl.NumberFormat('en-PH', 
                 { style: 'currency', currency: 'PHP' }).format((CartStore.grand_total + (CartStore.grand_total * .12))))
-
 
 
                 form.append('cart', JSON.stringify(cart_lists.value))
@@ -763,12 +817,12 @@ export default {
                     CartStore.clear_cart()
                     CartStore.getProduct()
                     submit_btn.value = false
+                    modalActive.value = false
 
                 }).catch(error =>{
                     console.log(error.response)
                     submit_btn.value = false
                 })
-            }
         }
 
 
@@ -782,18 +836,14 @@ export default {
         }
 
 
-
         return {
             user: computed(() => store.state.user.data)
             ,product_lists,close,search_box,typing,logout,isSidebar,lists,cart_lists,quantity,modalActive,
 
-            msg,lists,cart_add,cart_lists,CartStore,
-            deplete1,search_data,checkout,customer_name,
+            lists,cart_add,cart_lists,CartStore,search_data,checkout,customer_name,
             show_alert,cart_order,submit_btn,toggleModal,CashAmount,modalCash,invoice,changeMoney
-            ,filter_input
+            ,filter_input,storageLink,completeOrder
         }
-
-
 
     }
 }
