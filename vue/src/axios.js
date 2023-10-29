@@ -4,12 +4,12 @@ import store from './store';
 /* axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*'; */
 
 const axios_client = axios.create({
-    baseURL: 'http://127.0.0.1:8000/api',
+    baseURL: 'https://api.amadorpetsuppliesinventory.online/api',
 
 
     /* http://127.0.0.1:8000/api */
 
-    /* baseURL: 'api.amadorpetsuppliesinventory.online/api' */
+    /* baseURL: 'https://api.amadorpetsuppliesinventory.online/api' */
 
     /* http://127.0.0.1:8000/api */
 })

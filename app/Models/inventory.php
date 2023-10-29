@@ -15,6 +15,13 @@ class inventory extends Model
         'supplier','safety_stocks'
     ];
 
+    protected $casts = [
+        'production_date' => 'datetime:m-d-Y h:i:s a',
+        'expiration_date' => 'datetime:m-d-Y h:i:s a',
+    ];
+
+
+
     public function product() /* : BelongsTo */{
         return $this->belongsTo(product_info::class);
     }

@@ -424,9 +424,9 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
                         
                             <div class="table-responsive mt-3 mb-3" style="overflow: auto; height: 20rem; ">
                                 <table class="table table-hover table-borderless text-center" >
-
-                                    <thead style="background-color: rgb(4, 180, 116);">
-                                        <tr c>
+                                    
+                                    <thead>
+                                        <tr>
                                         <th scope="col" class="fw-bold">Product Name</th>
                                         <th scope="col" class="fw-bold">Quantity</th>
                                         <th scope="col" class="fw-bold">Price</th>
@@ -439,15 +439,17 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
                                     <tr>
                                         <td class="fw-bold">{{list.product_name}}</td>
                                         <td class="fw-bold">{{list.quantity}}</td>
-                                        <td class="fw-bold">{{list.price}}</td>
+                                        <td class="fw-bold">₱ {{list.price}}</td>
                 
                                         <td class="fw-bold d-flex justify-content-center align-items-center">                    
-                                            <button @click="CartStore.increment(i,list.stocks,list.price,list.product_id)" 
-                                            class="btn btn-sm btn-success">+</button>
-
-                                            <span class="mx-2">{{list.total.toLocaleString('en-US')}}</span>
+                                            
 
                                             <button @click="CartStore.decrement(i,list.product_id)" class="btn btn-sm btn-danger">-</button>
+
+                                            <span class="mx-2">₱ {{list.total.toLocaleString('en-US')}}</span>
+
+                                            <button @click="CartStore.increment(i,list.stocks,list.price,list.product_id)" 
+                                            class="btn btn-sm btn-success">+</button>
                                     
                                         </td>
 
@@ -541,9 +543,9 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
                                 </div> -->
 
                                 
-                                <div class="table-responsive mt-3 mb-3" style="overflow: auto; height: 20rem; ">
+                                <div class="table-responsive mt-3 mb-3" style="overflow: auto; ">
                                     <table class="table table-hover table-borderless text-center" >
-                                        <thead style="background-color: rgb(4, 180, 116);">
+                                        <thead>
                                             <tr>
                                             <th scope="col" class="fw-bold">Image</th>
                                             <th scope="col" class="fw-bold">Product Name</th>
@@ -666,7 +668,7 @@ export default {
 
 
     setup(){
-        const storageLink = ref('http://127.0.0.1:8000/storage/images/');
+        const storageLink = ref('https://api.amadorpetsuppliesinventory.online/storage/images/');
         const $toast = useToast();
 
         let product_lists = ref([]);

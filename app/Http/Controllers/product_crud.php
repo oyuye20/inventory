@@ -17,7 +17,7 @@ class product_crud extends Controller
 
     /* READ ALL PRODUCT */
     public function index(){     
-        return product_info::with('category')->where('isArchived',0)->paginate(2);
+        return product_info::with('category')->where('isArchived',0)->paginate(5);
     }
 
 

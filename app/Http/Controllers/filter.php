@@ -64,7 +64,10 @@ class filter extends Controller
         ->join('customer_orders','transactions.id', '=','customer_orders.transactions_id')
         
         ->select('customer_orders.product_name','customer_orders.price',
-        'transactions.purchase_date',DB::raw('MONTHNAME(transactions.purchase_date) as Month'),
+
+        DB::raw('DATE_FORMAT(purchase_date, "%m/%d/%y %r") AS purchase_date')
+
+        ,DB::raw('MONTHNAME(transactions.purchase_date) as Month'),
         DB::raw('sum(customer_orders.quantity) as total_quantity'),DB::raw('sum(customer_orders.total) as total_sold'))
 
         ->whereYear('transactions.purchase_date', $year)

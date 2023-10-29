@@ -21,69 +21,57 @@
 
 
         <li class="nav-item col-lg-1.5  me-3" role="presentation">
-
             <button class="nav-link fs-5" id="pills-critical-tab" 
             data-bs-toggle="pill" data-bs-target="#pills-critical" type="button" 
             role="tab" aria-controls="pills-critical" aria-selected="true" style="color: #04B474">
             <i class="fas fa-triangle-exclamation me-2"></i>
             Critical Stocks</button>
-
         </li>
 
 
         
         <li class="nav-item col-lg-1.5 me-3" role="presentation">
-
             <button class="nav-link fs-5" id="pills-critical-tab" 
             data-bs-toggle="pill" data-bs-target="#pills-expired" type="button" 
             role="tab" aria-controls="#pills-expired" aria-selected="true" style="color: #04B474">
             <i class="fas fa-triangle-exclamation me-2"></i>
             Expired Products</button>
-
         </li>
 
         <li class="nav-item col-lg-1.5 me-3" role="presentation">
-
             <button class="nav-link fs-5" id="pills-orders-tab" 
             data-bs-toggle="pill" data-bs-target="#pills-orders" type="button" 
             role="tab" aria-controls="#pills-orders" aria-selected="true" style="color: #04B474">
             <i class="fas fa-cart-shopping me-2"></i>
             Orders</button>
-
         </li>
 
 
 
-        <li class="nav-item col-lg-1.5 me-3" role="presentation">
-
+        <li class="nav-item col-lg-1.5 me-3" role="presentation" >
             <button class="nav-link fs-5" id="pills-inventory-tab" 
             data-bs-toggle="pill" data-bs-target="#pills-inventory" type="button" 
-            role="tab" aria-controls="pills-inventory" aria-selected="false">
-            <i class="fas fa-box me-2"></i>
+            role="tab" aria-controls="pills-inventory" aria-selected="false" style="color: #04B474">
+            <i class="fas fa-box me-2" ></i>
             Inventory Lists</button>
-
         </li>
 
 
         <li class="nav-item col-lg-1.5  me-3" role="presentation">
-
             <button class="nav-link fs-5" id="pills-cancel-tab" 
             data-bs-toggle="pill" data-bs-target="#pills-cancel" type="button" 
-            role="tab" aria-controls="pills-cancel" aria-selected="false">
+            role="tab" aria-controls="pills-cancel" aria-selected="false" style="color: #04B474">
             <i class="fas fa-ban me-2"></i>
-            Cancelled Order</button>
-
+            Orders Void</button>
         </li>
 
 
         <li class="nav-item col-lg-1.5  me-3" role="presentation">
-
             <button class="nav-link w-70 fs-5" id="pills-stock-tab" 
             data-bs-toggle="pill" data-bs-target="#pills-stock" type="button" 
-            role="tab" aria-controls="pills-stock" aria-selected="false">
+            role="tab" aria-controls="pills-stock" aria-selected="false" style="color: #04B474">
             <i class="far fa-clock me-2"></i>
             Stock History</button>
-
         </li>
 
 
@@ -99,7 +87,7 @@
                 <div class="table-responsive">
                     
                     <table class="table table-hover table-borderless text-center">
-                        <thead class="" style="background-color: rgb(4, 180, 116);">
+                        <thead>
                             <tr>
                             <th class="fw-bold">Product Name</th>
                             <th class="fw-bold">Total of sold items</th>
@@ -113,7 +101,8 @@
                         <tr>
                             <td class="fw-bold">{{sold.product_name}}</td>
                             <td class="fw-bold">{{sold.sold_items}}</td>
-                            <td class="fw-bold">{{Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format((sold.money))}}</td>
+
+                            <td class="fw-bold">₱ {{sold.money}}</td>
 
 
                             <!-- <td class="m-3">
@@ -126,11 +115,11 @@
                     </table>
 
 
-                    <div class="d-flex justify-content-end align-items-center" >
+                    <!-- <div class="d-flex justify-content-end align-items-center" >
                         <Bootstrap5Pagination :limit="1" :keepLength="true" :data="product_lists" class="shadow-sm"  
                         @pagination-change-page="getProduct"
                         />
-                    </div>
+                    </div> -->
 
                 </div>
 
@@ -156,39 +145,36 @@
                 <!-- INVENTORY TAB -->
                 <div class="tab-pane fade" id="pills-inventory" role="tabpanel" aria-labelledby="pills-inventory-tab" tabindex="0">
 
-
-                <h4 class="mt-3 w-100 bg-light p-3"><i class="fas fa-database me-2"></i>Product Lists</h4>
+                <h4 class="mt-3 w-100 bg-light p-3"><i class="fas fa-database me-2"></i>Inventory Lists</h4>
                 <div class="table-responsive">
                     
 
                     <table class="table table-hover table-borderless text-center">
-                        <thead class="" style="background-color: rgb(4, 180, 116);">
+                        <thead>
                             <tr>
-                            <th scope="col" class="fw-bold">Serial Number</th>
-                            <th scope="col" class="fw-bold">Manufacturer</th>
-                            <th scope="col" class="fw-bold">Product Name</th>
-                            <th scope="col" class="fw-bold">Description</th>
-                            <th scope="col" class="fw-bold">Size Name</th>
-                            <th scope="col" class="fw-bold">Stock</th>
-                            <th scope="col" class="fw-bold">Date of Production</th>
-                            <th scope="col" class="fw-bold">Expiration Date</th>
-                            <th scope="col" class="fw-bold">Status</th>
+                            <th class="fw-bold">Serial Number</th>
+                            <th class="fw-bold">Manufacturer</th>
+                            <th class="fw-bold">Product Name</th>
+                            <th class="fw-bold">Description</th>
+                            <th class="fw-bold">Size Name</th>
+                            <th class="fw-bold">Stock</th>
+                            <th class="fw-bold">Date of Production</th>
+                            <th class="fw-bold">Expiration Date</th>
                             <!-- <th>Actions</th> -->
                             </tr>
                         </thead>
 
-                    <tbody v-for="p in product_lists.data" :key="p.id" class="">
+                    <tbody v-for="i in inventory_lists.data" :key="i.id">
                         <tr>
-                            <td hidden>{{p.id}}</td>
-                            <td class="fs-5" >{{p.serial_number}}</td>
-                            <td class="fs-5" >{{p.manufacturer}}</td>
-                            <td class="fs-5" >{{p.product_name}}</td>
-                            <td class="fs-5" >{{p.description}}</td>
-                            <td class="fs-5" >{{p.size}}</td>
-                            <td class="fs-5" >{{p.stocks}}</td>
-                            <td class="fs-5" >{{p.production_date}}</td>
-                            <td class="fs-5" >{{p.expiration_date}}</td>
-                            <td class="fs-5" >hello</td>
+                            <td class="fw-bold">{{i.product.serial_number }}</td>
+                            <td class="fw-bold">{{i.product.product_name }}</td>
+                            <td class="fw-bold">{{i.supplier }}</td>
+                            <td class="fw-bold">{{i.category }}</td>
+                            <td class="fw-bold">{{i.product.price }}</td>
+                            <td class="fw-bold">{{i.stocks }}</td>
+                            <td class="fw-bold">{{i.production_date }}</td>
+                            <td class="fw-bold">{{i.expiration_date }}</td>
+
 
                             <!-- <td class="m-3">
                                 <button class="btn btn-primary"><i class="bi bi-pencil-square"></i></button>
@@ -201,8 +187,8 @@
 
 
                     <div class="d-flex justify-content-end align-items-center" >
-                        <Bootstrap5Pagination :limit="1" :keepLength="true" :data="product_lists" class="shadow-sm"  
-                        @pagination-change-page="getProduct"
+                        <Bootstrap5Pagination :limit="1" :keepLength="true" :data="inventory_lists" class="shadow-sm"  
+                        @pagination-change-page="getInventory"
                         />
                     </div>
 
@@ -222,7 +208,7 @@
                     
                     <div class="table-responsive">
                     <table class="table table-hover table-borderless text-center">
-                        <thead class="" style="background-color: rgb(4, 180, 116);">
+                        <thead>
                             <tr>
                             <th class="fw-bold">Serial Number</th>
                             <th class="fw-bold">Manufacturer</th>
@@ -272,7 +258,7 @@
                     
 
                     <table class="table table-hover table-borderless text-center">
-                        <thead style="background-color: rgb(4, 180, 116);">
+                        <thead>
                             <tr>
                             <th class="fw-bold">Serial Number</th>
                             <th class="fw-bold">Manufacturer</th>
@@ -333,7 +319,7 @@
                     
 
                     <table class="table table-hover table-borderless text-center">
-                        <thead style="background-color: rgb(4, 180, 116);">
+                        <thead>
                             <tr>
                             <th class="fw-bold">Customer Name</th>
                             <th class="fw-bold">Gross Total</th>
@@ -348,33 +334,16 @@
 
                         <tbody v-for="o in orders.data" :key="o.id" class="">
                             <tr>
-
                                 <td class="fw-bold" >{{o.customer_name}}</td>
                                 <td class="fw-bold" >{{o.gross_total}}</td>
                                 <td class="fw-bold" >{{o.discount}}</td>
-
-
-                                <td class="fw-bold" >
-                                    {{Intl.NumberFormat('en-PH', 
-                                     { style: 'currency', currency: 'PHP' }).
-                                     format(o.net_total)}}                    
-                                </td>
-
-                                <td class="fw-bold" >
-                                    {{Intl.NumberFormat('en-PH', 
-                                     { style: 'currency', currency: 'PHP' }).
-                                     format(o.change)}}                    
-                                </td>
-
-                                
+                                <td class="fw-bold" > ₱ {{o.net_total}}</td>
+                                <td class="fw-bold" >₱ {{o.change}}</td>          
                                 <td class="fw-bold" >{{o.purchase_date}}</td>
                                 <td class="fw-bold" >{{o.status}}</td>
-
-           
                                 <td class="m-3">
                                     <button class="btn btn-primary"><i class="far fa-eye"></i></button>
                                 </td>
-
                             </tr>
 
                         </tbody>
@@ -391,8 +360,7 @@
                     
                 </div>
                 <!-- END OF ORDER TAB -->
-               
-
+            
 
             </div>
 
@@ -420,7 +388,7 @@ export default {
     },
 
     setup(){
-        let product_lists = ref([]);
+        let inventory_lists = ref([]);
         let stock_lists = ref([]);
         let expired_lists = ref([]);
         let items_sold = ref([]);
@@ -432,22 +400,27 @@ export default {
         const loading = ref(true);
 
 
-        /* GET PRODUCT TABLE */
-        const getProduct = async(page = 1) => {
-            axios_client.get('/products?page=' + page).then(response=>{
-                product_lists.value = response.data;
+        /* GET INVENTORY TABLE */
+        const getInventory = async(page = 1) => {
+            axios_client.get('/inventory?page=' + page).then(response=>{
+                inventory_lists.value = response.data;
                 loading.value = false;
             }).catch(error =>{
-
+                console.log(error.response.data)
             })
         }
+
+
+
+
+
+
+
 
         /* GET ORDERS TABLE */
         const getOrders = async(page = 1) => {
             axios_client.get('/orders?page=' + page).then(response=>{
                 orders.value = response.data;
-
-                console.log(response.data)
             }).catch(error =>{
                 console.log(error.response.data)
             })
@@ -500,7 +473,7 @@ export default {
 
 
         onMounted(()=> {
-            getProduct()
+            getInventory()
             expired_prod()
             sold_items()
             getCriticalStocks()
@@ -508,7 +481,7 @@ export default {
         })
 
         return {
-            product_lists,stock_lists,getProduct,del_prod,loading,expired_prod,expired_lists,items_sold,sold_items
+            inventory_lists,stock_lists,getInventory,del_prod,loading,expired_prod,expired_lists,items_sold,sold_items
             ,getCriticalStocks,criticalStocks,getOrders,orders
         }
 

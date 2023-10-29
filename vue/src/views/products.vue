@@ -287,7 +287,7 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
 
                     <div class="div">
                         <table class="table table-hover table-borderless text-center w-100">
-                            <thead style="background-color: #04b4738d;">
+                            <thead>
                                 <tr>
                                     <th scope="col" class="fw-bold">Image</th>
                                     <th scope="col" class="fw-bold">Serial Number</th>
@@ -344,7 +344,7 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
                     <h4 class="mt-3 w-100 bg-light p-3"><i class="fas fa-filter me-2"></i>Category Lists</h4>
     
                     <table class="table table-hover table-borderless text-center w-100">
-                        <thead style="background-color: #04b4738d;">
+                        <thead>
                             <tr>
                                 <th scope="col" class="fw-bold">ID</th>
                                 <th scope="col" class="fw-bold">Category Name</th>
@@ -368,7 +368,7 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
                                 </RouterLink>
                                 
                                 <button type="button" class="btn btn-warning mx-1 mt-2" data-mdb-toggle="tooltip" 
-                                data-mdb-placement="left" title="Edit" @click.prevent="del_cat(cat.id)">
+                                data-mdb-placement="left" title="Edit" @click.prevent="del_cat(cat.id, cat.category)">
                                 <i class="fas fa-box-archive"></i></button>
 
                             </td>
@@ -463,7 +463,7 @@ export default {
         const loading = ref(true);
         const modalActive = ref(false);
 
-        const storageLink = ref('http://127.0.0.1:8000/storage/images/');
+        const storageLink = ref('https://api.amadorpetsuppliesinventory.online/storage/images/');
 
 
           /* GET PRODUCT TABLE */
@@ -611,8 +611,8 @@ export default {
                 })
 
                 swalWithBootstrapButtons.fire(
-                'Deleted!',
-                'Your file has been archived successfuly.',
+                'Archived!',
+                'Your product has been archived successfuly.',
                 'success'
                 )
             } 
@@ -629,13 +629,38 @@ export default {
 
 
         /* DELETE A CATEGORY */
-         function del_cat(id){
+         function del_cat(id, category){
+
+            swalWithBootstrapButtons.fire({
+            title: 'Are you sure you want to archive ' + category + '?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No',
+            reverseButtons: true
+
+            }).then((result) => {
+
+            if (result.isConfirmed) {
+
             let url = '/delete/category/' + id;
             axios_client.put(url).then(response => {
                 this.getCat()
             }).catch(error => {
                 console.log(error.response.data)
             })
+
+            swalWithBootstrapButtons.fire(
+            'Archived!',
+            'Your category has been archived successfuly.',
+            'success'
+            )
+            } 
+            
+            else (result.dismiss === Swal.DismissReason.cancel) 
+            })
+    
         }
 
 

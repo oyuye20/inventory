@@ -2,16 +2,16 @@
 
 <div class="container-fluid mt-3 table-responsive">
     <table class="table text-center mb-0 bg-white">
-  <thead style="background-color: #04b4738d;">
+  <thead>
     <tr>
-            <th class="fw-bold fs-6" style="color: rgba(0, 0, 0, 0.915);">Product Name</th>
-            <th class="fw-bold fs-6" style="color: rgba(0, 0, 0, 0.915);">Supplier</th>
-            <th class="fw-bold fs-6" style="color: rgba(0, 0, 0, 0.915);">Category</th>
-            <th class="fw-bold fs-6" style="color: rgba(0, 0, 0, 0.915);">Price</th>
-            <th class="fw-bold fs-6" style="color: rgba(0, 0, 0, 0.915);">Stocks</th>
-            <th class="fw-bold fs-6" style="color: rgba(0, 0, 0, 0.915);">Safety Stocks</th>
-            <th class="fw-bold fs-6" style="color: rgba(0, 0, 0, 0.915);">Production Date</th>
-            <th class="fw-bold fs-6" style="color: rgba(0, 0, 0, 0.915);">Expiration Date</th>
+            <th class="fw-bold" style="color: rgba(0, 0, 0, 0.915);">Product Name</th>
+            <th class="fw-bold" style="color: rgba(0, 0, 0, 0.915);">Supplier</th>
+            <th class="fw-bold" style="color: rgba(0, 0, 0, 0.915);">Category</th>
+            <th class="fw-bold" style="color: rgba(0, 0, 0, 0.915);">Price</th>
+            <th class="fw-bold" style="color: rgba(0, 0, 0, 0.915);">Stocks</th>
+            <th class="fw-bold" style="color: rgba(0, 0, 0, 0.915);">Safety Stocks</th>
+            <th class="fw-bold" style="color: rgba(0, 0, 0, 0.915);">Production Date</th>
+            <th class="fw-bold" style="color: rgba(0, 0, 0, 0.915);">Expiration Date</th>
     </tr>
   </thead>
 

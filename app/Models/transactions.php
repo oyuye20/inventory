@@ -16,6 +16,11 @@ class transactions extends Model
         'customer_name','gross_total','discount','net_total','status','purchase_date','change'
     ];
 
+    protected $casts = [
+        'purchase_date' => 'datetime:m-d-Y h:i:s a',
+    ];
+
+
     public function customer(): HasMany{
         return $this->hasMany(customer_orders::class);
     }

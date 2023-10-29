@@ -28,9 +28,25 @@
   }
  */
 
+ @import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
+
+*{
+  font-family: 'Inter', sans-serif;
+}
+
+
+
+
  td {
   vertical-align: middle;
  }
+
+thead {
+  background-color: #04b4738e;
+}
+
+
+
 
 
 

@@ -163,13 +163,19 @@ export const useCartStore = defineStore('CartStore', () =>{
         cart.value[i].quantity -= 1
         find_id.total -= (find_id.price * 1);
         
-        deplete.value = false
-        message_stock.value = ''
+        /* deplete.value = false
+        message_stock.value = '' */
 
         if(cart.value[i].quantity == 0) {
             cart.value.splice(i, 1)
-            deplete.value = false
-            message_stock.value = ''
+            Swal.fire({
+                title: 'Removed Item successfully',
+                icon: 'success',
+                confirmButtonText: 'OK'
+              })
+              
+            /* deplete.value = false
+            message_stock.value = '' */
         }
     }
 

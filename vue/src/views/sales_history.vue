@@ -269,10 +269,7 @@
                     <tr>
                         <td class="fw-bold">{{d.product_name}}</td>
 
-                        <td class="fw-bold"> {{
-                        Intl.NumberFormat
-                        ('en-PH', { style: 'currency', currency: 'PHP' }).format((d.price))         
-                        }}
+                        <td class="fw-bold">₱ {{d.price}}
                         </td>
 
 
@@ -337,14 +334,14 @@
 
             <div class="table-responsive">     
                 <table class="table table-hover table-borderless text-center">
-                    <thead class="" style="background-color: rgb(4, 180, 116);">
+                    <thead class="" style="background-color: #04b4738e;">
                         <tr>
-                        <th scope="col" class="fw-bold text-light">Product Name</th>
-                        <th scope="col" class="fw-bold text-light">Unit Price</th>
-                        <th scope="col" class="fw-bold text-light">Total Products Sold</th>
-                        <th scope="col" class="fw-bold text-light">Total Sales</th>
-                        <th scope="col" class="fw-bold text-light">Date</th>
-                        <th scope="col" class="fw-bold text-light">Month Of</th>
+                        <th scope="col" class="fw-bold">Product Name</th>
+                        <th scope="col" class="fw-bold">Unit Price</th>
+                        <th scope="col" class="fw-bold">Total Products Sold</th>
+                        <th scope="col" class="fw-bold">Total Sales</th>
+                        <th scope="col" class="fw-bold">Date</th>
+                        <th scope="col" class="fw-bold">Month Of</th>
 
                         <!-- <th>Actions</th> -->
                         </tr>
@@ -355,17 +352,11 @@
                         <td class="fw-bold">{{ m.product_name }}</td>
 
 
-                        <td class="fw-bold">{{
-                        Intl.NumberFormat
-                        ('en-PH', { style: 'currency', currency: 'PHP' }).format((m.price))         
-                        }}</td>
+                        <td class="fw-bold">₱ {{m.price}}</td>
 
                         <td class="fw-bold">{{ m.total_quantity }}</td>          
 
-                        <td class="fw-bold">{{
-                        Intl.NumberFormat
-                        ('en-PH', { style: 'currency', currency: 'PHP' }).format((m.total_sold))         
-                        }}</td>  
+                        <td class="fw-bold">₱ {{m.total_sold}}</td>  
 
                         <td class="fw-bold">{{ m.purchase_date }}</td>                      
 

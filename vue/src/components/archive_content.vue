@@ -36,7 +36,7 @@
                     <td class="m-3">
                         <button class="btn btn-success" data-bs-toggle="tooltip" 
                         data-mdb-toggle="tooltip" data-mdb-placement="left" title="Restore"
-                        @click="restore(p.id)"><i class="fas fa-arrow-rotate-right"></i></button>
+                        @click="restore(p.id, p.product_name)"><i class="fas fa-arrow-rotate-right"></i></button>
        
                         <button type="button" class="btn btn-danger mx-1 mt-2" 
                         @click.prevent="del_product(p.id)" data-mdb-toggle="tooltip" 
@@ -114,6 +114,7 @@ import { ref } from 'vue'
 import { Bootstrap5Pagination } from 'laravel-vue-pagination';
 import {reactive, onMounted} from 'vue';
 import axios_client from '../axios';
+import Swal from 'sweetalert2';
 export default {
 
     components: {
@@ -148,18 +149,51 @@ export default {
             })
         }
 
+        const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+            confirmButton: 'btn btn-success',
+            cancelButton: 'btn btn-danger'
+        },
+        buttonsStyling: false
+        })
+
 
 
 
         /* RESTORE A PRODUCT */
-        function restore(id){
-            let url = '/restore/' + id;
-            axios_client.put(url).then(response => {
-                this.getArchivedProduct()
-                this.getArchivedCategory()
-            }).catch(error => {
-                console.log(error.response.data)
+        function restore(id, product){
+            swalWithBootstrapButtons.fire({
+            title: 'Are you sure you want to restore ' + product + '?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No',
+            reverseButtons: true
+
+            }).then((result) => {
+
+            if (result.isConfirmed) {
+
+                let url = '/restore/' + id;
+                axios_client.put(url).then(response => {
+                    this.getArchivedProduct()
+                    this.getArchivedCategory()
+                }).catch(error => {
+                    console.log(error.response.data)
+                })
+
+                swalWithBootstrapButtons.fire(
+                'Restored!',
+                'Your product has been restored successfuly.',
+                'success'
+                )
+            } 
+            
+            else (result.dismiss === Swal.DismissReason.cancel) 
             })
+
+           
         }
 
 
@@ -184,7 +218,7 @@ export default {
         })
 
         return {getArchivedProduct,archivedProduct,archivedCategory,
-            storageLink,restore,getArchivedCategory,restoreCat}
+            storageLink,restore,getArchivedCategory,restoreCat,swalWithBootstrapButtons}
 
     }
     
