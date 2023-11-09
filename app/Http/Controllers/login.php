@@ -19,26 +19,46 @@ class login extends Controller
             'remember' => 'boolean'
         ]);
 
-       /*  $rem = $validate['remember'] ?? false;
+        
+
+
+    
+        /* $rem = $validate['remember'] ?? false;
         unset($validate['remember']); */
 
 
-        if(!Auth::attempt($validate))
+        $userdata = array(
+            'email' => $request->email,
+            'password' => $request->password,
+            'isActivated' => $request = 1,
+        );
+
+
+        if(Auth::attempt($userdata))
         {
+            $user = Auth::user();
+            $token = $user->createToken('token')->plainTextToken;
+
+            return response([
+                'user' => $user,
+                'token' => $token
+            ]);       
+        }
+        
+
+        else {
             return response(
                 'Incorrect email or password please try again'
             , 422);
         }
-
-        $user = Auth::user();
-        $token = $user->createToken('token')->plainTextToken;
-
-        return response([
-            'user' => $user,
-            'token' => $token
-        ]);
-
     }
+
+    public function staffLists(){
+        return User::where('role', '0')->paginate(5);
+    }
+
+
+
 
     public function register (Request $request)
     {

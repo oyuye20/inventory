@@ -9,6 +9,7 @@ use App\Models\transactions;
 use Illuminate\Support\Facades\DB;
 use App\Models\inventory;
 use App\Models\product_info;
+use Carbon\Carbon;
 
 class stats extends Controller
 {
@@ -27,13 +28,13 @@ class stats extends Controller
 
     /* REMINDER OF EXPIRED PRODUCTS WITH PAGINATION*/
     public function expProduct(){
-        return inventory::with('product')->whereDate('expiration_date', '<', now())->paginate(5);
+        return inventory::with('product')->whereDate('expiration_date', '<=', now())->paginate(5);
     }
 
 
     /* NUMBER OF EXPIRED PRODUCTS */
     public function expired_count(){
-        return inventory::with('product')->whereDate('expiration_date', '<', now())->count();
+        return inventory::with('product')->whereDate('expiration_date', '<=', now())->count();
     }
 
 
@@ -50,6 +51,8 @@ class stats extends Controller
         ]);
     }
 
+
+
     /* LISTS OF ORDERS   */
     public function orders(){
         return transactions::paginate(5);
@@ -59,13 +62,21 @@ class stats extends Controller
 
     /* LISTS OF CRITICAL STOCKS*/
     public function criticalStocks(){
-        return inventory::with('product')->whereColumn('stocks', '<', 'safety_stocks')->paginate(5);
+         return inventory::with('product')->whereColumn('safety_stocks','>','stocks')->paginate(5);
     }
+
 
 
     /* COUNT OF CRITICAL STOCKS*/
     public function criticalStocksCount(){
-        return inventory::with('product')->whereColumn('stocks', '<', 'safety_stocks')->count();
+        return inventory::with('product')->whereColumn('safety_stocks','>','stocks')->count();
+    }
+
+
+
+    public function expiringItems(){
+        return inventory::with('product')
+        ->where(DB::raw('DATEDIFF(expiration_date, CURDATE())'),'>=', 90)->paginate(5);
     }
 
 
@@ -134,7 +145,8 @@ class stats extends Controller
         return $customer = DB::table('transactions')
         ->join('customer_orders','transactions.id', '=','customer_orders.transactions_id')
         
-        ->select('customer_orders.product_name','customer_orders.price','transactions.purchase_date',
+        ->select('customer_orders.product_name','customer_orders.price',
+        DB::raw('DATE_FORMAT(transactions.purchase_date, "%m/%d/%y %r") AS purchase_date'),
         DB::raw('sum(customer_orders.quantity) as total_quantity'),
         DB::raw('sum(customer_orders.total) as total_sold'))
 
@@ -157,6 +169,23 @@ class stats extends Controller
         ->join('customer_orders','transactions.id', '=','customer_orders.transactions_id')
         
         ->select('customer_orders.product_name','customer_orders.price',
+        DB::raw('DATE_FORMAT(purchase_date, "%m/%d/%y %r") AS purchase_date'),
+        DB::raw('MONTHNAME(transactions.purchase_date) as Month'),
+        DB::raw('sum(customer_orders.quantity) as total_quantity'),DB::raw('sum(customer_orders.total) as total_sold')
+        )
+
+        ->groupByRaw('customer_orders.product_name')
+        ->orderBy('transactions.purchase_date')
+
+        ->paginate(5);
+    }
+
+    public function yearlyItems(){
+        return $customer = DB::table('transactions')
+        ->join('customer_orders','transactions.id', '=','customer_orders.transactions_id')
+        
+        ->select('customer_orders.product_name','customer_orders.price',
+        DB::raw('YEAR(purchase_date) AS yearOf'),
         DB::raw('DATE_FORMAT(purchase_date, "%m/%d/%y %r") AS purchase_date'),
         DB::raw('MONTHNAME(transactions.purchase_date) as Month'),
         DB::raw('sum(customer_orders.quantity) as total_quantity'),DB::raw('sum(customer_orders.total) as total_sold')

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\product_info;
 use App\Models\category;
+use Illuminate\Support\Facades\Storage;
+use App\Models\inventory;
 
 class archive extends Controller
 {
@@ -61,4 +63,19 @@ class archive extends Controller
         }
     }
 
+
+    public function searchProdArchived($data){
+        return product_info::with('category')->where('isArchived', '=',1)
+        ->where(function($query) use($data) {
+            return $query->where('product_name','LIKE','%'.$data.'%')
+                ->orWhere('manufacturer','LIKE','%'.$data.'%');
+          })
+      
+        ->paginate(5);
+    }
+
+
+    public function permanentDeleteProd($id){
+        $p = product_info::where('id', '=', $id)->delete();
+    }
 }

@@ -87,8 +87,22 @@ const router = createRouter({
 
 
 
+
+
+    {
+      path: '/accounts',
+      meta: {requiresAuth :true},
+      children:[
+        { path: '/accounts', name: 'accounts', component: () => import('../views/accounts.vue'), props: true},
+      ]
+    },
+
+
+
     
     { path: '/archive', name: 'archive', component: () => import('../views/archive.vue')},
+
+    { path: '/settings', name: 'settings', component: () => import('../views/settings.vue')},
 
 
 
@@ -96,6 +110,11 @@ const router = createRouter({
     { path: '/add-product', name: 'add_product', component: () => import('../components/add_prod.vue')},
 
    
+
+
+
+
+
 
     {
       name: 'not_found',
@@ -126,6 +145,7 @@ router.beforeEach((to,from,next) =>
   else if (store.state.user.token && (to.name==='login' || to.name==='register')){
     next({name: 'dashboard'})
   }
+
 
   else
   {

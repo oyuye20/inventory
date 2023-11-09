@@ -15,6 +15,7 @@ return new class extends Migration
 
         Schema::create('transactions', function(Blueprint $table){
             $table->increments('id');
+            $table->string('transactions_id');
             $table->string('customer_name');
             $table->string('gross_total');
             $table->string('discount');

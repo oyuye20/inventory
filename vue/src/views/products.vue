@@ -48,14 +48,6 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
 
 
 
-<transition name="modalAnim">
-    <logout :logoutModal="logoutModal" @close="togglelogoutModal"></logout>
-</transition>
-
-
-
-
-
 <body>
 <div class="d-flex" id="wrapper">
 
@@ -63,163 +55,7 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
         <!-- Sidebar -->
 
             <div class="sidebar_wrapper" :class ="{side: isSidebar}">
-     
-                <div class="sidebar-heading text-center py-4 fs-4 fw-bold d-flex justify-content-center ">
-                    <div class="div d-flex justify-content-center align-items-center me-2">
-                        <i class="fas fa-circle-user fa-2x"></i>
-                    </div>
-                   
-                    <div class="div d-flex flex-column justify-content-end">
-                        Admin
-
-                        <span class="text-secondary fs-6">Administrator</span>
-                    </div>
-
-                    
-                </div>
-
-
-                <div class="list-group list-group-flush my-3 w-100 p-3">
-
-                    <router-link :to="{name: 'dashboard'}">
-                    <div id="sidebtn" class="bg-light fs-5 
-                    list-group-item-action d-flex justify-content-center rounded-5" >
-
-                        <div class="div d-flex justify-content-center align-items-center">
-                            <i class="fas fa-chart-pie me-4"></i>
-                        </div>
-                           
-                        <div class="div w-100">
-                            <span class="fs-4">Dashboard</span>
-                        </div>
-
-                    </div>                  
-                    </router-link>
-
-          
-                    <router-link :to="{name: 'products'}">
-                    <div id="sidebtn" class=" fs-5 list-group-item-action 
-                    d-flex justify-content-center rounded-5 mt-2" style="background-color: 
-                    rgb(185, 232, 206); color: rgb(57, 164, 59);">
-
-                        <div class="div d-flex justify-content-center align-items-center">
-                            <i class="bi bi-box-seam-fill me-4"></i>
-                        </div>
-                           
-                        <div class="div w-100">
-                            <span class="fs-4">Products</span>
-                        </div>
-
-                    </div>
-                    </router-link>
-
-                    
-
-                    <router-link :to="{name: 'inventory'}">
-                        
-                        <div id="sidebtn" class="fs-5 list-group-item-action d-flex justify-content-center rounded-5 mt-2" >
-
-                        <div class="div d-flex justify-content-center align-items-center">
-                            <i class="fas fa-boxes-stacked me-4"></i>
-                        </div>
-                           
-                        <div class="div w-100">
-                            <span class="fs-4">Inventory</span>
-                        </div>
-
-                    </div>
-
-                    </router-link>
-
-
-                    <router-link :to="{name: 'transaction'}">
-                    <div id="sidebtn" class="fs-5 list-group-item-action d-flex justify-content-center rounded-5 mt-2" >
-                        <div class="div d-flex justify-content-center align-items-center">
-                            <i class="fas fa-receipt me-4 fa-lg"></i>
-                        </div>
-                           
-                        <div class="div w-100">
-                            <span class="fs-4">Transactions</span>
-                        </div>
-                    </div>
-                    </router-link>
-
-
-                    <router-link :to="{name: 'sales'}">       
-                        <div id="sidebtn" class="fs-5 list-group-item-action d-flex justify-content-center rounded-5 mt-2" >
-                            <div class="div d-flex justify-content-center align-items-center">
-                                <i class="fas fa-chart-line me-4"></i>
-                            </div>
-                            
-                            <div class="div w-100">
-                                <span class="fs-4">Sales History</span>
-                            </div>
-                        </div>
-                    </router-link>
-
-
-                
-                    <router-link :to="{name: 'records'}">
-                        <div id="sidebtn" class="fs-5 list-group-item-action d-flex justify-content-center rounded-5 mt-2" >
-                            <div class="div d-flex justify-content-center align-items-center">
-                                <i class="bi bi-database-fill me-4"></i>
-                            </div>
-                            
-                            <div class="div w-100">
-                                <span class="fs-4">Records</span>
-                            </div>
-                        </div>
-                    </router-link>
-
-
-                    <router-link :to="{name: 'archive'}">
-                        <div id="sidebtn" class="fs-5 list-group-item-action 
-                        d-flex justify-content-center rounded-5 mt-2" >
-
-                            <div class="div d-flex justify-content-center align-items-center">
-                                <i class="fas fa-trash me-4"></i>
-                            </div>
-                            
-                            <div class="div w-100">
-                                <span class="fs-4">Archive</span>
-                            </div>
-
-                        </div>
-                    </router-link>
-
-
-
-                    <router-link :to="{}">
-                        <div id="sidebtn" class="fs-5 list-group-item-action 
-                        d-flex justify-content-center rounded-5 mt-2" >
-
-                            <div class="div d-flex justify-content-center align-items-center">
-                                <i class="fas fa-gear me-4"></i>
-                            </div>
-                            
-                            <div class="div w-100">
-                                <span class="fs-4">Settings</span>
-                            </div>
-
-                        </div>
-                    </router-link>
-
-
-
-                    <!-- <a id="sidebtn" role="button" 
-                    class="fs-5  d-flex justify-content-center rounded-5 mt-2" >
-                        <div class="div d-flex justify-content-center align-items-center">
-                            <i class="bi bi-power me-2"></i>
-                        </div>
-                           
-                        <div class="div w-100">
-                            <span class="fs-4">Logout</span>
-                        </div>
-                    </a> -->
-
-              
-                </div>
-
+                <sidebar/>
             </div>
      
 
@@ -241,10 +77,7 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
     
                         <span class="fs-5 h-100 me-4">{{ formatDate }}</span>   
 
-                        <a role="button" class="fw-bold text-dark fs-5" 
-                        @click="togglelogoutModal"><i class="fas 
-                        fa-arrow-right-from-bracket me-2"></i>
-                        Logout</a>
+                        <logout/>
 
                     </div>
 
@@ -263,6 +96,42 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
 
             
 
+               
+
+
+                 <div class="row container-fluid mb-3 mt-3  ">
+
+                    <div class="col-xxl-12 d-flex justify-content-between ">
+
+                        <div class="col-10 me-3">
+                            <input type="text" @keydown.enter="search" role="searchbox" v-model="search_box" class="form-control rounded-5 p-2" 
+                            style="box-shadow: 3px 3px 3px rgb(197, 197, 197); 
+                            border: 1.9px solid rgb(215, 214, 214);" placeholder="Search Product">
+                        </div>
+
+                        <div class="col-2 d-flex justify-content-center p-0 m-0">
+                            <button class="btn btn-success" @click="search"><i class="fas fa-magnifying-glass"></i></button>
+                        </div>
+
+                    </div>
+
+
+
+
+
+                    <!-- <div class="col-xl-10 col-lg-9 col-md-9 col-xs-7  border border-dark">
+                        <input type="text" @keydown.enter="search" role="searchbox" v-model="search_box" class="form-control rounded-5 p-2" 
+                        style="box-shadow: 3px 3px 3px rgb(197, 197, 197); 
+                        border: 1.9px solid rgb(215, 214, 214);" placeholder="Search Product">
+                    </div>
+
+                    <div class="col-1 d-flex justify-content-center p-0 m-0 mx-4 border border-dark">
+                        <button class="btn btn-success" @click="search"><i class="fas fa-magnifying-glass"></i></button>
+                    </div>  -->      
+                </div>
+
+                
+                
                 <div v-if="loading" class="p-3 d-flex justify-content-center align-items-center container-fluid h-100 mt-3">
                     <span class="spinner-border spinner-border-lg  p-3" aria-hidden="true" style="font-size: ;"></span>
                  </div>  
@@ -270,19 +139,14 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
                 
                  <!-- PRODUCT TABLE -->
                 <div v-else class="table-responsive mt-3">
+
+   
+
                     <h4 class="mt-3 mb-3 w-100 bg-light p-3"><i class="fas fa-box-open me-2"></i>Product Info Lists</h4>
 
-                    <div class="container-fluid d-flex justify-content-center mb-3 mt-3">
-                        <div class="col-10">
-                            <input type="text" @keydown.enter="search" role="searchbox" v-model="search_box" class="form-control rounded-5 p-2" 
-                            style="box-shadow: 3px 3px 3px rgb(197, 197, 197); 
-                            border: 1.9px solid rgb(215, 214, 214);" placeholder="Search Product">
-                        </div>
+                    <button @click="exportExcel" class="btn btn-success mb-3"><i class="far fa-file-excel me-2">         
+                    </i> Export product excel </button>
 
-                        <div class="col-1 d-flex justify-content-center p-0 m-0 mx-4">
-                            <button class="btn btn-success" @click="search"><i class="fas fa-magnifying-glass"></i></button>
-                        </div>                 
-                    </div>
 
 
                     <div class="div">
@@ -303,16 +167,24 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
                         <tbody v-for="product in product_lists.data" :key="product.id">
             
                             <tr>
-                                <td class="fw-bold"><img v-bind:src="storageLink + product.image" 
-                                class="img-fluid" width="100" height="100"></td>
-
+                                <td class="fw-bold" @click="showImage(product.image, product.product_name)" style="cursor: pointer;">
+                                    <img v-bind:src="storageLink + product.image" 
+                                class="img-fluid" width="100" height="100">
+                            
+                                </td>                              
                                 <td hidden>{{product.id}}</td>
-                                    <td class="fw-bold">{{product.serial_number}}</td>
-                                    <td class="fw-bold">{{product.manufacturer}}</td>
-                                    <td class="fw-bold">{{product.category.category}}</td>
-                                    <td class="fw-bold">{{product.product_name}}</td>
-                                    <td class="fw-bold">{{product.description}}</td>
-                                    <td class="fw-bold">{{product.size}}</td>
+
+                                    <td v-if="product.serial_number == 'No Serial Number'">
+                                        <span class="text-danger fw-bold">{{product.serial_number}}</span>
+                                    </td>
+
+                                    <td v-else>{{product.serial_number}}</td>
+
+                                    <td>{{product.manufacturer}}</td>
+                                    <td>{{product.category.category}}</td>
+                                    <td>{{product.product_name}}</td>
+                                    <td>{{product.description}}</td>
+                                    <td>{{product.size}}</td>
                                 <td class="m-3">
 
                                     <RouterLink :to="{name: 'edit_product', params:{id:product.id} }">
@@ -355,9 +227,9 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
                         </thead>
                     <tbody v-for="cat in category_lists.data" :key="cat.id">
                         <tr>
-                            <td class="fw-bold">{{cat.id}}</td>
-                            <td class="fw-bold">{{cat.category}}</td>
-                            <td class="fw-bold">{{cat.description}}</td>
+                            <td>{{cat.id}}</td>
+                            <td>{{cat.category}}</td>
+                            <td>{{cat.description}}</td>
   
                             <td class="m-3">
 
@@ -425,6 +297,8 @@ import  modalComponent  from '@/components/modalComponent.vue';
 import { StreamBarcodeReader } from "vue-barcode-reader";
 import logout from '../components/modal/logout.vue';
 import Swal from 'sweetalert2'
+import sidebar from '../components/sidebar/sidebar.vue';
+import { inject } from 'vue'
 
 
 export default {
@@ -433,28 +307,21 @@ export default {
     components: {
     Bootstrap5Pagination,
     StreamBarcodeReader,
-    logout
+    logout,
+    sidebar
 },
 
 
 
     setup(){
+        const storageLink = inject('$storageLink');
         
         let product_lists = ref([]);
         let productSearchResults = ref([]);
-
-
-
-
-
-
         let category_lists = ref([]);
 
 
-
-
         const isOpen = ref(false);
-
         const search_box = ref('');
 
 
@@ -463,8 +330,7 @@ export default {
         const loading = ref(true);
         const modalActive = ref(false);
 
-        const storageLink = ref('https://api.amadorpetsuppliesinventory.online/storage/images/');
-
+    
 
           /* GET PRODUCT TABLE */
         const getProduct = async(page = 1) => {
@@ -505,16 +371,6 @@ export default {
             }
         }
 
-
-
-
-
-        /* FOR LOGOUT MODAL */
-        const logoutModal = ref(false);
-        const togglelogoutModal = () => {
-            logoutModal.value = !logoutModal.value
-        }
-        /* END OF FOR LOGOUT MODAL */
 
 
     
@@ -619,12 +475,21 @@ export default {
             
             else (result.dismiss === Swal.DismissReason.cancel) 
             })
+      
 
-
-
-
-            
         }
+
+        function showImage(image, product) {
+            Swal.fire({
+                title: 'Image',
+                text: product,
+                imageUrl: storageLink + image,
+                imageWidth: 400,
+                imageHeight: 200,
+                imageAlt: image,
+            })
+        }
+
 
 
 
@@ -695,6 +560,24 @@ export default {
         }
 
 
+        function exportExcel(){
+            axios_client
+            ({
+                url: '/export-excel',
+                method: 'GET',
+                responseType: 'blob',
+            }).then((response) => {
+                var fileURL = window.URL.createObjectURL(new Blob([response.data]));
+                var fileLink = document.createElement('a');
+                fileLink.href = fileURL;
+                fileLink.setAttribute('download', 'product.csv');
+                document.body.appendChild(fileLink);
+                fileLink.click();
+            });
+        }
+
+
+
     
         onMounted(()=> {
             search()
@@ -702,9 +585,9 @@ export default {
         })
 
         return {
-            product_lists,del_prod,typing,loading,isSidebar,
+            product_lists,del_prod,typing,loading,isSidebar,exportExcel,
             modalActive,toggleModal,create_category,category,getCat,category_lists,del_cat,isOpen,formatDate
-            ,logoutModal,togglelogoutModal,storageLink,search,search_box,productSearchResults,getProduct
+            ,search,search_box,productSearchResults,getProduct,showImage,storageLink
         }
 
     }

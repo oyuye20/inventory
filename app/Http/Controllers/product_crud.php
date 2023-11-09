@@ -12,12 +12,25 @@ use App\Models\inventory;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
+
+
+use App\Models\Users;
+use App\Exports\ProductsExport;
+use Maatwebsite\Excel\Facades\Excel;
+
+
+
 class product_crud extends Controller
 {
 
+    public function exportProductExcel(){
+       return Excel::download(new ProductsExport,'product.csv');
+    }
+
+
     /* READ ALL PRODUCT */
-    public function index(){     
-        return product_info::with('category')->where('isArchived',0)->paginate(5);
+    public function index(){
+        return product_info::with('category')->where('isArchived',0)->orderBy('product_name')->paginate(5);
     }
 
 
@@ -37,6 +50,7 @@ class product_crud extends Controller
 
         $transactions = transactions::create([ 
             "customer_name" => $request->input("customer_name"),
+            "transactions_id" => $request->input("transactions_id"),
             "gross_total" => $request->input("sub_total"),
             "discount" => "0",
             "net_total" => $final_total,

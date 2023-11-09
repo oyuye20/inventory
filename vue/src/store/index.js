@@ -7,6 +7,7 @@ const store = createStore ({
         user: {
             data: {},
             token: localStorage.getItem("TOKEN"),
+            role: localStorage.getItem("role")
         }
     },
     getters: {},
@@ -34,13 +35,17 @@ const store = createStore ({
         setUser: (state, userData)=> {
             state.user.token = userData.token;
             state.user.token = userData.user;
+
             localStorage.setItem("TOKEN",userData.token);
+            localStorage.setItem("role",userData.user.role);
         },
         
         logout: (state) => {
             state.user.token = null;
             state.user.data = {};
+
             localStorage.removeItem("TOKEN");
+            localStorage.removeItem("role");
         }   
     },
 

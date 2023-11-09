@@ -45,11 +45,16 @@ return new class extends Migration
             $table->unsignedInteger('product_id');
             $table->string('category');
             $table->string('supplier');
-            $table->string('stocks');
-            $table->string('safety_stocks');
-            $table->date('production_date');
-            $table->date('expiration_date');
+            $table->string('supplier_email');
+            $table->string('supplier_number');
+            $table->bigInteger('stocks');
+            $table->bigInteger('safety_stocks');
+            $table->string('stock_by');
+            $table->string('updated_by');
+            $table->date('production_date')->nullable();
+            $table->date('expiration_date')->nullable();
             $table->string('status');
+            $table->boolean('noExpiration');
             $table->timestamps();
 
             $table->foreign('product_id')

@@ -14,6 +14,8 @@ export const useCartStore = defineStore('CartStore', () =>{
     const cart = ref([]);
     const message_stock = ref("");
 
+    const search_box = ref ("");
+
 
 
     const message2 = computed(() => message_stock.value)
@@ -64,24 +66,33 @@ export const useCartStore = defineStore('CartStore', () =>{
             cart.value.push(data_cart)     
         }
 
-        
     }
 
 
 
     const getProduct = async(page = 1) => {
-        axios_client.get('/inventory?page=' + page).then(response=>{
-            list_product.value = response.data;
+        if(search_box.value == ''){
+            axios_client.get('/inventory?page=' + page).then(response=>{
+                list_product.value = response.data;
 
-            console.log(response.data)
-        }).catch(error =>{
+              }).catch(error =>{
+                  console.log(error.response.data)
+              })
+           
+            }
 
-        })
+            else {
+              axios_client.get('/inventory/search/' + search_box.value  + '?page=' + page).then(response=>{
+                list_product.value = response.data;
+
+              }).catch(error =>{
+                  console.log(error.response.data)
+              })
+      
+        }
     }
 
 
-
-    
 
 
     const grand_total = computed(() => {
@@ -179,7 +190,8 @@ export const useCartStore = defineStore('CartStore', () =>{
         }
     }
 
-    return {getProduct,prod,add_cart,cart,grand_total,remove_cart,increment,decrement,clear_cart,message_stock,message2,close_msg_stock}
+    return {getProduct,prod,add_cart,cart,grand_total,remove_cart,increment,
+        decrement,clear_cart,message_stock,message2,close_msg_stock,search_box}
 
 
     /* state: () => ({

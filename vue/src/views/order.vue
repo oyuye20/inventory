@@ -1,5 +1,8 @@
 <template>
 
+<!-- v-if="modalActive" -->
+
+
 <transition name="modalAnim">
 <div v-if="modalActive" class="container-fluid d-flex justify-content-center align-items-center" 
 style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; background-color: rgba(0, 0, 0, 0.605); overflow: auto;">
@@ -10,7 +13,7 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
         <div class="col-lg-8 bg-light shadow-sm p-0">
 
             <div class="col-12 mb-4 text-start p-3" style="background-color: rgb(4, 180, 116);">
-                <span class="fw-bold fs-5 text-white">Transaction ID: 1234678</span>
+                <span class="fw-bold fs-5 text-white">Transaction ID: {{transID}}</span>
             </div>
 
 
@@ -26,29 +29,45 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
                <!--  v-for="(list, i) in cart_lists" :key="list.product_id" -->
 
 
-            <div class="div p-3 m-1" v-for="(list, i) in cart_lists" :key="list.product_id">
+            <!-- <div class="div p-0 m-1 border border-dark" v-for="(list, i) in cart_lists" :key="list.product_id">
 
                 <div class="col-12 d-flex">
-              
-                    
-                    <div class="col-8">
+                          
+                    <div class="col-8 d-flex border">
                         <span class="fw-bold">{{list.product_name}}</span>
                     </div>
 
-                    <div class="col-2">
+                    <div class="col-2 d-flex justify-content-center">
                         <span class="fw-bold">{{list.quantity}}</span>
                     </div>    
                     
-                    <div class="col-2">
+                    <div class="col-2 d-flex justify-content-center">
                         <span class="fw-bold">{{list.price}}</span>
                     </div> 
                 </div>
          
+            </div> -->
+
+            <div class="div p-2 m-1 " v-for="(list, i) in cart_lists" :key="list.product_id">
+                <div class="col-10 d-flex mb-2 ">
+                    <div class="col-10">
+                        <span class="fw-bold">{{list.product_name}}</span>
+                    </div>
+
+                    
+                    <div class="col-2 text-center">
+                        <span class="fw-bold">{{list.quantity}}</span>
+                    </div>
+
+                    <div class="col-2 text-center">
+                        <span class="fw-bold">₱ {{list.price}}</span>
+                    </div>
+                </div>          
             </div>
 
                 
 
-            <div class="div p-3 m-1">
+            <div class="div p-2 m-1;k">
 
                 <div class="col-12 d-flex mb-2 ">
                     <div class="col-10">
@@ -91,6 +110,9 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
 
                          
             </div>
+
+
+
 
             <div class="div p-3 m-1">
 
@@ -196,144 +218,7 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
         <!-- Sidebar -->
 
         <div class="sidebar_wrapper" :class ="{side: isSidebar}">
-
-            <div class="sidebar-heading text-center py-4 fs-4 fw-bold d-flex justify-content-center ">
-                <div class="div d-flex justify-content-center align-items-center me-2">
-                    <i class="fas fa-circle-user fa-2x"></i>
-                </div>
-                
-                <div class="div d-flex flex-column justify-content-end">
-                    Admin
-
-                    <span class="text-secondary fs-6">Administrator</span>
-                </div>
-            </div>
-
-
-            <div class="list-group list-group-flush my-3 w-100 p-3">
-                <router-link :to="{name: 'dashboard'}">
-                    <div id="sidebtn" class="list-group-item fs-5 list-group-item-action d-flex justify-content-center rounded-5" >
-
-                        <div class="div d-flex justify-content-center align-items-center">
-                            <i class="fas fa-chart-pie me-4"></i>
-                        </div>
-                        
-                        <div class="div w-100">
-                            <span class="fs-4">Dashboard</span>
-                        </div>
-                    </div>                 
-                </router-link>
-
-                <router-link :to="{name: 'products'}">                 
-                    <div id="sidebtn" class="list-group-item fs-5 list-group-item-action d-flex justify-content-center rounded-5 mt-2" >
-
-                        <div class="div d-flex justify-content-center align-items-center">
-                            <i class="bi bi-box-seam-fill me-4"></i>
-                        </div>
-                        
-                        <div class="div w-100">
-                            <span class="fs-4">Products</span>
-                        </div>
-
-                    </div>
-                </router-link>
-
-
-
-                <router-link :to="{name: 'inventory'}">
-                    <div id="sidebtn" class="list-group-item fs-5 list-group-item-action 
-                        d-flex justify-content-center rounded-5 mt-2" >
-
-                        <div class="div d-flex justify-content-center align-items-center">
-                            <i class="fas fa-boxes-stacked me-4"></i>
-                        </div>
-                            
-                        <div class="div w-100">
-                            <span class="fs-4">Inventory</span>
-                        </div>
-
-                    </div>
-                </router-link>
-
-        
-                <router-link :to="{name: 'transaction'}">
-                    <div id="sidebtn" class="list-group-item fs-5 list-group-item-action d-flex justify-content-center rounded-5 mt-2" style="background-color: rgb(185, 232, 206); color: rgb(57, 164, 59);">
-
-                        <div class="div d-flex justify-content-center align-items-center">
-                            <i class="fas fa-receipt me-4 fa-lg"></i>
-                        </div>
-                        
-                        <div class="div w-100">
-                            <span class="fs-4">Transactions</span>
-                        </div>
-
-                    </div>
-                </router-link>
-                
-
-                <router-link :to="{name: 'sales'}">       
-                    <div id="sidebtn" class="fs-5 list-group-item-action d-flex justify-content-center rounded-5 mt-2" >
-                        <div class="div d-flex justify-content-center align-items-center">
-                            <i class="fas fa-chart-line me-4"></i>
-                        </div>
-                        
-                        <div class="div w-100">
-                            <span class="fs-4">Sales History</span>
-                        </div>
-                    </div>
-                </router-link>
-
-        
-                <router-link :to="{name: 'records'}">
-                    <div id="sidebtn" class="list-group-item fs-5 list-group-item-action d-flex justify-content-center rounded-5 mt-2" >
-
-                        <div class="div d-flex justify-content-center align-items-center">
-                            <i class="bi bi-database-fill me-4"></i>
-                        </div>
-                        
-                        <div class="div w-100">
-                            <span class="fs-4">Records</span>
-                        </div>
-
-                    </div>
-                </router-link>
-
-
-                <router-link :to="{name: 'archive'}">
-                    <div id="sidebtn" class="list-group-item fs-5 list-group-item-action 
-                    d-flex justify-content-center rounded-5 mt-2" >
-
-                        <div class="div d-flex justify-content-center align-items-center">
-                            <i class="fas fa-trash me-4"></i>
-                        </div>
-                        
-                        <div class="div w-100">
-                            <span class="fs-4">Archive</span>
-                        </div>
-
-                    </div>
-                </router-link>
-
-
-
-                <router-link :to="{}">
-                    <div id="sidebtn" class="list-group-item fs-5 list-group-item-action 
-                    d-flex justify-content-center rounded-5 mt-2" >
-
-                        <div class="div d-flex justify-content-center align-items-center">
-                            <i class="fas fa-gear me-4"></i>
-                        </div>
-                        
-                        <div class="div w-100">
-                            <span class="fs-4">Settings</span>
-                        </div>
-
-                    </div>
-                </router-link>
-
-
-            
-            </div>
+            <sidebar/>
         </div>
      
 
@@ -342,42 +227,19 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
         <!-- Page Content -->
 
         <div id="page-content-wrapper">
+           
 
-            <nav class="navbar py-4 px-4 shadow-none">
-                <div class="d-flex align-items-center">
-                    <a v-on:click="isSidebar =! isSidebar" role="button" id="toggle_icon"><i class="fas fa-bars me-3 fa-2x"></i></a>    
+            <nav class="navbar py-4 px-4 shadow-none">  
+                <div class="d-flex justify-content-between w-100">
+                    <a v-on:click="isSidebar =! isSidebar" role="button" id="toggle_icon">
+                    <i class="fas fa-bars me-3 fa-2x"></i></a>
                     <h2 class="fs-4 fw-bold"><i class="fas fa-receipt me-2"></i>Transactions</h2>
+                    
+                    <div class="div d-flex justify-content-center align-items-center" >
+                        <logout/>
+                    </div> 
+        
                 </div>
-
-                <!-- <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button> -->
-
-
-                <div class="div">
-                    <a role="button" class="fw-bold text-dark fs-5" 
-                    @click="togglelogoutModal">
-                    <i class="fas fa-arrow-right-from-bracket me-2"></i>
-                    Logout</a>
-                </div> 
-
-                <!-- <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle second-text fw-bold" href="#" id="navbarDropdown"
-                                role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="bi bi-person-circle me-2"></i>Welcome Admin
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="#">Profile</a></li>
-                                <li><a class="dropdown-item" href="#">Settings</a></li>
-                                <li><a class="dropdown-item" href="#">Logout</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div> -->
             </nav>
 
             
@@ -387,29 +249,14 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
 
                 <div class="row gx-2 mt-3">
 
-                    <!-- <div v-if="show_alert" class="alert alert-success alert-dismissible fade show" role="alert">
-                        Ordered Successfully
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div> -->
-
-                    <!-- <div v-if="msg" class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <i class="fas fa-circle-exclamation me-2"></i><span class="fs-6 fw-bold">{{ msg }}</span>
-                        <button type="button" class="btn-close" @click="CartStore.close_msg_stock()"></button>
-                    </div> -->
-
-
                     <div class="col-xl-6 mt-3">
                         <div class="bg-light w-100">
                             <h4 class="p-3 text-light" style="background-color: rgb(4, 180, 116);"><i class="fas fa-cash-register me-2"></i>Transaction</h4>
 
 
                             <div class="d-flex justify-content-between p-3">
-                                <!-- <h4 class="">Total</h4>
-                                <h4 class="text-success fw-bold">1,000 Pesos</h4> -->
-                                <h5>Transaction ID: 123213123123</h5>
-                                <h5>Transaction Date: Saturday, July 22, 2023</h5>
-
-                
+                                <span>Transaction ID: {{transID}}</span>
+                                <span>Transaction Date: {{formatDate}}</span>
                             </div>
 
 
@@ -418,9 +265,6 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
                             </div>
 
                         
-                            
-
-
                         
                             <div class="table-responsive mt-3 mb-3" style="overflow: auto; height: 20rem; ">
                                 <table class="table table-hover table-borderless text-center" >
@@ -437,11 +281,11 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
 
                                 <tbody v-for="(list, i) in cart_lists" :key="list.product_id">
                                     <tr>
-                                        <td class="fw-bold">{{list.product_name}}</td>
-                                        <td class="fw-bold">{{list.quantity}}</td>
-                                        <td class="fw-bold">₱ {{list.price}}</td>
+                                        <td>{{list.product_name}}</td>
+                                        <td>{{list.quantity}}</td>
+                                        <td>₱ {{list.price}}</td>
                 
-                                        <td class="fw-bold d-flex justify-content-center align-items-center">                    
+                                        <td class="d-flex justify-content-center align-items-center">                    
                                             
 
                                             <button @click="CartStore.decrement(i,list.product_id)" class="btn btn-sm btn-danger">-</button>
@@ -498,6 +342,8 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
                     </div>
 
 
+
+                    <!-- PRODUCT LIST TAB -->
                     <div class="col-xl-6 mt-3">
                         <div class="bg-light w-100">
 
@@ -507,42 +353,18 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
 
                             <!-- PRODUCT LISTS -->
                             <div class="row g-1">
-
                                 <div class="container-fluid d-flex justify-content-center mb-2 mt-2">
                                     <div class="col-10">
-                                        <input type="text" @keydown.enter="search" role="searchbox" v-model="search_box" class="form-control rounded-5 p-2" 
-                                        style="box-shadow: 3px 3px 3px rgb(197, 197, 197); 
+                                        <input type="text" @keydown.enter="CartStore.getProduct" role="searchbox" v-model="CartStore.search_box" 
+                                        class="form-control rounded-5 p-2" style="box-shadow: 3px 3px 3px rgb(197, 197, 197); 
                                         border: 1.9px solid rgb(215, 214, 214);" placeholder="Search Product">
                                     </div>
 
                                     <div class="col-1 d-flex justify-content-center p-0 m-0 mx-4">
-                                        <button class="btn btn-success" @click="search"><i class="fas fa-magnifying-glass"></i></button>
+                                        <button class="btn btn-success" @click="CartStore.getProduct"><i class="fas fa-magnifying-glass"></i></button>
                                     </div>                 
                                 </div>
-        
-
-                            
-                                <!-- <div class="col-xl-6 p-2" v-for="p in lists.data" :key="p.id">
-                                    <div class="p-3">              
-                                        <div  class="d-flex justify-content-center flex-column align-items-center">
-                                            <p>{{p.product.product_name}}</p>
-                                            <p>{{p.stocks}}</p>
-                                            <p>{{p.product.price}}</p>
-                                        </div>
-
-                                        <div v-if="p.stocks == 0" class="div">
-                                            <button disabled class="btn btn-danger w-100 mt-3 fw-bold">Sold out</button>
-                                        </div>
-
-                                        <div v-else class="div">
-                                            <button :disabled="deplete1" 
-                                            @click="cart_add.add_cart(p.product_id,p.product.product_name,p.stocks,p.product.price,)" 
-                                            class="btn btn-primary w-100 mt-3">add</button>
-                                        </div>
-                                    </div>
-                                </div> -->
-
-                                
+                              
                                 <div class="table-responsive mt-3 mb-3" style="overflow: auto; ">
                                     <table class="table table-hover table-borderless text-center" >
                                         <thead>
@@ -560,19 +382,19 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
                                                 <td class="fw-bold"><img v-bind:src="storageLink + p.product.image" 
                                                 class="img-fluid" width="100" height="100"></td>
 
-                                                <td class="fw-bold">{{p.product.product_name}}</td>
+                                                <td>{{p.product.product_name}}</td>
 
                                                 
                                                 <td class="fw-bold" v-if="p.stocks ==0">
                                                 <span class="fw-bold text-danger">SOLD OUT</span></td>
 
-                                                <td v-else class="fw-bold">
+                                                <td v-else>
                                                     {{p.stocks}}
                                                 </td>
 
 
 
-                                                <td class="fw-bold">
+                                                <td>
                                                     {{Intl.NumberFormat('en-PH', 
                                                     { style: 'currency', currency: 'PHP' }).
                                                     format(p.product.price)}}
@@ -609,7 +431,7 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
                                 </div>
 
 
-                                
+                          
                             </div>
 
                             
@@ -651,7 +473,10 @@ import {useVuelidate} from '@vuelidate/core'
 import { required, email } from '@vuelidate/validators'
 import order_content from '../components/order_content.vue';
 import { Bootstrap5Pagination } from 'laravel-vue-pagination';
+import sidebar from '../components/sidebar/sidebar.vue';
 import Swal from 'sweetalert2'
+import logout from '../components/modal/logout.vue';
+import { inject } from 'vue'
 
 
 import {useToast} from 'vue-toast-notification';
@@ -663,13 +488,18 @@ export default {
 
     components: {
         order_content,
-        Bootstrap5Pagination
+        Bootstrap5Pagination,
+        sidebar,
+        logout
     },
 
 
     setup(){
-        const storageLink = ref('https://api.amadorpetsuppliesinventory.online/storage/images/');
+        const storageLink = inject('$storageLink');
         const $toast = useToast();
+
+
+        const transID = ref(Math.floor(Math.random() * 99999999999999) + 1)
 
         let product_lists = ref([]);
         let search_data = ref([]);
@@ -709,7 +539,7 @@ export default {
             modalActive.value = !modalActive.value;
         }
 
-        watchEffect((onvalidate) =>{
+        /* watchEffect((onvalidate) =>{
         search_box.value
 
             if(search_box.value.length>0)
@@ -745,7 +575,18 @@ export default {
                 })
             }
 
-        })
+        }) */
+
+       
+        /* DATE TIME  */
+    
+        const date = new Date();
+        const formatDate = date.toLocaleDateString("en-US")
+        /* END OF DATE TIME */
+
+
+
+
 
 
         function filter_input(){
@@ -811,6 +652,8 @@ export default {
                 form.append('cart', JSON.stringify(cart_lists.value))
                 form.append('purchase_date', dateTime)
 
+                form.append('transactions_id', transID.value)
+
 
                 axios_client.post("/checkout", form).then(response=>{
                     console.log(response.data)     
@@ -820,6 +663,7 @@ export default {
                     CartStore.getProduct()
                     submit_btn.value = false
                     modalActive.value = false
+                    transID.value = Math.floor(Math.random() * 99999999999999) + 1
 
                 }).catch(error =>{
                     console.log(error.response)
@@ -844,7 +688,7 @@ export default {
 
             lists,cart_add,cart_lists,CartStore,search_data,checkout,customer_name,
             show_alert,cart_order,submit_btn,toggleModal,CashAmount,modalCash,invoice,changeMoney
-            ,filter_input,storageLink,completeOrder
+            ,filter_input,storageLink,completeOrder,transID,formatDate
         }
 
     }

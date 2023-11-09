@@ -51,8 +51,16 @@ class inventory1 extends Controller
             "stocks" => $request->stocks,
             "production_date" => $request->prod_date,
             "expiration_date" => $request->exp_date,
+
             "supplier" => $request->supplier,
+            "supplier_email" => $request->supplierEmail,
+            "supplier_number" => $request->supplierNumber,
+
+
+            "stock_by" => $request->stockBy,
+            "updated_by" => $request->updatedBy,
             "safety_stocks" => $request->safetyStocks,
+            "noExpiration" => $request->noExpiration,
             "status" => 'Good'
         ]);
 
@@ -76,6 +84,11 @@ class inventory1 extends Controller
     }
 
 
+    public function stockHistory(){
+        return inventory::with('product')->orderBy('created_at','asc')->paginate(5);
+    }
+
+
     public function index_category()
     {
         return category::orderBy('id')->where('isArchived',0)->paginate(5);
@@ -88,9 +101,17 @@ class inventory1 extends Controller
     }
 
 
-    public function select_product_info()
+    public function select_product_info($data)
     {
-        return product_info::orderBy('id')->where('isArchived',0)->get();
+
+        return product_info::with('category')->whereHas('category', function ($query) use($data)  {
+            $query->where('isArchived',0)->where(function($query) use($data)  {
+              $query->where('category','=',$data);
+            });
+          }) ->get();
+
+
+       /*  return product_info::with('category')->orderBy('id')->where('isArchived',0)->get(); */
     }
 
 

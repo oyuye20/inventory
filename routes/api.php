@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\analytics;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\login;
@@ -31,6 +32,7 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::get('/user', function (Request $request){
         return $request->user();
     });
+    
 
     Route::post('/logout_user', [login::class, 'logout']);
     
@@ -39,9 +41,13 @@ Route::middleware('auth:sanctum')->group(function(){
 
 
 
+
 /* LOGIN */
 Route::post('/auth_login', [login::class, 'login']);
 Route::post('/auth_register', [login::class, 'register']);
+
+
+Route::get('/accounts/lists', [login::class, 'staffLists']);
 
 
 /* PRODUCT CRUD */
@@ -55,6 +61,12 @@ Route::put('/delete/{id}', [product_crud::class, 'delete_product']);
 
 Route::get('/sample/{id}', [product_crud::class, 'show1']);
 
+
+
+Route::get('/export-excel', [product_crud::class, 'exportProductExcel']);
+
+
+
 Route::post('/checkout', [product_crud::class, 'checkout']);
 
 
@@ -64,8 +76,17 @@ Route::post('/checkout', [product_crud::class, 'checkout']);
 Route::get('/inventory', [inventory1::class, 'inventory_index']);
 Route::get('/index/category', [inventory1::class, 'index_category']);
 
+
+
+Route::get('/stock/history', [inventory1::class, 'stockHistory']);
+
+
+
+
 Route::get('/select/category', [inventory1::class, 'select_category']);
-Route::get('/select/product/info', [inventory1::class, 'select_product_info']);
+Route::get('/select/product/info/{data}', [inventory1::class, 'select_product_info']);
+
+
 
 
 Route::get('/category/edit/{id}', [inventory1::class, 'get_update_cat']);
@@ -87,6 +108,8 @@ Route::put('/delete/category/{id}', [inventory1::class, 'delete_category']);
 Route::get('/stats', [stats::class, 'total_prod']);
 Route::get('/expiration', [stats::class, 'expProduct']);
 
+
+
 Route::get('/expiration/count', [stats::class, 'expired_count']);
 
 
@@ -95,15 +118,8 @@ Route::get('/stock_total', [stats::class, 'stock_total']);
 
 
 Route::get('/orders', [stats::class, 'orders']);
-
-
-
 Route::get('/critical/stocks', [stats::class, 'criticalStocks']);
-
-
 Route::get('/critical/count', [stats::class, 'criticalStocksCount']);
-
-
 
 
 
@@ -114,6 +130,15 @@ Route::get('/sold', [stats::class, 'sold_items']);
 
 Route::get('/daily', [stats::class, 'dailyItems']);
 Route::get('/monthly', [stats::class, 'monthlyItems']);
+Route::get('/yearly', [stats::class, 'yearlyItems']);
+
+
+
+Route::get('/expiring/products', [stats::class, 'expiringItems']);
+
+
+
+
 
 
 Route::get('/notification/stocks', [notify::class, 'checkStocks']);
@@ -123,9 +148,16 @@ Route::get('/notification/stocks', [notify::class, 'checkStocks']);
 
 /* SEARCH AND FILTER */
 Route::get('/search/{data}', [filter::class, 'search']);
+
+
+Route::get('/filter/daily/{date}', [filter::class, 'filterDaily']);
 Route::get('/filter/month/{date}', [filter::class, 'filterMonth']);
 
+
 Route::get('/inventory/search/{data}', [filter::class, 'searchInventory']);
+
+
+Route::get('/critical/search/{data}', [filter::class, 'searchCritical']);
 
 
 
@@ -143,8 +175,28 @@ Route::get('/archive/category', [archive::class, 'indexCategory']);
 Route::put('/restore/{id}', [archive::class, 'restoreProduct']);
 Route::put('/restore/cat/{id}', [archive::class, 'restoreCategory']);
 
+Route::delete('/delete/permanent/{id}', [archive::class, 'permanentDeleteProd']);
+
+
+Route::get('archive/product/search/{data}', [archive::class, 'searchProdArchived']);
+
+
+
+
+
 
 
 /* NOTIFICATIONS */
 Route::post('/notify', [notifications_user::class, 'notify']);
 Route::get('/notify/lists', [notifications_user::class, 'indexNotif']);
+
+
+
+Route::get('/notify/email', [notify::class, 'emailNotif']);
+
+
+
+/* ANALYTICS */
+Route::get('/sample', [analytics::class, 'sample']);
+
+

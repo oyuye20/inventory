@@ -1,15 +1,8 @@
 <template>
 
-<transition name="modalAnim" >
+<!-- <transition name="modalAnim" >
     <logout :logoutModal="logoutModal" @close="togglelogoutModal" style="position: relative; z-index: 3;"></logout>
-</transition>
-
-<transition name="modalAnim">
-    <notification :notification="notification" @close="toggleNotif" 
-    style="position: relative; z-index: 3;"></notification>
-</transition>
-    
-
+</transition> -->
 
 
 <body>
@@ -18,156 +11,7 @@
     <!-- Sidebar -->
 
         <div class="sidebar_wrapper" :class ="{side: isSidebar}">
-
-            <div class="sidebar-heading text-center py-4 fs-4 fw-bold d-flex justify-content-center">
-
-                <div class="div d-flex justify-content-center align-items-center me-2">
-                    <i class="fas fa-circle-user fa-2x"></i>
-                </div>
-                
-                <div class="div d-flex flex-column justify-content-end">
-                    Admin
-                    <span class="text-secondary fs-6">Administrator</span>
-                </div>
-
-            </div>
-
-            
-
-
-            <div class="list-group list-group-flush my-3 w-100 p-3">
-
-                <div id="sidebtn" class="fs-5 list-group-item-action 
-                d-flex justify-content-center rounded-5" style="background-color: rgb(185, 232, 206); 
-                color: rgb(57, 164, 59);">
-
-                    <div class="div d-flex justify-content-center align-items-center">
-                        <i class="fas fa-chart-pie me-4"></i>
-                    </div>
-                        
-                    <div class="div w-100">
-                        <span class="fs-4">Dashboard</span>
-                    </div>
-
-                </div>
-
-
-
-                <router-link :to="{name: 'products'}">
-                    <div id="sidebtn" class="fs-5 list-group-item-action 
-                    d-flex justify-content-center rounded-5 mt-2" >
-
-                        <div class="div d-flex justify-content-center align-items-center">
-                            <i class="bi bi-box-seam-fill me-4"></i>
-                        </div>
-                            
-                        <div class="div w-100">
-                            <span class="fs-4">Products</span>
-                        </div>
-
-                    </div>
-                </router-link>
-
-
-                <router-link :to="{name: 'inventory'}">
-                    <div id="sidebtn" class="fs-5 list-group-item-action 
-                        d-flex justify-content-center rounded-5 mt-2" >
-
-                        <div class="div d-flex justify-content-center align-items-center">
-                            <i class="fas fa-boxes-stacked me-4"></i>
-                        </div>
-                            
-                        <div class="div w-100">
-                            <span class="fs-4">Inventory</span>
-                        </div>
-
-                    </div>
-                </router-link>
-
-                
-                
-                <router-link :to="{name: 'transaction'}">
-                    <div id="sidebtn" class="fs-5 list-group-item-action d-flex justify-content-center rounded-5 mt-2" >
-
-                        <div class="div d-flex justify-content-center align-items-center">
-                            <i class="fas fa-receipt me-4 fa-lg"></i>
-                        </div>
-                            
-                        <div class="div w-100">
-                            <span class="fs-4">Transactions</span>
-                        </div>
-
-                    </div>
-                </router-link>
-
-
-
-                <router-link :to="{name: 'sales'}">
-
-                <div id="sidebtn" class="fs-5 list-group-item-action d-flex justify-content-center rounded-5 mt-2" >
-                    <div class="div d-flex justify-content-center align-items-center">
-                        <i class="fas fa-chart-line me-4"></i>
-                    </div>
-                        
-                    <div class="div w-100">
-                        <span class="fs-4">Sales History</span>
-                    </div>
-                </div>
-                  
-                </router-link>      
-
-
-            
-                <router-link :to="{name: 'records'}">
-                    <div id="sidebtn" class="fs-5 list-group-item-action d-flex justify-content-center rounded-5 mt-2" >
-
-                        <div class="div d-flex justify-content-center align-items-center">
-                            <i class="bi bi-database-fill me-4"></i>
-                        </div>
-                        
-                        <div class="div w-100">
-                            <span class="fs-4">Records</span>
-                        </div>
-
-                    </div>
-                </router-link>
-
-
-                <router-link :to="{name: 'archive'}">
-                        <div id="sidebtn" class="fs-5 list-group-item-action 
-                        d-flex justify-content-center rounded-5 mt-2" >
-
-                            <div class="div d-flex justify-content-center align-items-center">
-                                <i class="fas fa-trash me-4"></i>
-                            </div>
-                            
-                            <div class="div w-100">
-                                <span class="fs-4">Archive</span>
-                            </div>
-
-                        </div>
-                </router-link>
-
-
-
-                <router-link :to="{}">
-                        <div id="sidebtn" class="fs-5 list-group-item-action 
-                        d-flex justify-content-center rounded-5 mt-2" >
-
-                            <div class="div d-flex justify-content-center align-items-center">
-                                <i class="fas fa-gear me-4"></i>
-                            </div>
-                            
-                            <div class="div w-100">
-                                <span class="fs-4">Settings</span>
-                            </div>
-
-                        </div>
-                </router-link>
-
-
-    
-            </div>
+            <sidebar/>
         </div>
     
 
@@ -182,52 +26,14 @@
             <div class="d-flex justify-content-between w-100">
                 <a v-on:click="isSidebar =! isSidebar" role="button" id="toggle_icon"><i class="fas fa-bars me-3 fa-2x"></i></a>
                 <h2 class="fs-4 fw-bold"><i class="fas fa-chart-pie me-2"></i>Dashboard</h2>
-
-
-                
+       
                 <div class="div d-flex justify-content-center align-items-center" >
-                
-                    <a role="button" @click="toggleNotif" class="position-relative me-4" aria-expanded="false"> 
-                        <i class="fas fa-bell fs-4 text-dark"></i>
-
-                        <span class="position-absolute top-0 start-100
-                            translate-middle badge rounded-pill bg-danger" style="z-index: 0;" v-if="notifCount" >
-                            {{notifCount}}
-                            <span class="visually-hidden">unread messages</span>
-                        </span>
-                    </a>          
-                        
-                    <a role="button" class="fw-bold text-dark fs-5" 
-                    @click="togglelogoutModal">
-                    <i class="fas fa-arrow-right-from-bracket me-2"></i>
-                    Logout</a>
-
+                    <logout/>
                 </div> 
-
-                
+       
             </div>
 
-            <!-- <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle second-text fw-bold" href="#" id="navbarDropdown"
-                            role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-person-circle me-2"></i>Welcome Admin
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="#">Profile</a></li>
-                            <li><a class="dropdown-item" href="#">Settings</a></li>
-                            <li><a class="dropdown-item" href="#">Logout</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </div> -->
+         
         </nav>
 
         <div class="container-fluid px-4">
@@ -335,10 +141,31 @@
                     </div>
                 </div>
 
-                    <Bar v-if="isloaded"
+                    <!-- <Bar v-if="isloaded"
                     id="my-chart-id"
                     :options="chartOptions"
-                    :data="chartData"/>
+                    :data="chartData"/> -->
+
+
+                        <div class="row container-fluid">
+                    
+                                <Bar
+                                id="my-chart-id"
+                                :options="chartOptions"
+                                :data="chartData" :style="styles"
+                                />
+
+
+                               
+ 
+                                <Line
+                                id="my-chart-id2"
+                                :options="chartOptions2"
+                                :data="chartData2"
+                                />
+                       
+                        </div>
+                       
                 
                 
             </div>           
@@ -348,6 +175,7 @@
     </div>
 </div>
     <!-- /#page-content-wrapper -->
+
 
     
 </body>
@@ -366,12 +194,23 @@ import axios_client from '../axios';
 import { ref, watchEffect, defineComponent } from 'vue';
 
 import logout from '../components/modal/logout.vue';
-import notification from '../components/notification.vue';
-
+import sidebar from '../components/sidebar/sidebar.vue';
+import Swal from 'sweetalert2'
 import { Bar } from 'vue-chartjs'
-import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
 
-ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
+import { Line } from 'vue-chartjs'
+
+
+
+
+import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale,  LineController, LineElement, PointElement} from 'chart.js'
+
+import { useStore } from "vuex";
+import { useRouter } from "vue-router";
+
+ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, LineController,
+LineElement,
+PointElement)
 
 /* import { Chart, registerables } from 'chart.js';
 import { BarChart, useBarChart } from 'vue-chart-3';
@@ -390,26 +229,19 @@ Chart.register(...registerables); */
 
  export default {
     name: 'Dashboard',
-    components: {Bar,logout,notification},
+    components: {Bar,logout,sidebar,Line},
+
+
+
+
+
 
 
     setup(){
 
-
-        const logoutModal = ref(false);
-
-        const togglelogoutModal = () => {
-            logoutModal.value = !logoutModal.value
-        }
-
-
-        const notification = ref(false);
-
-        const toggleNotif = () => {
-            notification.value = !notification.value
-        }
-
-      
+        const store = useStore();
+        const router = useRouter();
+    
 
 
         const product_lists = ref([]);
@@ -484,19 +316,56 @@ Chart.register(...registerables); */
         const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
         const dateTime = date +' '+ time;
 
-        const chartData =  reactive({
-            labels: ['Products'],
-            datasets: [{ 
-            data: [exp_list_count.value],     
-            }]
-         })
 
 
-    
+        const chartData = computed(() => ({
+        labels: ['Products'],
+        datasets: [
+            {
+            data: [product_total.value],
+            backgroundColor: ['#77CEFF', '#0079AF', '#123E6B', '#97B0C4', '#A5C8ED'],
+            },
+        ],
+        }));
+
+
+
         const chartOptions = ref ({
-            responsive: true,
             backgroundColor: '#f87979'
         })
+
+
+
+        const chartData2 = computed(() => ({
+        labels: ['1','2'],
+        datasets: [{
+                label: 'My First Dataset',
+                data: [65, 59],
+                fill: false,
+                borderColor: 'rgb(75, 192, 192)',
+                tension: 0.1
+            }],
+        }));
+
+
+        const styles = ref({
+            position: 'relative',
+            height: '300px',
+            responsive: true,
+        })
+
+
+
+        const chartOptions2 = ref ({
+            responsive: true,
+            backgroundColor: '#f87979'
+            
+        })
+
+
+
+
+
 
 
 
@@ -510,17 +379,6 @@ Chart.register(...registerables); */
             })
         }
 
-
-
-
-        /* GET PRODUCT TABLE */
-        const getProduct = async() => {
-            axios_client.get('/products').then(response=>{
-                product_lists.value = response.data.products
-            }).catch(error =>{
-
-            })
-        }
 
 
         /* TOTAL OF PRODUCTS IN DASHBOARD */
@@ -600,9 +458,8 @@ Chart.register(...registerables); */
 
     
 
-        onMounted(()=> {
+        onMounted( async ()=> {      
             getNotifications()
-            getProduct()
             expired_prod()
             total_products()
             stock_total()
@@ -614,16 +471,17 @@ Chart.register(...registerables); */
 
 
 
-        return {
-            product_lists,getProduct,close,expired_prod,expired_lists
+        return { user: computed(() => store.state.user.data),
+            product_lists,close,expired_prod,expired_lists
             ,stock_lists,search_box,typing,product_total,total_products,stock_total
             ,num_total_stock,crit_stocks1,exp_count_f,exp_list_count,isSidebar,dateTime,sale_total,total_sales
 
             ,chartData,chartOptions,sold_items,items_sold,isloaded
 
-            ,togglelogoutModal,logoutModal,getNotifications,notifCount,notifLists,lowStocksCount,lowStocks
+            ,getNotifications,notifCount,notifLists,lowStocksCount,lowStocks,
 
-            ,notification,toggleNotif
+
+            chartData2,chartOptions2,styles
 
             /* , barChartProps, barChartRef,isloaded */
         }

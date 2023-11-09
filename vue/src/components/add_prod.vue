@@ -1,11 +1,21 @@
 <template>
 
     <div class="container d-flex flex-column justify-content-center align-items-center">
-    <StreamBarcodeReader v-if="showcam" class="w-100"
+        
+    <qrcode-scanner v-if="showcam" :qrbox="250" :fps="20"  style="width: 500px;"
+    @result="onScan"/>
+
+
+
+    <!-- <StreamBarcodeReader v-if="showcam" class="w-100"
       @decode="(a, b, c) => onDecode(a, b, c)"
       @loaded="() => onLoaded()">
-    </StreamBarcodeReader>
+    </StreamBarcodeReader> -->
     </div>
+
+
+  
+   
 
 
 
@@ -25,21 +35,30 @@
 
 
 
-        <div class="mb-3">
+        <div class="mb-3" v-if="serialField">
             <label for="" class="form-label">Serial Number</label>
 
             <div class="d-flex">
-                <input type="text"  v-model="add_prod.serial_number" class="form-control">
+                <input type="text" v-model="serialRes" class="form-control" @input="filter_input()">
 
                 <button class="btn btn-primary w-10" @click="toggleCam" data-bs-toggle="tooltip"
                 data-bs-placement="top" data-bs-title="Tooltip on top"><i class="fas fa-barcode"></i></button>
             </div>
 
 
-            <div v-if="v$.serial_number.$error">
+            <!-- <div v-if="v$.serialRes.value.$error">
                 <p class="text-danger fw-bold mt-1">{{ "Serial number required" }}</p>
-            </div>
+            </div> -->
         </div>
+
+
+            <div class="form-check">
+                <input class="form-check-input" v-model="noSerial" type="checkbox" @click="serialHide" id="flexCheckDefault">
+                <label class="form-check-label" for="flexCheckDefault">
+                    No Serial Number
+                </label>
+            </div>
+
 
 
 
@@ -131,6 +150,7 @@ import { ref } from 'vue'
 import { faker } from '@faker-js/faker';
 import { StreamBarcodeReader } from "vue-barcode-reader";
 import { ImageBarcodeReader } from "vue-barcode-reader";
+import Compressor from 'compressorjs';
 
 
 import {useToast} from 'vue-toast-notification';
@@ -152,14 +172,18 @@ export default {
     const category = ref([]);
     const showcam = ref(false);
 
+    const noSerial = ref();
 
+
+    const serialField = ref(true);
+
+    function serialHide(){
+        serialField.value = !serialField.value;
+    }
 
 
     const EventfileInput = ref(null);
           
-
-
-
     function onLoaded(){
         
     }
@@ -178,7 +202,6 @@ export default {
 
 
     const add_prod  = reactive({
-        serial_number: '',
         manufacturer: '',
         product_name: '',
         description : '',
@@ -187,9 +210,12 @@ export default {
         category: '',
     })
 
+    const serialRes = ref();
+
 
     function filter_input(){
-        this.add_prod.serial_number = this.add_prod.serial_number.replace(/[^0-9]/g, "");
+        serialRes.value = serialRes.value.replace(/[^0-9]/g, "");
+    
         this.add_prod.price = this.add_prod.price.replace(/[^0-9]/g, "");
     }
 
@@ -198,7 +224,6 @@ export default {
    /*  const serial_number = ref('') */
 
     const rules  = {
-        serial_number: {required},
         manufacturer: {required},
         product_name: {required},
         description: {required},
@@ -228,25 +253,52 @@ export default {
     }
     /* FOR IMAGE UPLOAD FUNCTIONS */
 
+    
+
+
+    function onScan(decodedText){
+        serialRes.value = decodedText
+    }
+
+
+
+
 
 
 
     function add_btn(){
-        console.log(category.value)
         loading.value = true;
         this.v$.$validate()
 
         if(!this.v$.$error)
         {
+
+            let new_manu =  this.add_prod.manufacturer.replace(/^./, this.add_prod.manufacturer[0].toUpperCase());
+            let new_prod = this.add_prod.product_name.replace(/^./, this.add_prod.product_name[0].toUpperCase());
+
+
             let formData = new FormData();
-            formData.append('serial_number', this.add_prod.serial_number);
-            formData.append('manufacturer', this.add_prod.manufacturer);
-            formData.append('product_name', this.add_prod.product_name);
+            
+
+            if(serialRes.value == ''){
+                formData.append('serial_number', Math.floor(Math.random() * 99999999999999) + 1);
+            }
+
+            else {
+                formData.append('serial_number', serialRes.value);
+            }
+
+
+
+            formData.append('manufacturer', new_manu);
+            formData.append('product_name', new_prod);
             formData.append('description', this.add_prod.description);
             formData.append('size', this.add_prod.size);
             formData.append('price', this.add_prod.price);
             formData.append('category', category.value);
             formData.append('image', imageFile.value);
+
+           
 
             let url = '/add_product';
             axios_client.post(url,formData, config).then(response => {
@@ -291,9 +343,9 @@ export default {
 
     return {
        add_prod,add_btn,rules,v$,loading,filter_input,getCat,
-       category_lists,category,onLoaded,onDecode,showcam,toggleCam,imageUpload,
+       category_lists,category,onLoaded,onDecode,showcam,toggleCam,imageUpload,onScan,serialRes,
 
-       imageURL,imageFile
+       imageURL,imageFile,noSerial,serialField,serialHide
     }
 
 
