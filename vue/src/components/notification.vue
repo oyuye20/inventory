@@ -37,7 +37,7 @@
 
                     <div class="col-12 mb-1 text-start p-3 bg-light shadow-sm d-flex justify-content-center">            
                         <button class="btn btn-primary me-2" @click="close">Close</button>         
-                        <button class="btn btn-danger">Read all notifications</button>                   
+                        <button class="btn btn-danger" @click="readNotif">Read all notifications</button>                   
                     </div>
 
             </div>
@@ -55,26 +55,60 @@ import { useRouter } from "vue-router";
 import { computed, toHandlers, onMounted } from "vue";
 import axios_client from '../axios';
 import { Bootstrap5Pagination } from 'laravel-vue-pagination'
-
+import Swal from 'sweetalert2'
 
 
 export default {
     components: {
         Bootstrap5Pagination,
     },
-
-
     props: ["notification"],
 
     
 
     setup(props, {emit}) {
+     
+
         const notifLists = ref([]);
 
 
         const close = () => {
             emit('close');
         }
+
+        function readNotif(){
+            const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: "btn btn-success",
+                cancelButton: "btn btn-danger"
+            },
+            buttonsStyling: false
+            });
+
+
+            swalWithBootstrapButtons.fire({
+            title: "Warning",
+            text: "Are you sure you want to read all notifications?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes",
+            cancelButtonText: "No",
+
+            }).then((result) => {
+
+            if (result.isConfirmed) 
+            {
+                
+            } 
+            
+            else if (result.dismiss === Swal.DismissReason.cancel) 
+                {
+                
+                }
+            });
+        }
+
+
 
 
         const getNotifications = async(page = 1) => {
@@ -93,7 +127,7 @@ export default {
 
 
 
-        return {close,getNotifications,notifLists}
+        return {close,getNotifications,notifLists,readNotif}
     }
 
     

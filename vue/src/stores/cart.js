@@ -25,12 +25,13 @@ export const useCartStore = defineStore('CartStore', () =>{
     const deplete = ref(false);
 
 
-    const add_cart = (product_id, product_name, stocks, price) => {
+    const add_cart = (product_id, product_name, stocks, price, serial_number) => {
         const data_cart = {
             product_id,
             product_name,
             quantity: 1,
             price,
+            serial_number,
             total: price,
             stocks
         }
@@ -74,21 +75,18 @@ export const useCartStore = defineStore('CartStore', () =>{
         if(search_box.value == ''){
             axios_client.get('/inventory?page=' + page).then(response=>{
                 list_product.value = response.data;
-
               }).catch(error =>{
                   console.log(error.response.data)
               })
            
-            }
+        }
+        else {
+            axios_client.get('/inventory/search/' + search_box.value  + '?page=' + page).then(response=>{
+            list_product.value = response.data;
 
-            else {
-              axios_client.get('/inventory/search/' + search_box.value  + '?page=' + page).then(response=>{
-                list_product.value = response.data;
-
-              }).catch(error =>{
-                  console.log(error.response.data)
-              })
-      
+            }).catch(error =>{
+                console.log(error.response.data)
+            })
         }
     }
 

@@ -215,19 +215,13 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
 
 <body>
     <div class="d-flex" id="wrapper">
-        <!-- Sidebar -->
 
         <div class="sidebar_wrapper" :class ="{side: isSidebar}">
             <sidebar/>
         </div>
      
 
-        <!-- /#sidebar-wrapper -->
-
-        <!-- Page Content -->
-
         <div id="page-content-wrapper">
-           
 
             <nav class="navbar py-4 px-4 shadow-none">  
                 <div class="d-flex justify-content-between w-100">
@@ -245,8 +239,6 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
             
             <div class="container-fluid px-4"> 
               
-                <!-- <order_content/> -->
-
                 <div class="row gx-2 mt-3">
 
                     <div class="col-xl-6 mt-3">
@@ -272,8 +264,8 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
                                     <thead>
                                         <tr>
                                         <th scope="col" class="fw-bold">Product Name</th>
-                                        <th scope="col" class="fw-bold">Quantity</th>
                                         <th scope="col" class="fw-bold">Price</th>
+                                        <th scope="col" class="fw-bold">Quantity</th>
                                         <th scope="col" class="fw-bold">Total</th>
                                         <th scope="col" class="fw-bold">Action</th>
                                         </tr>
@@ -282,20 +274,23 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
                                 <tbody v-for="(list, i) in cart_lists" :key="list.product_id">
                                     <tr>
                                         <td>{{list.product_name}}</td>
-                                        <td>{{list.quantity}}</td>
                                         <td>₱ {{list.price}}</td>
-                
-                                        <td class="d-flex justify-content-center align-items-center">                    
+
+                                        <td class="d-flex h-100">
+                                            <button @click="CartStore.decrement(i,list.product_id)" class="btn btn-sm btn-danger mx-2">-</button>
                                             
-
-                                            <button @click="CartStore.decrement(i,list.product_id)" class="btn btn-sm btn-danger">-</button>
-
-                                            <span class="mx-2">₱ {{list.total.toLocaleString('en-US')}}</span>
+                                        <span class="d-flex justify-content-center align-items-center">{{list.quantity}}</span>
 
                                             <button @click="CartStore.increment(i,list.stocks,list.price,list.product_id)" 
-                                            class="btn btn-sm btn-success">+</button>
+                                            class="btn btn-sm btn-success mx-2">+</button>        
                                     
                                         </td>
+                
+                                          
+
+                                            <td><span class="mx-2">₱ {{list.total.toLocaleString('en-US')}}</span></td>
+
+                
 
 
                                         <td class="fw-bold"><button @click="CartStore.remove_cart(index)" 
@@ -317,14 +312,12 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
                                     </h4>
 
                                     <h4 class="text-dark"><i class="fas fa-coins me-2 m-2 text-success"></i>
-                                        VAT(12%): {{
-                                            Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format((CartStore.grand_total * 0.12))                           
-                                        }}
+                                        Discount: 
                                     </h4>
 
                                     <h4 class="text-dark"><i class="fas fa-coins me-2 m-2 text-success"></i>
                                         Grand Total: {{
-                                            Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format((CartStore.grand_total + (CartStore.grand_total * .12)))                                                    
+                                            Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format((CartStore.grand_total))                                                    
                                             }}
                                     </h4>
 
@@ -380,38 +373,25 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
                                         <tbody v-for="p in lists.data" :key="p.id">
                                             <tr>
                                                 <td class="fw-bold"><img v-bind:src="storageLink + p.product.image" 
-                                                class="img-fluid" width="100" height="100"></td>
+                                                 width="50" height="50"></td>
+
 
                                                 <td>{{p.product.product_name}}</td>
-
+                          
+                                                <td>{{p.stocks}}</td>
                                                 
-                                                <td class="fw-bold" v-if="p.stocks ==0">
-                                                <span class="fw-bold text-danger">SOLD OUT</span></td>
-
-                                                <td v-else>
-                                                    {{p.stocks}}
-                                                </td>
-
-
-
                                                 <td>
                                                     {{Intl.NumberFormat('en-PH', 
                                                     { style: 'currency', currency: 'PHP' }).
                                                     format(p.product.price)}}
                                                 </td>
 
+                                             
 
-                                                <td v-if="p.stocks == 0">
-                                                    <button disabled class="btn btn-danger" 
-                                                    @click="cart_add.add_cart(p.product_id,p.product.
-                                                    product_name,p.stocks,p.product.price)">
-                                                    +</button>
-                                                </td>
-
-                                                <td v-else>
+                                                <td>
                                                     <button class="btn btn-primary" 
-                                                    @click="cart_add.add_cart(p.product_id,p.product.
-                                                    product_name,p.stocks,p.product.price)">
+                                                    @click="cart_add.add_cart(p.id,p.product.
+                                                    product_name,p.stocks,p.product.price,p.product.serial_number)">
                                                     +</button>
                                                 </td>
 
@@ -447,9 +427,6 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
                 </div>
             </div>
         </div>
-
-
-       
 
 
     </div>
@@ -498,43 +475,44 @@ export default {
         const storageLink = inject('$storageLink');
         const $toast = useToast();
 
-
-        const transID = ref(Math.floor(Math.random() * 99999999999999) + 1)
-
-        let product_lists = ref([]);
-        let search_data = ref([]);
-        const CartStore = useCartStore()
-        const cart_add = useCartStore()
-        const customer_name = ref("");
-        const CashAmount = ref("");
-        const changeMoney = ref("");
-
-
-
-        const cart_order = CartStore.cart
-        const show_alert = ref(false);
-        const submit_btn = ref(false);
-
+        const CartStore = useCartStore();
+        const cart_add = useCartStore();
+        const store = useStore();
+        const router = useRouter();
+        const cart_order = CartStore.cart;
 
         const lists = computed(()=> CartStore.prod)
         const cart_lists = computed(()=> CartStore.cart)
 
 
+        const transID = ref(Math.floor(Math.random() * 99999999999999) + 1)
+        let product_lists = ref([]);
+        let search_data = ref([]); 
+        const customer_name = ref("");
+        const CashAmount = ref("");
+        const changeMoney = ref("");
+        const quantity = ref('');
+        const search_box = ref('');
+        const username = ref('');
 
+
+        
+        const show_alert = ref(false);
+        const submit_btn = ref(false);
         const modalActive = ref(false);
         const modalCash = ref(false);
-
-
         const isSidebar = ref(false);
-        const quantity = ref('');
-
-        const search_box = ref('');
         const typing = ref(false);
 
-        const store = useStore();
-        const router = useRouter();
 
+        /* DATE TIME  */
+        const date = new Date();
+        const formatDate = date.toLocaleDateString("en-US")
+        /* END OF DATE TIME */
 
+        
+        
+    
         const toggleModal = () =>{
             modalActive.value = !modalActive.value;
         }
@@ -578,17 +556,20 @@ export default {
         }) */
 
        
-        /* DATE TIME  */
-    
-        const date = new Date();
-        const formatDate = date.toLocaleDateString("en-US")
-        /* END OF DATE TIME */
+        const userData = async() => {
+            axios_client.get('/user').then(response=>{
+                username.value = response.data.username
+
+            }).catch(error =>{
+                console.log(error.response.data)
+            })
+        }
 
 
 
 
 
-
+        
         function filter_input(){
             CashAmount.value = CashAmount.value.replace(/[^0-9]/g, "");
         }
@@ -610,7 +591,7 @@ export default {
 
      
         function invoice(){
-            let total = (CartStore.grand_total + (CartStore.grand_total * .12));
+            let total = (CartStore.grand_total);
 
             if(CashAmount.value == '')
             {
@@ -625,7 +606,6 @@ export default {
             else {
                 modalCash.value = !modalCash.value
                 modalActive.value = true
-
                 changeMoney.value = (CashAmount.value - total)       
             }
         }
@@ -638,15 +618,11 @@ export default {
                 const dateTime = date +' '+ time;
         
                 let form = new FormData();
-                form.append('sub_total', Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format((CartStore.grand_total)))
+                form.append('sub_total', CartStore.grand_total)
                 form.append('customer_name', customer_name.value)
                 form.append('change', changeMoney.value)
-                form.append('vat', Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(CartStore.grand_total * 0.12))
-
-
-                form.append('grand_total',  
-                Intl.NumberFormat('en-PH', 
-                { style: 'currency', currency: 'PHP' }).format((CartStore.grand_total + (CartStore.grand_total * .12))))
+                form.append('grand_total', CartStore.grand_total)
+                form.append('orderedBy', username.value)
 
 
                 form.append('cart', JSON.stringify(cart_lists.value))
@@ -666,7 +642,7 @@ export default {
                     transID.value = Math.floor(Math.random() * 99999999999999) + 1
 
                 }).catch(error =>{
-                    console.log(error.response)
+                    console.log(error.response.data)
                     submit_btn.value = false
                 })
         }
@@ -674,6 +650,7 @@ export default {
 
         onMounted(()=> {
             CartStore.getProduct()
+            userData()
         })
 
         function logout(){
@@ -684,11 +661,14 @@ export default {
 
         return {
             user: computed(() => store.state.user.data)
-            ,product_lists,close,search_box,typing,logout,isSidebar,lists,cart_lists,quantity,modalActive,
 
-            lists,cart_add,cart_lists,CartStore,search_data,checkout,customer_name,
-            show_alert,cart_order,submit_btn,toggleModal,CashAmount,modalCash,invoice,changeMoney
-            ,filter_input,storageLink,completeOrder,transID,formatDate
+            ,close,logout,checkout,filter_input,completeOrder,toggleModal,invoice,userData
+
+            ,product_lists,search_box,typing,isSidebar,lists,cart_lists,quantity,modalActive,
+
+            lists,cart_add,cart_lists,CartStore,search_data,customer_name,show_alert,cart_order
+            
+            ,submit_btn,CashAmount,modalCash,changeMoney,storageLink,transID,formatDate
         }
 
     }

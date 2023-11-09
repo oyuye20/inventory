@@ -8,7 +8,8 @@
 
     <div class="mb-3">
         <label for="" class="form-label">Serial Number</label>
-        <input type="text" @input="filter_input" v-model="edit_prod_val.serial_number" class="form-control" name="" id="" aria-describedby="helpId" placeholder="">
+        <input type="text" disabled v-model="edit_prod_val.serial_number" 
+        class="form-control" >
 
         <!-- <div v-if="v$.serial_number.$error">
             <p class="text-danger fw-bold mt-1">{{ "Serial number required" }}</p>
@@ -38,17 +39,28 @@
             <input type="text" v-model="edit_prod_val.size" class="form-control" name="" id="" aria-describedby="helpId" placeholder="">
         </div>
 
+        <div class="mb-3 col-5 mx-1">
+            <label for="" class="form-label">Price</label>
+            <input type="text" v-model="edit_prod_val.price" class="form-control" name="" id="" aria-describedby="helpId" placeholder="">
+        </div>
+
 
     </div>
 
 
     <div class="modal-footer">
 
+        <router-link :to="{name: 'products'}">
+            <button type="button" 
+            class="btn btn-danger me-2 modal-add ">Back
+            </button>             
+        </router-link>   
+
+
         <button type="submit" :disabled="loading" 
-        class="btn btn-success me-2 modal-add ">
-        
+        class="btn btn-success me-2 modal-add ">   
         <span v-if="loading" class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>Update Product
-        </button>
+        </button>  
 
     </div>       
 

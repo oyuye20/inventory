@@ -13,7 +13,7 @@ class customer_orders extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'transactions_id','product_name','quantity','price','total'
+        'transactions_id','product_name','quantity','price','total','serial_number'
     ];
 
     public function transactions(): BelongsTo{

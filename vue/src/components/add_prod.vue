@@ -1,16 +1,8 @@
 <template>
 
     <div class="container d-flex flex-column justify-content-center align-items-center">
-        
-    <qrcode-scanner v-if="showcam" :qrbox="250" :fps="20"  style="width: 500px;"
-    @result="onScan"/>
-
-
-
-    <!-- <StreamBarcodeReader v-if="showcam" class="w-100"
-      @decode="(a, b, c) => onDecode(a, b, c)"
-      @loaded="() => onLoaded()">
-    </StreamBarcodeReader> -->
+        <qrcode-scanner v-if="showcam" :qrbox="250" :fps="20"  style="width: 500px;"
+        @result="onScan"/>
     </div>
 
 
@@ -29,7 +21,6 @@
             <select class="form-control" v-model="category">    
                 <option selected v-for="cat in category_lists" :key="cat.id" :value="cat.id">{{cat.category}}</option>
             </select>
-
         </div>
 
 
@@ -52,12 +43,12 @@
         </div>
 
 
-            <div class="form-check">
-                <input class="form-check-input" v-model="noSerial" type="checkbox" @click="serialHide" id="flexCheckDefault">
-                <label class="form-check-label" for="flexCheckDefault">
-                    No Serial Number
-                </label>
-            </div>
+        <div class="form-check">
+            <input class="form-check-input" v-model="noSerial" type="checkbox" @click="serialHide" id="flexCheckDefault">
+            <label class="form-check-label" for="flexCheckDefault">
+                No Serial Number
+            </label>
+        </div>
 
 
 
@@ -126,12 +117,22 @@
             <textarea name="" v-model="add_prod.description" id="" class="form-control"></textarea>
         </div>
 
+        <div class="d-flex justify-content-end">
+            <router-link :to="{name: 'products'}">     
+                <button type="button" 
+                class="btn btn-danger me-2 modal-add">Back
+                </button>             
+            </router-link> 
 
-        <form class="modal-footer" @submit.prevent="add_btn">
-            <button type="submit"  :disabled="loading" class="btn btn-success me-2 modal-add">
-                <span v-if="loading" class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>Add product
-            </button>
-        </form>       
+            <form class="modal-footer" @submit.prevent="add_btn">
+                <button type="submit"  :disabled="loading" class="btn btn-success me-2 modal-add">
+                    <span v-if="loading" class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>Add product
+                </button>
+            </form>       
+        </div>
+
+
+        
 
     </div>
 </div>

@@ -15,7 +15,7 @@ class notify extends Controller
     public function checkStocks(){
         $inventory = inventory::with('product')->whereColumn('safety_stocks','>','stocks')->get();
         $count = notification_table::where('isReaded', 0)->count();
-        $notification = notification_table::where('isReaded', 0)->paginate(5);
+        $notification = notification_table::where('isReaded', 0)->orderBy('created_at', 'DESC')->paginate(5);
         $user = User::where('role', '1')->get();
 
         

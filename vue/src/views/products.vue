@@ -94,6 +94,9 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
                     </button>
                 </router-link>
 
+                <button @click="exportExcel" class="btn btn-success modal-add"><i class="far fa-file-excel me-2">         
+                </i> Export product excel </button>
+
             
 
                
@@ -144,8 +147,7 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
 
                     <h4 class="mt-3 mb-3 w-100 bg-light p-3"><i class="fas fa-box-open me-2"></i>Product Info Lists</h4>
 
-                    <button @click="exportExcel" class="btn btn-success mb-3"><i class="far fa-file-excel me-2">         
-                    </i> Export product excel </button>
+                    
 
 
 
@@ -153,13 +155,14 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
                         <table class="table table-hover table-borderless text-center w-100">
                             <thead>
                                 <tr>
-                                    <th scope="col" class="fw-bold">Image</th>
+                                    <th scope="col" class="fw-bold p-3">Image</th>
                                     <th scope="col" class="fw-bold">Serial Number</th>
+                                    <th scope="col" class="fw-bold">Category</th>     
                                     <th scope="col" class="fw-bold">Manufacturer</th>
-                                    <th scope="col" class="fw-bold">Category</th>
                                     <th scope="col" class="fw-bold">Product Name</th>
                                     <th scope="col" class="fw-bold">Description</th>
                                     <th scope="col" class="fw-bold">Size Name</th>
+                                    <th scope="col" class="fw-bold">Price</th>
                                     <th class="fw-bold" >Actions</th>
                                 </tr>
 
@@ -169,22 +172,21 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
                             <tr>
                                 <td class="fw-bold" @click="showImage(product.image, product.product_name)" style="cursor: pointer;">
                                     <img v-bind:src="storageLink + product.image" 
-                                class="img-fluid" width="100" height="100">
-                            
+                                 width="50" height="50">
                                 </td>                              
                                 <td hidden>{{product.id}}</td>
 
-                                    <td v-if="product.serial_number == 'No Serial Number'">
+                                    <!-- <td v-if="product.serial_number == 'No Serial Number'">
                                         <span class="text-danger fw-bold">{{product.serial_number}}</span>
-                                    </td>
+                                    </td> -->
 
-                                    <td v-else>{{product.serial_number}}</td>
-
-                                    <td>{{product.manufacturer}}</td>
+                                    <td>{{product.serial_number}}</td>
                                     <td>{{product.category.category}}</td>
+                                    <td>{{product.manufacturer}}</td>
                                     <td>{{product.product_name}}</td>
-                                    <td>{{product.description}}</td>
+                                    <td style="padding: 0; margin: 0; word-wrap:break-word;">{{product.description}}</td>
                                     <td>{{product.size}}</td>
+                                    <td>₱ {{product.price}}</td>
                                 <td class="m-3">
 
                                     <RouterLink :to="{name: 'edit_product', params:{id:product.id} }">

@@ -57,9 +57,9 @@
                         aria-hidden="true"></span>Login</button>
 
 
-                        <div class="d-flex justify-content-center">
+                       <!--  <div class="d-flex justify-content-center">
                             <a role="button" class="mb-2 fw-bold">Forgot Password?</a>
-                        </div>
+                        </div> -->
                         
                         
                     </form>

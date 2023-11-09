@@ -274,6 +274,9 @@ Chart.register(...registerables); */
         }
 
 
+     
+
+
 
         
     /* const chartData = computed(() => ({
@@ -307,6 +310,10 @@ Chart.register(...registerables); */
         const notifLists = ref([]);
 
 
+        const labels = ref([]);
+        const data = ref([]);
+
+
         
 
 
@@ -337,15 +344,27 @@ Chart.register(...registerables); */
 
 
         const chartData2 = computed(() => ({
-        labels: ['1','2'],
+        labels: labels.value,
         datasets: [{
-                label: 'My First Dataset',
-                data: [65, 59],
+                label: 'Total Sold',
+                data: data.value,
                 fill: false,
                 borderColor: 'rgb(75, 192, 192)',
                 tension: 0.1
             }],
         }));
+
+
+        const getMonthlyAnalytics = async() => {
+            axios_client.get('/analytics/monthly').then(response=>{       
+            labels.value = response.data.labels
+            data.value = response.data.total_sold
+
+
+            }).catch(error =>{
+                console.log(error.response.data)
+            })
+        }
 
 
         const styles = ref({
@@ -459,6 +478,7 @@ Chart.register(...registerables); */
     
 
         onMounted( async ()=> {      
+            getMonthlyAnalytics()
             getNotifications()
             expired_prod()
             total_products()
@@ -473,7 +493,7 @@ Chart.register(...registerables); */
 
         return { user: computed(() => store.state.user.data),
             product_lists,close,expired_prod,expired_lists
-            ,stock_lists,search_box,typing,product_total,total_products,stock_total
+            ,stock_lists,search_box,typing,product_total,total_products,stock_total,getMonthlyAnalytics
             ,num_total_stock,crit_stocks1,exp_count_f,exp_list_count,isSidebar,dateTime,sale_total,total_sales
 
             ,chartData,chartOptions,sold_items,items_sold,isloaded

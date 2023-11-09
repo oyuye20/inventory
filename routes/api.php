@@ -74,18 +74,19 @@ Route::post('/checkout', [product_crud::class, 'checkout']);
 
 /* INVENTORY */
 Route::get('/inventory', [inventory1::class, 'inventory_index']);
+Route::get('/inventoryLists', [inventory1::class, 'inventoryLists']);
+
+
+
 Route::get('/index/category', [inventory1::class, 'index_category']);
-
-
-
 Route::get('/stock/history', [inventory1::class, 'stockHistory']);
-
-
-
-
 Route::get('/select/category', [inventory1::class, 'select_category']);
 Route::get('/select/product/info/{data}', [inventory1::class, 'select_product_info']);
 
+
+
+
+Route::get('/sold-out-inventory', [inventory1::class, 'getSoldOutInventory']);
 
 
 
@@ -157,12 +158,21 @@ Route::get('/filter/month/{date}', [filter::class, 'filterMonth']);
 Route::get('/inventory/search/{data}', [filter::class, 'searchInventory']);
 
 
+
+Route::get('/inventoryLists/search/{data}', [filter::class, 'searchInventoryLists']);
+
+
+
+
+
+
 Route::get('/critical/search/{data}', [filter::class, 'searchCritical']);
 
 
 
 
 
+Route::get('/sold-out-inventory/{data}', [filter::class, 'searchSoldOutItems']);
 
 Route::get('/relation', [product_crud::class, 'sample']);
 
@@ -198,5 +208,6 @@ Route::get('/notify/email', [notify::class, 'emailNotif']);
 
 /* ANALYTICS */
 Route::get('/sample', [analytics::class, 'sample']);
+Route::get('/analytics/monthly', [stats::class, 'monthlyItemsAnalytics']);
 
 

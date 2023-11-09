@@ -30,7 +30,7 @@ class product_crud extends Controller
 
     /* READ ALL PRODUCT */
     public function index(){
-        return product_info::with('category')->where('isArchived',0)->orderBy('product_name')->paginate(5);
+        return product_info::with('category')->where('isArchived',0)->orderBy('product_name')->paginate(10);
     }
 
 
@@ -43,9 +43,10 @@ class product_crud extends Controller
     public function checkout(Request $request){      
         $r = json_decode($request->input("cart"),true);
 
-        $s = $request->input("grand_total");
+        /* $s = $request->input("grand_total");
         $converted = substr($s,3);
-        $final_total = str_replace(',', '', $converted);
+        $final_total = str_replace(',', '', $converted); */
+
 
 
         $transactions = transactions::create([ 
@@ -53,8 +54,9 @@ class product_crud extends Controller
             "transactions_id" => $request->input("transactions_id"),
             "gross_total" => $request->input("sub_total"),
             "discount" => "0",
-            "net_total" => $final_total,
+            "net_total" => $request->input("grand_total"),
             "purchase_date" => $request->input("purchase_date"),
+            "orderedBy" => $request->input("orderedBy"),
             "change" => $request->input("change"),
             "status" => "Paid",
         ]);
@@ -63,6 +65,7 @@ class product_crud extends Controller
         foreach($r as $values) {
             customer_orders::create([
                 "transactions_id" => $transactions->id,
+                "serial_number" => $values['serial_number'],
                 "product_name" => $values['product_name'],
                 "quantity" => $values['quantity'],
                 "price" => $values['price'],
@@ -73,7 +76,7 @@ class product_crud extends Controller
         /* UPDATE inventories SET stocks = stocks - 5 WHERE product_id = 1 */
 
 
-            inventory::where('product_id', $values['product_id'])->decrement('stocks',$values['quantity']);
+            inventory::where('id', $values['product_id'])->decrement('stocks',$values['quantity']);
 
 
             /* $update_quantity = DB::table('inventories')

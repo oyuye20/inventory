@@ -62,21 +62,21 @@
 
 
         <li class="nav-item col-lg-1.5 me-3" role="presentation" >
-            <button class="nav-link fs-5" id="pills-inventory-tab" 
-            data-bs-toggle="pill" data-bs-target="#pills-inventory" type="button" 
-            role="tab" aria-controls="pills-inventory" aria-selected="false" style="color: #04B474">
-            <i class="fas fa-box me-2" ></i>
-            Inventory Lists</button>
+            <button class="nav-link fs-5" id="pills-soldout-tab" 
+            data-bs-toggle="pill" data-bs-target="#pills-soldout" type="button" 
+            role="tab" aria-controls="pills-soldout" aria-selected="false" style="color: #04B474">
+            <i class="fas fa-arrow-down me-2"></i>
+            Sold out items</button>
         </li>
 
 
-        <!-- <li class="nav-item col-lg-1.5 me-3" role="presentation" >
+        <li class="nav-item col-lg-1.5 me-3" role="presentation" >
             <button class="nav-link fs-5" id="pills-supplier-tab" 
             data-bs-toggle="pill" data-bs-target="#pills-supplier" type="button" 
             role="tab" aria-controls="pills-supplier" aria-selected="false" style="color: #04B474">
             <i class="fas fa-truck me-2"></i>
             Supplier</button>
-        </li> -->
+        </li>
 
 
 
@@ -104,6 +104,9 @@
 
             <div class="tab-content" id="pills-tabContent">
 
+              
+
+
                 <div class="tab-pane fade show active" id="pills-sold" role="tabpanel" aria-labelledby="pills-sold-tab" tabindex="0">
 
                    
@@ -128,6 +131,7 @@
                     <table class="table table-hover table-borderless text-center">
                         <thead>
                             <tr>
+                            <th class="fw-bold">Serial Number</th>
                             <th class="fw-bold">Product Name</th>
                             <th class="fw-bold">Total of sold items</th>
                             <th class="fw-bold">Total Income</th>
@@ -138,10 +142,10 @@
 
                     <tbody v-for="sold in items_sold">
                         <tr>
+                            <td>{{sold.serial_number}}</td>
                             <td>{{sold.product_name}}</td>
                             <td>{{sold.sold_items}}</td>
                             <td>₱ {{sold.money}}</td>
-
 
                             <!-- <td class="m-3">
                                 <button class="btn btn-primary"><i class="bi bi-pencil-square"></i></button>
@@ -161,16 +165,65 @@
 
                 </div>
 
+                </div>
 
 
+                <div class="tab-pane fade show" id="pills-supplier" role="tabpanel" aria-labelledby="pills-supplier-tab" tabindex="0">
+
+                   
+                <h4 class="mt-3 w-100 bg-light p-3 fw-bold"><i class="fas fa-truck me-2"></i>Supplier</h4>
 
 
+                <div class="container-fluid col-xxl-12 d-flex justify-content-between mb-3">
+                    <div class="col-10 me-3">
+                        <input type="text" @keydown.enter="search" role="searchbox" class="form-control rounded-5 p-2" 
+                        style="box-shadow: 3px 3px 3px rgb(197, 197, 197); 
+                        border: 1.9px solid rgb(215, 214, 214);" placeholder="Search sold items">
+                    </div>
+
+                    <div class="col-2 d-flex justify-content-center p-0 m-0">
+                        <button class="btn btn-success" @click="search"><i class="fas fa-magnifying-glass"></i></button>
+                    </div>
+                </div>
 
 
+                <div class="table-responsive"> 
+                    <table class="table table-hover table-borderless text-center">
+                        <thead>
+                            <tr>
+                            <th class="fw-bold">Supplier Name</th>
+                            <th class="fw-bold">Supplier Email</th>
+                            <th class="fw-bold">Supplier Contact Number</th>
 
+                            <!-- <th>Actions</th> -->
+                            </tr>
+                        </thead>
+
+                    <tbody v-for="s in stockHistory_lists.data">
+                        <tr>
+                            <td>{{s.supplier}}</td>
+                            <td>{{s.supplier_email}}</td>
+                            <td>{{s.supplier_number}}</td>
+
+                            <!-- <td class="m-3">
+                                <button class="btn btn-primary"><i class="bi bi-pencil-square"></i></button>
+                                <button type="button" class="btn btn-danger mx-1 mt-2" @click.prevent="del_prod(product.id)"><i class="bi bi-trash3-fill"></i></button>
+                            </td> -->
+                        </tr>
+
+                    </tbody>
+                    </table>
+
+
+                    <div class="d-flex justify-content-end align-items-center" >
+                        <Bootstrap5Pagination :limit="1" :keepLength="true" :data="stockHistory_lists" class="shadow-sm"  
+                        @pagination-change-page="stockHistory"
+                        />
+                    </div>
 
                 </div>
 
+                </div>
 
 
                 <div class="tab-pane fade show" id="pills-stock" role="tabpanel" aria-labelledby="pills-stock-tab" tabindex="0">
@@ -241,28 +294,24 @@
                 </div>
 
 
-
-
                 <div class="tab-pane fade show" id="pills-cancel" role="tabpanel" aria-labelledby="pills-cancel-tab" tabindex="0">Cancelled Order</div>
 
 
+                <!-- SOLD STOCKS TAB -->
+                <div class="tab-pane fade" id="pills-soldout" role="tabpanel" aria-labelledby="pills-soldout-tab" tabindex="0">
 
-
-                <!-- INVENTORY TAB -->
-                <div class="tab-pane fade" id="pills-inventory" role="tabpanel" aria-labelledby="pills-inventory-tab" tabindex="0">
-
-                <h4 class="mt-3 w-100 bg-light p-3 fw-bold"><i class="fas fa-box me-2" ></i>Inventory Lists</h4>
+                <h4 class="mt-3 w-100 bg-light p-3 fw-bold"><i class="fas fa-arrow-down me-2"></i>Sold out Lists</h4>
 
 
                 <div class="container-fluid col-xxl-12 d-flex justify-content-between mb-3">
                     <div class="col-10 me-3">
-                        <input type="text" @keydown.enter="getInventory" role="searchbox" v-model="search_inventory" class="form-control rounded-5 p-2" 
+                        <input type="text" @keydown.enter="getSoldoutItems" role="searchbox" v-model="search_inventory" class="form-control rounded-5 p-2" 
                         style="box-shadow: 3px 3px 3px rgb(197, 197, 197); 
                         border: 1.9px solid rgb(215, 214, 214);" placeholder="Search inventory">
                     </div>
 
                     <div class="col-2 d-flex justify-content-center p-0 m-0">
-                        <button class="btn btn-success" @click="getInventory"><i class="fas fa-magnifying-glass"></i></button>
+                        <button class="btn btn-success" @click="getSoldoutItems"><i class="fas fa-magnifying-glass"></i></button>
                     </div>
                 </div>
 
@@ -287,14 +336,14 @@
                             </tr>
                         </thead>
 
-                    <tbody v-for="i in inventory_lists.data" :key="i.id">
+                    <tbody v-for="i in soldOutLists.data" :key="i.id">
                         <tr>
                             <td>{{i.product.serial_number }}</td>
                             <td>{{i.product.product_name }}</td>
                             <td>{{i.supplier }}</td>
                             <td>{{i.category }}</td>
                             <td>{{i.product.price }}</td>
-                            <td>{{i.stocks }}</td>
+                            <td class="fw-bold text-danger">{{i.stocks }}</td>
 
                             <td v-if="i.production_date == null">
                                 No Date
@@ -314,12 +363,6 @@
                                 <td>{{i.expiration_date }}</td>
                             </td>
 
-
-
-                            
-                          
-
-
                             <!-- <td class="m-3">
                                 <button class="btn btn-primary"><i class="bi bi-pencil-square"></i></button>
                                 <button type="button" class="btn btn-danger mx-1 mt-2" @click.prevent="del_prod(product.id)"><i class="bi bi-trash3-fill"></i></button>
@@ -331,8 +374,8 @@
 
 
                     <div class="d-flex justify-content-end align-items-center" >
-                        <Bootstrap5Pagination :limit="1" :keepLength="true" :data="inventory_lists" class="shadow-sm"  
-                        @pagination-change-page="getInventory"
+                        <Bootstrap5Pagination :limit="1" :keepLength="true" :data="soldOutLists" class="shadow-sm"  
+                        @pagination-change-page="getSoldoutItems"
                         />
                     </div>
 
@@ -341,8 +384,6 @@
 
                 </div>
                 <!-- END OF INVENTORY TAB -->
-
-
 
 
                 <!-- CRITICAL TAB -->
@@ -587,6 +628,7 @@
                             <th class="fw-bold">Net Total</th>
                             <th class="fw-bold">Change</th>
                             <th class="fw-bold">Purchase Date</th>
+                            <th class="fw-bold">Ordered By</th>
                             <th class="fw-bold">Status</th>
                             <th class="fw-bold">View Order</th>
                             </tr>
@@ -599,8 +641,9 @@
                                 <td>{{o.gross_total}}</td>
                                 <td>{{o.discount}}%</td>
                                 <td>₱ {{o.net_total}}</td>
-                                <td>₱ {{o.change}}</td>          
+                                <td>₱ {{o.change}}</td>
                                 <td>{{o.purchase_date}}</td>
+                                <td>{{o.orderedBy}}</td>
                                 <td>{{o.status}}</td>
                                 <td class="m-3">
                                     <button class="btn btn-primary"><i class="far fa-eye"></i></button>
@@ -647,7 +690,7 @@ export default {
     },
 
     setup(){
-        let inventory_lists = ref([]);
+        let soldOutLists = ref([]);
         let stock_lists = ref([]);
         let expired_lists = ref([]);
         let items_sold = ref([]);
@@ -673,11 +716,11 @@ export default {
 
 
         /* GET INVENTORY TABLE  AND SEARCH*/
-        const getInventory = async(page = 1) => {
+        const getSoldoutItems = async(page = 1) => {
 
             if(search_inventory.value == ''){
-                axios_client.get('/inventory?page=' + page).then(response=>{
-                    inventory_lists.value = response.data;
+                axios_client.get('/sold-out-inventory?page=' + page).then(response=>{
+                    soldOutLists.value = response.data;
                     loading.value = false;
 
                 }).catch(error =>{
@@ -687,7 +730,7 @@ export default {
 
             else {
                 axios_client.get('/inventory/search/' + search_inventory.value  + '?page=' + page).then(response=>{
-                    inventory_lists.value = response.data;
+                    soldOutLists.value = response.data;
                     loading.value = false;
 
                 }).catch(error =>{
@@ -798,7 +841,7 @@ export default {
 
 
         onMounted(()=> {
-            getInventory()
+            getSoldoutItems()
             expired_prod()
             sold_items()
             getCriticalStocks()
@@ -808,7 +851,7 @@ export default {
         })
 
         return {
-            inventory_lists,stock_lists,expiringStocks,getInventory,del_prod,loading,expired_prod,expired_lists,items_sold,sold_items
+            soldOutLists,stock_lists,expiringStocks,getSoldoutItems,del_prod,loading,expired_prod,expired_lists,items_sold,sold_items
             ,getCriticalStocks,stockHistory,filterExpiringProd,criticalStocks,getOrders,orders,stockHistory_lists,
 
             search_inventory, search_expired, search_order, search_critical, search_sold, 

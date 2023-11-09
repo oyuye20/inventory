@@ -27,11 +27,33 @@ class filter extends Controller
     }  
 
 
+
     public function searchInventory($data){
-      return inventory::with('product')->whereHas('product', function ($query) use($data) {
+      return inventory::with('product')->where('stocks','>','0')->whereHas('product', function ($query) use($data) {
+        $query->where('product_name','LIKE','%'.$data.'%')
+              ->orWhere('manufacturer','LIKE','%'.$data.'%')
+              ->orWhere('serial_number','LIKE','%'.$data.'%');
+      })->orderBy('created_at','ASC')->groupBy('product_id')->paginate(5);
+      
+      
+      /* return inventory::with('product')->whereHas('product', function ($query) use($data) {
         $query->where('product_name','LIKE','%'.$data.'%');
+      })->paginate(5); */
+    }
+
+
+    
+
+    public function searchInventoryLists($data){
+      return inventory::with('product')->where('stocks','>','0')->whereHas('product', function ($query) use($data) {
+        $query->where('product_name','LIKE','%'.$data.'%')
+          ->orWhere('manufacturer','LIKE','%'.$data.'%')
+          ->orWhere('serial_number','LIKE','%'.$data.'%');
       })->paginate(5);
     }
+
+
+
 
 
     public function searchSold(){
@@ -57,6 +79,15 @@ class filter extends Controller
     public function searchOrder(){
 
     }
+
+
+    public function searchSoldOutItems($data){
+      
+    }
+
+
+
+
 
 
 

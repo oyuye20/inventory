@@ -42,7 +42,7 @@
       <td @click="showImage(i.product.image, i.product.product_name)"
       style="cursor: pointer;">
         <img v-bind:src="storageLink + i.product.image" 
-        class="img-fluid" width="100" height="100">
+        width="50" height="50">
       </td>
 
       <td>{{i.product.product_name}}</td>
@@ -222,6 +222,7 @@ export default {
         })
 
 
+
         function showImage(image, product) {
             Swal.fire({
                 title: 'Image',
@@ -298,7 +299,7 @@ export default {
         const getInventory = async(page = 1) => {
 
           if(search_box.value == ''){
-            axios_client.get('/inventory?page=' + page).then(response=>{
+            axios_client.get('/inventoryLists?page=' + page).then(response=>{
                   inv_lists.value = response.data
 
               }).catch(error =>{
@@ -308,7 +309,7 @@ export default {
             }
 
             else {
-              axios_client.get('/inventory/search/' + search_box.value  + '?page=' + page).then(response=>{
+              axios_client.get('/inventoryLists/search/' + search_box.value  + '?page=' + page).then(response=>{
                   inv_lists.value = response.data
 
               }).catch(error =>{
@@ -356,6 +357,8 @@ export default {
             }).catch(error =>{
                 console.log(error.response.data)
             })
+
+            this.inventory.category = category
         }
 
 

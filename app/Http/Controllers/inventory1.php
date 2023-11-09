@@ -21,7 +21,7 @@ class inventory1 extends Controller
  */
         /* return inventory::with('product')->where('stocks','>', 100)->paginate(5); */
 
-        return inventory::with('product')->paginate(5);
+        return inventory::with('product')->where('stocks','>','0')->orderBy('created_at','ASC')->groupBy('product_id')->paginate(5);
 
 
         /* return DB::table('product_infos')
@@ -37,6 +37,27 @@ class inventory1 extends Controller
 
         ->paginate(2); */
     }
+
+
+    public function inventoryLists(){
+        return inventory::with('product')->where('stocks','>','0')->orderBy('id','ASC')->paginate(5);
+    }
+
+
+
+
+
+
+    public function getSoldOutInventory(){
+        return inventory::with('product')->where('stocks','=','0')->paginate(10);
+    }
+
+
+
+
+
+
+
 
 
 
@@ -85,7 +106,7 @@ class inventory1 extends Controller
 
 
     public function stockHistory(){
-        return inventory::with('product')->orderBy('created_at','asc')->paginate(5);
+        return inventory::with('product')->orderBy('created_at','asc')->paginate(10);
     }
 
 

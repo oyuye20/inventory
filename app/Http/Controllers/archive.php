@@ -11,7 +11,7 @@ use App\Models\inventory;
 class archive extends Controller
 {
     public function indexProduct(){
-        return product_info::with('category')->where('isArchived',1)->paginate(5);
+        return product_info::with('category')->where('isArchived',1)->orderBy('created_at','DESC')->paginate(5);
     }
 
     public function indexCategory(){
