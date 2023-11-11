@@ -89,7 +89,7 @@
         </div>
 
 
-        <form class="col-12 d-flex justify-content-center mb-3" @submit.prevent="updateProfile(id)"> 
+        <form class="col-12 d-flex justify-content-center mb-3" @submit.prevent="updateProfile(user_details.id)"> 
             <div class="col-10 me-2">
                 <button class="btn w-100 text-light fw-bold"  type="submit" 
                 style="background-color: #04B474;">Save Changes</button>
@@ -130,13 +130,13 @@ import {reactive, onMounted} from 'vue';
 import { computed, toHandlers } from "vue";
 import axios_client from '../axios';
 import { inject } from 'vue'
+import {useToast} from 'vue-toast-notification';
 export default {
 
 
     setup(){
         const store = useStore();
         const image = ref('');
-        const id = ref('');
 
 
 
@@ -166,7 +166,6 @@ export default {
 
             image.value = response.data.image;
             user_details.value = response.data;
-            id.value = response.data.id;
 
 
             }).catch(error =>{
@@ -174,17 +173,34 @@ export default {
             })
         }
 
-
-
-        function updateProfile(id){
-            console.log(id)
+        const config = {
+        headers: {
+            'content-type': 'multipart/form-data'
+        }
         }
 
 
 
+        function updateProfile(id){
+
+        let formData = new FormData();
+        formData.append('image', imageFile.value);
+        formData.append('user_data', JSON.stringify(user_details.value));
+
+        axios_client.post(`/updateProfile/`
+         + id, formData, config).then(response=>{
+            this.userData();
+
+            const $toast = useToast();
+            let instance = $toast.success('Profile updated successfully', 
+            {position: 'top'}); 
+            
+        }).catch(error =>{
+            console.log(error.response.data)
+        })
 
 
-
+        }
 
 
 
@@ -194,7 +210,7 @@ export default {
         })
 
         return {userData,store,storageLink,image,user_details,
-            chooseFiles,imageUpload,imageURL,updateProfile,id}
+            chooseFiles,imageUpload,imageURL,updateProfile}
     }
 
 

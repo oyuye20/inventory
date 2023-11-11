@@ -53,5 +53,23 @@ class notify extends Controller
 
 
 
+    public function readNotifications(){
+        return notification_table::where('isReaded', '=', 0)->update(['isReaded' => 1]);
+
+        /* if($notif)
+        {
+            return response()->json([
+                'message' => 'read all notifications successfully'
+            ]);
+        }
+
+        else {
+            return response()->json([
+                'message' => 'Product does not exists'
+                
+            ]);
+        } */
+    }
+
 
 }

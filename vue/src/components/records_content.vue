@@ -1,9 +1,9 @@
 <template>
 
-    <div v-if="loading" class="div p-3 flex-column d-flex justify-content-center align-items-center container-fluid" style="height: 100vh;">
-        <p class="fw-bold fs-3">Loading...</p>
-        <span class="spinner-border spinner-border-sm  p-3" aria-hidden="true" style="font-size: ;"></span>
-    </div>  
+<div v-if="loading" class="div p-3 flex-column d-flex justify-content-center align-items-center container-fluid" style="height: 100vh;">
+    <p class="fw-bold fs-3">Loading...</p>
+    <span class="spinner-border spinner-border-sm  p-3" aria-hidden="true" style="font-size: ;"></span>
+</div>  
 
 
 
@@ -630,7 +630,7 @@
                             <th class="fw-bold">Purchase Date</th>
                             <th class="fw-bold">Ordered By</th>
                             <th class="fw-bold">Status</th>
-                            <th class="fw-bold">View Order</th>
+                           <!--  <th class="fw-bold">View Order</th> -->
                             </tr>
                         </thead>
 
@@ -645,9 +645,9 @@
                                 <td>{{o.purchase_date}}</td>
                                 <td>{{o.orderedBy}}</td>
                                 <td>{{o.status}}</td>
-                                <td class="m-3">
+                                <!-- <td class="m-3">
                                     <button class="btn btn-primary"><i class="far fa-eye"></i></button>
-                                </td>
+                                </td> -->
                             </tr>
 
                         </tbody>

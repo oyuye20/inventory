@@ -6,6 +6,31 @@
 
     <h4>Edit Product</h4>
 
+
+
+
+    <div class="mb-3" v-if="imageURL">
+        <img :src="imageURL" class="img-fluid" width="200" height="200">
+        <p>New Image</p>
+    </div>
+
+
+
+    <div class="mb-3" v-else>
+        <img v-bind:src="storageLink + edit_prod_val.image" width="200" height="200">
+    </div>
+
+
+
+    <div class="mb-3">
+        <label for="" class="form-label">Image</label>
+        <input type="file" @change="imageUpload" class="form-control">
+    </div>
+
+
+
+
+
     <div class="mb-3">
         <label for="" class="form-label">Serial Number</label>
         <input type="text" disabled v-model="edit_prod_val.serial_number" 
@@ -34,14 +59,19 @@
 
     <div class="d-flex justify-content-center col-12">
 
-        <div class="mb-3 col-5 mx-1">
+        <div class="mb-3 col-3 mx-1">
             <label for="" class="form-label">Size</label>
-            <input type="text" v-model="edit_prod_val.size" class="form-control" name="" id="" aria-describedby="helpId" placeholder="">
+            <input type="text" v-model="edit_prod_val.size" class="form-control">
         </div>
 
-        <div class="mb-3 col-5 mx-1">
+        <div class="mb-3 col-3 mx-1">
             <label for="" class="form-label">Price</label>
-            <input type="text" v-model="edit_prod_val.price" class="form-control" name="" id="" aria-describedby="helpId" placeholder="">
+            <input type="text" v-model="edit_prod_val.price" @input="filter_input()" class="form-control">
+        </div>
+
+        <div class="mb-3 col-3 mx-1">
+            <label for="" class="form-label">Selling</label>
+            <input type="text" v-model="edit_prod_val.selling_price" @input="filter_input()" class="form-control">
         </div>
 
 
@@ -78,19 +108,29 @@ import axios_client from '../axios';
 import { useRouter, useRoute } from "vue-router";
 import { ref } from 'vue'
 import { defineProps } from "vue";
+import { inject } from 'vue'
 
 export default {
 
     setup(){
-
+    const storageLink = inject('$storageLink');
     const router = useRouter();
     const route = useRoute();
     const loading = ref(false);
 
 
-    const edit_prod_val = ref([]);
-    
+    const config = {
+        headers: {
+            'content-type': 'application/x-www-form-urlencoded'
+        }
+    }
 
+
+    const edit_prod_val = ref([]);
+    const imageFile = ref('');
+    const imageURL = ref ('');
+    
+    
 
     const rules  = {
         serial_number: {required}
@@ -98,13 +138,25 @@ export default {
 
     const v$ = useVuelidate(rules)
 
+
+
     
+
+
+    function imageUpload(e){
+        const file = imageFile.value = e.target.files[0]
+        imageURL.value = URL.createObjectURL(file)
+    }
+
+
 
     /* GET PRODUCT TABLE */
     const getProduct = async() => {
         axios_client.get(`/product/edit/` 
         + route.params.id).then(response=>{
-            edit_prod_val.value = response.data.edit_prod;
+
+            edit_prod_val.value = response.data;
+
 
         }).catch(error =>{
             console.log(error)
@@ -112,19 +164,25 @@ export default {
     }
 
 
+   
+
+ 
 
     /* UPDATE A PRODUCT */
     function update_Product (){
         loading.value = true;
 
-        /* console.log(edit_prod_val.value) */
+        let formData = new FormData();
+        formData.append('image2', imageFile.value);
+        formData.append('product_data', JSON.stringify(edit_prod_val.value));
 
-        axios_client.put(`/update_product/`
-         + route.params.id, edit_prod_val.value).then(response=>{
+
+        axios_client.post(`/update_product/`
+         + route.params.id, formData, config).then(response=>{
             loading.value = true;
             router.push({name: 'products'})
         }).catch(error =>{
-            console.log(error)
+            console.log(error.response.data)
         })
     }
 
@@ -132,8 +190,8 @@ export default {
 
     /* PREVENT ALPHANUMERIC CHARACTERS INPUT */
     function filter_input(){
-        this.edit_prod_val.serial_number = 
-        this.edit_prod_val.serial_number.replace(/[^0-9]/g, "");
+        this.edit_prod_val.price.replace(/[^0-9]/g, "");
+        this.edit_prod_val.selling_price.replace(/[^0-9]/g, "");
     }
 
 
@@ -143,9 +201,9 @@ export default {
 
 
     return {
-       rules,v$,loading,getProduct,route,edit_prod_val,update_Product,filter_input
+       rules,v$,loading,getProduct,route,edit_prod_val,update_Product,
+       filter_input,storageLink,imageUpload,imageFile,imageURL
     }
-
 
 
 

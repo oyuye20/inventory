@@ -24,10 +24,12 @@
   <thead>
     <tr>
             <th class="fw-bold" style="color: rgba(0, 0, 0, 0.915);">Image</th>
+            <th class="fw-bold" style="color: rgba(0, 0, 0, 0.915);">Serial Number</th>
             <th class="fw-bold" style="color: rgba(0, 0, 0, 0.915);">Product Name</th>
             <th class="fw-bold" style="color: rgba(0, 0, 0, 0.915);">Supplier</th>
             <th class="fw-bold" style="color: rgba(0, 0, 0, 0.915);">Category</th>
             <th class="fw-bold" style="color: rgba(0, 0, 0, 0.915);">Price</th>
+            <th class="fw-bold" style="color: rgba(0, 0, 0, 0.915);">Selling Price</th>
             <th class="fw-bold" style="color: rgba(0, 0, 0, 0.915);">Stocks</th>
             <th class="fw-bold" style="color: rgba(0, 0, 0, 0.915);">Safety Stocks</th>
             <th class="fw-bold" style="color: rgba(0, 0, 0, 0.915);">Production Date</th>
@@ -45,6 +47,8 @@
         width="50" height="50">
       </td>
 
+      <td>{{i.product.serial_number}}</td>
+
       <td>{{i.product.product_name}}</td>
       <td>{{i.supplier}}</td>
       <td>{{i.category}}</td>
@@ -52,6 +56,11 @@
       <td>
         {{Intl.NumberFormat('en-PH', { style: 'currency', 
         currency: 'PHP' }).format((i.product.price))}}              
+      </td>
+
+      <td>
+        {{Intl.NumberFormat('en-PH', { style: 'currency', 
+        currency: 'PHP' }).format((i.product.selling_price))}}              
       </td>
 
       <td>{{i.stocks}}</td>
@@ -89,7 +98,7 @@
 </div>
 
 
-<div class="container-fluid mb-4">
+<!-- <div class="container-fluid mb-4">
 
   <h4>Add new stocks</h4>
 
@@ -164,7 +173,7 @@
   </form>
   
 
-</div>
+</div> -->
 
 
 
@@ -205,23 +214,9 @@ export default {
 
 
         const $toast = useToast();
-
-
-
         const storageLink = inject('$storageLink');
 
-        const inventory  = reactive({
-          category: '',
-          product_info: '',
-          stocks: '',
-          prod_date: '',
-          exp_date: '',
-          supplier: '',
-          supplierEmail: '',
-          supplierNumber: ''
-        })
-
-
+  
 
         function showImage(image, product) {
             Swal.fire({
@@ -232,65 +227,6 @@ export default {
                 imageHeight: 200,
                 imageAlt: image,
             })
-        }
-
-        
-        function filter_input(){
-          this.inventory.stocks = this.inventory.stocks.replace(/[^0-9]/g, "");
-          this.inventory.supplierNumber = this.inventory.supplierNumber.replace(/[^0-9]/g, "");
-        }
-
-
-        function add_inventory(){
-
-          let safetyStocks = Math.round(this.inventory.stocks * 0.25);
-          
-          let formData = new FormData();
-          formData.append('category', this.inventory.category);
-
-          formData.append('supplier', this.inventory.supplier);
-          formData.append('supplierEmail', this.inventory.supplierEmail);
-          formData.append('supplierNumber', this.inventory.supplierNumber);
-
-
-
-          formData.append('product_info', this.inventory.product_info);
-          formData.append('stocks', this.inventory.stocks);
-          formData.append('safetyStocks', safetyStocks);
-
-
-          formData.append('stockBy', username.value);
-          formData.append('updatedBy', username.value);
-
-
-
-
-          formData.append('prod_date', this.inventory.prod_date);
-          formData.append('exp_date', this.inventory.exp_date);
-          formData.append('noExpiration', expire_radio.value);
-          
-
-
-          let url = '/inventory/add';
-          axios_client.post(url,formData).then(response => {
-
-            console.log(response.data)
-
-            /* this.inventory.category = ''
-            this.inventory.product_info = ''
-            this.inventory.stocks = ''
-            this.inventory.prod_date = ''
-            this.inventory.exp_date = ''
-            this.inventory.supplier = ''
-            this.inventory.safetyStocks = '' */
-            this.getInventory();
-
-            $toast.success("Inventory added successfully", {position: 'top'}); 
-
-          }).catch(error =>{
-             
-              console.log(error.response.data)
-          })
         }
 
 
@@ -331,61 +267,15 @@ export default {
             })
         }
 
-        
-
-
-
-
-        /* GET CATEGORY */
-        const getCat = async() => {
-            axios_client.get('/select/category')
-            .then(response=>{
-                category_lists.value = response.data;
-            }).catch(error =>{
-                console.log(error.response.data)
-            })
-        }
-
-
-
-
-        function getSelectedCat (category){      
-            axios_client.get('/select/product/info/' + category)
-            .then(response=>{
-                productinfo.value = response.data;
-                catRes.value = true;
-            }).catch(error =>{
-                console.log(error.response.data)
-            })
-
-            this.inventory.category = category
-        }
-
-
-
-        /* GET PRODUCT NAME IN SELECT INPUT */
-        /* const getProductInfo = async() => {
-            axios_client.get('/select/product/info')
-            .then(response=>{
-                productinfo.value = response.data;
-            }).catch(error =>{
-                console.log(error.response.data)
-            })
-        } */
-
-
-
 
 
         onMounted(()=> {
             getInventory()
-            getCat()
-    
             userData()
         })
 
-        return {showImage,getInventory,inv_lists,category_lists,getCat,productinfo,inventory,
-          add_inventory,filter_input,storageLink,search_box,expire_radio,userData,username,getSelectedCat,catRes}
+        return {showImage,getInventory,inv_lists,category_lists,productinfo,
+        storageLink,search_box,expire_radio,userData,username,catRes}
 
     }
 

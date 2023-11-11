@@ -16,6 +16,8 @@ export const useCartStore = defineStore('CartStore', () =>{
 
     const search_box = ref ("");
 
+    const loading = ref (true);
+
 
 
     const message2 = computed(() => message_stock.value)
@@ -75,6 +77,10 @@ export const useCartStore = defineStore('CartStore', () =>{
         if(search_box.value == ''){
             axios_client.get('/inventory?page=' + page).then(response=>{
                 list_product.value = response.data;
+
+                loading.value = false;
+
+                
               }).catch(error =>{
                   console.log(error.response.data)
               })
@@ -189,7 +195,7 @@ export const useCartStore = defineStore('CartStore', () =>{
     }
 
     return {getProduct,prod,add_cart,cart,grand_total,remove_cart,increment,
-        decrement,clear_cart,message_stock,message2,close_msg_stock,search_box}
+        decrement,clear_cart,message_stock,message2,close_msg_stock,search_box,loading}
 
 
     /* state: () => ({

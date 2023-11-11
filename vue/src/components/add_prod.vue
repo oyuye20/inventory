@@ -1,142 +1,204 @@
 <template>
 
-    <div class="container d-flex flex-column justify-content-center align-items-center">
-        <qrcode-scanner v-if="showcam" :qrbox="250" :fps="20"  style="width: 500px;"
-        @result="onScan"/>
-    </div>
+
+  <div class="container-fluid px-4">
+
+                <button class="btn btn-dark mt-3 modal-add" @click="toggleModal">Add new category</button>
+
+                <!-- <router-link :to="{name: 'add_product'}">
+                    <button type="button" class="btn btn-dark mt-3 modal-add">
+                        Add new product
+                    </button>
+                </router-link> -->
 
 
-  
+                <button type="button" class="btn btn-dark mt-3 modal-add"
+                @click="toggleProduct">
+                        Add new product
+                </button>
+
+
+
+
+                <button @click="exportExcel" class="btn btn-success modal-add"><i class="far fa-file-excel me-2">         
+                </i> Export product excel </button>
+
+            
+
+               
+
+
+                 <div class="row container-fluid mb-3 mt-3  ">
+
+                    <div class="col-xxl-12 d-flex justify-content-between ">
+
+                        
+
+                        <div class="col-10 me-3">
+                            <input type="text" @keydown.enter="search" role="searchbox" v-model="search_box" class="form-control rounded-5 p-2" 
+                            style="box-shadow: 3px 3px 3px rgb(197, 197, 197); 
+                            border: 1.9px solid rgb(215, 214, 214);" placeholder="Search Product">
+                        </div>
+
+                        <div class="col-2 d-flex justify-content-center p-0 m-0">
+                            <button class="btn btn-success" @click="search"><i class="fas fa-magnifying-glass"></i></button>
+                        </div>
+
+                    </div>
+
+
+                    <!-- <div class="input-group mb-3 container-fluid">
+                        <input type="text" class="form-control rounded-5 h-100" placeholder="Search Product" 
+                        style="box-shadow: 3px 3px 3px rgb(197, 197, 197); border: 1.9px solid rgb(215, 214, 214);">
+
+                        <button class="btn btn-primary mx-3 rounded-2 h-100" type="button" ><i class="fas fa-magnifying-glass"></i></button>
+                    </div> -->
+
+
+
+
+
+                    <!-- <div class="col-xl-10 col-lg-9 col-md-9 col-xs-7  border border-dark">
+                        <input type="text" @keydown.enter="search" role="searchbox" v-model="search_box" class="form-control rounded-5 p-2" 
+                        style="box-shadow: 3px 3px 3px rgb(197, 197, 197); 
+                        border: 1.9px solid rgb(215, 214, 214);" placeholder="Search Product">
+                    </div>
+
+                    <div class="col-1 d-flex justify-content-center p-0 m-0 mx-4 border border-dark">
+                        <button class="btn btn-success" @click="search"><i class="fas fa-magnifying-glass"></i></button>
+                    </div>  -->      
+                </div>
+
+                
+                
+                <div v-if="loading" class="p-3 d-flex justify-content-center align-items-center container-fluid h-100 mt-3">
+                    <span class="spinner-border spinner-border-lg  p-3" aria-hidden="true" style="font-size: ;"></span>
+                 </div>  
+       
+                
+                 <!-- PRODUCT TABLE -->
+                <div v-else class="table-responsive mt-3">
+
    
 
+                    <h4 class="mt-3 mb-3 w-100 bg-light p-3"><i class="fas fa-box-open me-2"></i>Product Info Lists</h4>
 
-
-<div class="container d-flex justify-content-center mt-3">
-    <div class="col-12">
-        <h4><i class="fas fa-circle-plus me-2 mb-3"></i>Add new product</h4>
-
-
-        <div class="mb-3">
-            <label for="" class="form-label">Category</label>
-            <select class="form-control" v-model="category">    
-                <option selected v-for="cat in category_lists" :key="cat.id" :value="cat.id">{{cat.category}}</option>
-            </select>
-        </div>
+                    
 
 
 
+                    <div class="div">
+                        <table class="table table-hover table-borderless text-center w-100">
+                            <thead>
+                                <tr>
+                                    <th scope="col" class="fw-bold p-3">Image</th>
+                                    <th scope="col" class="fw-bold">Serial Number</th>
+                                    <th scope="col" class="fw-bold">Category</th>     
+                                    <th scope="col" class="fw-bold">Manufacturer</th>
+                                    <th scope="col" class="fw-bold">Product Name</th>
+                                    <th scope="col" class="fw-bold">Description</th>
+                                    <th scope="col" class="fw-bold">Size Name</th>
+                                    <th scope="col" class="fw-bold">Price</th>
+                                    <th scope="col" class="fw-bold">Selling Price</th>
+                                    <th class="fw-bold" >Actions</th>
+                                </tr>
 
-        <div class="mb-3" v-if="serialField">
-            <label for="" class="form-label">Serial Number</label>
+                            </thead>
+                        <tbody v-for="product in product_lists.data" :key="product.id">
+            
+                            <tr>
+                                <td class="fw-bold" @click="showImage(product.image, product.product_name)" style="cursor: pointer;">
+                                    <img v-bind:src="storageLink + product.image" 
+                                 width="50" height="50">
+                                </td>                              
+                                <td hidden>{{product.id}}</td>
 
-            <div class="d-flex">
-                <input type="text" v-model="serialRes" class="form-control" @input="filter_input()">
+                                    <!-- <td v-if="product.serial_number == 'No Serial Number'">
+                                        <span class="text-danger fw-bold">{{product.serial_number}}</span>
+                                    </td> -->
 
-                <button class="btn btn-primary w-10" @click="toggleCam" data-bs-toggle="tooltip"
-                data-bs-placement="top" data-bs-title="Tooltip on top"><i class="fas fa-barcode"></i></button>
-            </div>
+                                    <td>{{product.serial_number}}</td>
+                                    <td>{{product.category.category}}</td>
+                                    <td>{{product.manufacturer}}</td>
+                                    <td>{{product.product_name}}</td>
+                                    <td style="padding: 0; margin: 0; word-wrap:break-word;">{{product.description}}</td>
+                                    <td>{{product.size}}</td>
+                                    <td>₱ {{product.price}}</td>
+                                    <td>₱ {{product.selling_price}}</td>
+                                <td class="m-3">
 
+                                    <RouterLink :to="{name: 'edit_product', params:{id:product.id} }">
+                                        <button class="btn btn-success"><i class="bi bi-pencil-square"></i></button>
+                                    </RouterLink>
+                                    
+                                    <button type="button" class="btn btn-warning mx-1 mt-2" @click.prevent="del_prod(product.id, product.product_name)">
+                                    <i class="fas fa-box-archive"></i></button>
 
-            <!-- <div v-if="v$.serialRes.value.$error">
-                <p class="text-danger fw-bold mt-1">{{ "Serial number required" }}</p>
-            </div> -->
-        </div>
+                                </td>
+                            </tr>
+                            
+                        </tbody>
+                        </table>
 
+                        <div class="container-fluid">
+                            <Bootstrap5Pagination :limit="30" :keepLength="true" :data="product_lists" class="shadow-sm"  
+                            @pagination-change-page="search"/>
+                        </div>   
+                    </div>
+               
 
-        <div class="form-check">
-            <input class="form-check-input" v-model="noSerial" type="checkbox" @click="serialHide" id="flexCheckDefault">
-            <label class="form-check-label" for="flexCheckDefault">
-                No Serial Number
-            </label>
-        </div>
-
-
-
-
-        <div class="mb-3">
-            <label for="" class="form-label">Product name</label>
-            <input type="text" v-model="add_prod.product_name" class="form-control" name="" id="" aria-describedby="helpId" placeholder="">
-
-            <div v-if="v$.product_name.$error">
-                <p class="text-danger fw-bold mt-1">{{ "Product name required" }}</p>
-            </div>
-        </div>
-
-
-        <div class="mb-3" v-if="imageURL">
-            <img :src="imageURL" class="img-fluid" width="200" height="200">
-        </div>
-
-
-        <div class="mb-3">
-            <label for="" class="form-label">Image File</label>
-            <input type="file" class="form-control"  @change="imageUpload" aria-describedby="helpId" placeholder="">
-        </div>
-
-
-        <div class="mb-3">
-            <label for="" class="form-label">Manufacturer</label>
-            <input type="text" v-model="add_prod.manufacturer" class="form-control" name="" id="" aria-describedby="helpId" placeholder="">
-
-            <div v-if="v$.manufacturer.$error">
-                <p class="text-danger fw-bold mt-1">{{ "Manufacturer required" }}</p>
-            </div>
-        </div>
-
-
-
-        <div class="mb-3 d-flex">
-
-        <div class="price w-50">
-            <label for="" class="form-label">Price</label>
-            <input type="text" v-model="add_prod.price" @input="filter_input()" class="form-control" placeholder="">
-
-            <div v-if="v$.price.$error">
-                <p class="text-danger fw-bold mt-1">{{ "Price required" }}</p>
-            </div>
-        </div>
-
-
-        <div class="size w-50">
-            <div class="mx-2">
-                <label for="" class="form-label">Size</label>
-                <input type="text" v-model="add_prod.size" class="form-control" placeholder="">
-
-                <div v-if="v$.size.$error">
-                    <p class="text-danger fw-bold mt-1">{{ "Size required" }}</p>
                 </div>
-            </div>     
-        </div>
+                <!-- END OF PRODUCT TABLE -->
+
+
+                <!-- CATEGORY TABLE -->
+                <div class="table-responsive mt-4">
+                    <h4 class="mt-3 w-100 bg-light p-3"><i class="fas fa-filter me-2"></i>Category Lists</h4>
+    
+                    <table class="table table-hover table-borderless text-center w-100">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="fw-bold">ID</th>
+                                <th scope="col" class="fw-bold">Category Name</th>
+                                <th scope="col" class="fw-bold">Description</th>
+                                <th class="fw-bold" >Actions</th>
+                            </tr>
+
+                        </thead>
+                    <tbody v-for="cat in category_lists.data" :key="cat.id">
+                        <tr>
+                            <td>{{cat.id}}</td>
+                            <td>{{cat.category}}</td>
+                            <td>{{cat.description}}</td>
+  
+                            <td class="m-3">
+
+                                <RouterLink :to="{name: 'edit_product', params:{id:cat.id} }">
+                                    <button class="btn btn-success" data-mdb-toggle="tooltip" 
+                                    data-mdb-placement="left" title="Edit"><i class="bi bi-pencil-square">
+                                    </i></button>
+                                </RouterLink>
+                                
+                                <button type="button" class="btn btn-warning mx-1 mt-2" data-mdb-toggle="tooltip" 
+                                data-mdb-placement="left" title="Edit" @click.prevent="del_cat(cat.id, cat.category)">
+                                <i class="fas fa-box-archive"></i></button>
+
+                            </td>
+                        </tr>
+                    </tbody>
+                    </table>
+
+
+                    <div class="d-flex justify-content-end align-items-center" >
+                        <Bootstrap5Pagination :limit="1" :keepLength="true" :data="category_lists" class="shadow-sm"  
+                        @pagination-change-page="getCat"
+                        />
+                    </div>            
+                </div>
+                <!-- END OF CATEGORY TABLE -->
 
 
         </div>
-
-
-        <div class="mb-3">
-            <label for="" class="form-label">Description</label>
-            <textarea name="" v-model="add_prod.description" id="" class="form-control"></textarea>
-        </div>
-
-        <div class="d-flex justify-content-end">
-            <router-link :to="{name: 'products'}">     
-                <button type="button" 
-                class="btn btn-danger me-2 modal-add">Back
-                </button>             
-            </router-link> 
-
-            <form class="modal-footer" @submit.prevent="add_btn">
-                <button type="submit"  :disabled="loading" class="btn btn-success me-2 modal-add">
-                    <span v-if="loading" class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>Add product
-                </button>
-            </form>       
-        </div>
-
-
-        
-
-    </div>
-</div>
-
 
 
 </template>
@@ -183,11 +245,7 @@ export default {
     }
 
 
-    const EventfileInput = ref(null);
-          
-    function onLoaded(){
-        
-    }
+
 
     function onDecode(a,b,c){
 
@@ -209,6 +267,7 @@ export default {
         size : '',
         price : '',
         category: '',
+        sellingPrice: ''
     })
 
     const serialRes = ref();
@@ -216,7 +275,6 @@ export default {
 
     function filter_input(){
         serialRes.value = serialRes.value.replace(/[^0-9]/g, "");
-    
         this.add_prod.price = this.add_prod.price.replace(/[^0-9]/g, "");
     }
 
@@ -296,6 +354,7 @@ export default {
             formData.append('description', this.add_prod.description);
             formData.append('size', this.add_prod.size);
             formData.append('price', this.add_prod.price);
+            formData.append('sellingPrice', this.add_prod.sellingPrice);
             formData.append('category', category.value);
             formData.append('image', imageFile.value);
 
@@ -338,13 +397,13 @@ export default {
 
     onMounted(()=> {
         getCat()
-        onLoaded()
+        /* onLoaded() */
     })
 
 
     return {
        add_prod,add_btn,rules,v$,loading,filter_input,getCat,
-       category_lists,category,onLoaded,onDecode,showcam,toggleCam,imageUpload,onScan,serialRes,
+       category_lists,category,onDecode,showcam,toggleCam,imageUpload,onScan,serialRes,
 
        imageURL,imageFile,noSerial,serialField,serialHide
     }

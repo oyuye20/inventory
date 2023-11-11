@@ -136,6 +136,7 @@ class product_crud extends Controller
         $product->description = $request->description;
         $product->size = $request->size;
         $product->price = $request->price;
+        $product->selling_price = $request->sellingPrice;
   
         $product->save();
 
@@ -145,31 +146,41 @@ class product_crud extends Controller
     }
 
 
-    /* UPDATE A PRODUCT */
+    /* GET DATA OF UPDATING PRODUCT */
     public function index_update_product($id){
-        $product = product_info::find($id);
-
-        return response()->json([
-            'edit_prod' => $product
-        ]);
+        return product_info::find($id);
     }
 
 
     /* FOR UPDATING THE PRODUCT ITSELF */
     public function action_update_product(Request $request,$id){
-        $product = product_info::find($id)->update($request->all());
+        $r = json_decode($request->input("product_data"),true);
 
-        if($product){
-            return response()->json([
-                'message' => 'Product updated successfully'
-            ]);
-        }
-        else
-        {
+        $prod = product_info::find($id);
 
+        if($request->hasFile('image2')){
+            unlink(public_path('storage/images/'.$prod->image));
+
+            $image = $request->file('image2');
+            $ext = $image->extension();
+            $file = time().'.'.$ext;
+            $image->storeAs('public/images', $file);
+            $prod->image = $file;
+            $prod->save();
         }
-     
-        
+
+        $prod->manufacturer = $r['manufacturer'];
+        $prod->product_name = $r['product_name'];
+        $prod->description = $r['description'];
+        $prod->size = $r['size'];
+        $prod->price = $r['price'];
+        $prod->selling_price = $r['selling_price'];
+        $prod->save();
+
+        return response()->json([
+            'message' => 'Product updated successfully'
+        ]);
+       
     }
 
 
@@ -196,13 +207,4 @@ class product_crud extends Controller
             ]);
         }
     }
-
-    /* SEARCH A PRODUCT */
-
-    /* public function search_product(){
-        $search = request('query');
-        $product = products::where('product_name','like',"%{$search}%")->get();
-
-        return response()->json($product);
-    } */
 }

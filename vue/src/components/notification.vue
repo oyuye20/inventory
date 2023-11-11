@@ -56,6 +56,7 @@ import { computed, toHandlers, onMounted } from "vue";
 import axios_client from '../axios';
 import { Bootstrap5Pagination } from 'laravel-vue-pagination'
 import Swal from 'sweetalert2'
+import { getCurrentInstance } from 'vue';
 
 
 export default {
@@ -76,38 +77,38 @@ export default {
             emit('close');
         }
 
-        function readNotif(){
+
+
+
+        const readNotif = () => {
+
             const swalWithBootstrapButtons = Swal.mixin({
             customClass: {
-                confirmButton: "btn btn-success",
-                cancelButton: "btn btn-danger"
+                confirmButton: 'btn btn-success',
+                cancelButton: 'btn btn-danger'
             },
             buttonsStyling: false
-            });
-
+            })
 
             swalWithBootstrapButtons.fire({
-            title: "Warning",
-            text: "Are you sure you want to read all notifications?",
-            icon: "warning",
+            title: 'Are you sure you want to read all notifications?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: "Yes",
-            cancelButtonText: "No",
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No',
+            reverseButtons: true
 
             }).then((result) => {
 
-            if (result.isConfirmed) 
-            {
-                
+            if (result.isConfirmed) {
+                emit('readNotif'); 
             } 
             
-            else if (result.dismiss === Swal.DismissReason.cancel) 
-                {
-                
-                }
-            });
+            else (result.dismiss === Swal.DismissReason.cancel) 
+            })
+         
         }
-
 
 
 

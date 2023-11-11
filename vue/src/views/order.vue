@@ -81,7 +81,7 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
                     </div>    
                 </div>
 
-                <div class="col-12 d-flex mb-2 ">
+                <!-- <div class="col-12 d-flex mb-2 ">
                     <div class="col-10">
                         <span class="fw-bold">Vat</span>
                     </div>
@@ -92,7 +92,7 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
                         { style: 'currency', currency: 'PHP' })
                         .format((CartStore.grand_total * 0.12))}}</span>
                     </div>    
-                </div>
+                </div> -->
 
 
                 <div class="col-12 d-flex mb-2 ">
@@ -104,7 +104,7 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
                     <div class="col-2 text-center">
                         <span class="fw-bold">{{Intl.NumberFormat('en-PH', 
                         { style: 'currency', currency: 'PHP' }).format
-                        ((CartStore.grand_total + (CartStore.grand_total * .12)))}}</span>
+                        ((CartStore.grand_total))}}</span>
                     </div>    
                 </div>
 
@@ -236,8 +236,16 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
                 </div>
             </nav>
 
+
+            <div v-if="loadingPage" class="div p-3 flex-column d-flex justify-content-center align-items-center 
+            container-fluid" style="height: 100%;">
+                <p class="fw-bold fs-3">Loading...</p>
+                <span class="spinner-border spinner-border-sm  p-3" aria-hidden="true" style="font-size: ;"></span>
+            </div>  
+
+
             
-            <div class="container-fluid px-4"> 
+            <div v-else class="container-fluid px-4"> 
               
                 <div class="row gx-2 mt-3">
 
@@ -273,29 +281,24 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
 
                                 <tbody v-for="(list, i) in cart_lists" :key="list.product_id">
                                     <tr>
-                                        <td>{{list.product_name}}</td>
-                                        <td>₱ {{list.price}}</td>
 
-                                        <td class="d-flex h-100">
-                                            <button @click="CartStore.decrement(i,list.product_id)" class="btn btn-sm btn-danger mx-2">-</button>
-                                            
+                                    <td>{{list.product_name}}</td>
+                                    <td>₱ {{list.price}}</td>
+
+                                    <td class="d-flex h-100">
+                                        <button @click="CartStore.decrement(i,list.product_id)" class="btn btn-sm btn-danger mx-2">-</button>
+                                        
                                         <span class="d-flex justify-content-center align-items-center">{{list.quantity}}</span>
 
-                                            <button @click="CartStore.increment(i,list.stocks,list.price,list.product_id)" 
-                                            class="btn btn-sm btn-success mx-2">+</button>        
-                                    
-                                        </td>
-                
-                                          
+                                        <button @click="CartStore.increment(i,list.stocks,list.price,list.product_id)" 
+                                        class="btn btn-sm btn-success mx-2">+</button>        
+                                    </td>
+                                
+                                    <td><span class="mx-2">₱ {{list.total.toLocaleString('en-US')}}</span></td>
 
-                                            <td><span class="mx-2">₱ {{list.total.toLocaleString('en-US')}}</span></td>
-
-                
-
-
-                                        <td class="fw-bold"><button @click="CartStore.remove_cart(index)" 
-                                            role="button" class="btn btn-danger"><i class="fas fa-trash"></i></button>
-                                        </td>
+                                    <td class="fw-bold"><button @click="CartStore.remove_cart(index)" 
+                                        role="button" class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                                    </td>
                                     
                                     </tr>
 
@@ -311,14 +314,14 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
                                         Sub Total: {{Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(CartStore.grand_total)}}
                                     </h4>
 
-                                    <h4 class="text-dark"><i class="fas fa-coins me-2 m-2 text-success"></i>
+                                    <!-- <h4 class="text-dark"><i class="fas fa-coins me-2 m-2 text-success"></i>
                                         Discount: 
-                                    </h4>
+                                    </h4> -->
 
                                     <h4 class="text-dark"><i class="fas fa-coins me-2 m-2 text-success"></i>
                                         Grand Total: {{
-                                            Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format((CartStore.grand_total))                                                    
-                                            }}
+                                        Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format((CartStore.grand_total))                                                    
+                                        }}
                                     </h4>
 
                                     
@@ -383,7 +386,7 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
                                                 <td>
                                                     {{Intl.NumberFormat('en-PH', 
                                                     { style: 'currency', currency: 'PHP' }).
-                                                    format(p.product.price)}}
+                                                    format(p.product.selling_price)}}
                                                 </td>
 
                                              
@@ -391,7 +394,7 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
                                                 <td>
                                                     <button class="btn btn-primary" 
                                                     @click="cart_add.add_cart(p.id,p.product.
-                                                    product_name,p.stocks,p.product.price,p.product.serial_number)">
+                                                    product_name,p.stocks,p.product.selling_price,p.product.serial_number)">
                                                     +</button>
                                                 </td>
 
@@ -426,6 +429,7 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
 
                 </div>
             </div>
+
         </div>
 
 
@@ -483,6 +487,11 @@ export default {
 
         const lists = computed(()=> CartStore.prod)
         const cart_lists = computed(()=> CartStore.cart)
+
+
+        const loadingPage = computed(()=> CartStore.loading)
+
+
 
 
         const transID = ref(Math.floor(Math.random() * 99999999999999) + 1)
@@ -668,7 +677,7 @@ export default {
 
             lists,cart_add,cart_lists,CartStore,search_data,customer_name,show_alert,cart_order
             
-            ,submit_btn,CashAmount,modalCash,changeMoney,storageLink,transID,formatDate
+            ,submit_btn,CashAmount,modalCash,changeMoney,storageLink,transID,formatDate,loadingPage
         }
 
     }

@@ -1,10 +1,9 @@
 <template>
 
 <transition name="modalAnim">
-    <notification :notification="notification" @close="toggleNotif"
+    <notification :notification="notification" @close="toggleNotif" @readNotif="readNotif2"
     style="position: relative; z-index: 3;"></notification>
 </transition>
-
 
 
 
@@ -38,9 +37,9 @@
         <div class="div">
             <i class="fas fa-bell me-3 position-relative">
 
-            <span class="fs-6 position-absolute top-20 start-80 
-            fs-7 translate-middle badge rounded-pill badge-danger">
-            {{countNotif}}
+            <span class="fs-6 position-absolute top-20 start-80
+            fs-7 translate-middle badge rounded-pill badge-danger" :key="updateCount">
+            {{countNotifComputed}}
             </span>
             </i>
 
@@ -54,9 +53,6 @@
     <hr v-if="loadingSidebar">
 
   
-
-
-
     <div v-if="loadingSidebar">
         <div v-if="roleComputed == '1' && loadingSidebar" class="list-group list-group-flush my-3 w-100 p-3">
 
@@ -275,24 +271,6 @@
             </div>
         </router-link>
 
-
-
-        <router-link :to="{name: 'settings'}" class="rounded-5 mt-2">
-            <div id="sidebtn" class="fs-5 list-group-item-action 
-            d-flex justify-content-center">
-
-                <div class="div d-flex justify-content-center align-items-center">
-                    <i class="fas fa-gear me-4 active_text"></i>
-                </div>
-                
-                <div class="div w-100">
-                     <span class="fs-4 active_text">Settings</span>
-                </div>
-
-            </div>
-        </router-link>
-
-
     </div>
 
     </div>
@@ -310,7 +288,7 @@ import { computed, toHandlers } from "vue";
 import axios_client from '../../axios';
 import notification from '../notification.vue';
 import { inject } from 'vue'
-
+import Swal from 'sweetalert2'
 
 
 export default {
@@ -325,8 +303,17 @@ export default {
         const loadingSidebar = ref (false);
         const roleNum = ref();
         const image = ref();
+
+
+        const countNotifComputed = computed(() =>
+            countNotif.value
+        )
+
+
         const countNotif = ref();
         const username = ref();
+        const updateCount = ref(0);
+
 
 
         const roleComputed = computed(()=>
@@ -351,6 +338,25 @@ export default {
         }
 
 
+    
+
+
+
+        function readNotif2(){
+            axios_client.put('/readNotifications').then(response=>{
+            console.log(response.data)
+
+            /* updateCount.value += 1; */
+            
+
+            console.log(updateCount.value)
+
+            }).catch(error =>{
+                console.log(error.response.data)
+            })
+        }
+
+
 
         
 
@@ -368,14 +374,18 @@ export default {
             })
         }
 
-        onMounted( async ()=> {    
+        onMounted( ()=> {    
             getNotifCount()  
             userData()
         })
 
 
-        return {storageLink,store,userData,roleNum,loadingSidebar,
-            image,roleComputed,toggleNotif,notification,getNotifCount,countNotif,username}
+        return {storageLink,store,userData,roleNum,loadingSidebar,readNotif2,
+            image,roleComputed,toggleNotif,notification,getNotifCount,countNotif,username
+            ,updateCount,countNotifComputed
+
+            ,
+        }
     }
 
 

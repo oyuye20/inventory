@@ -53,6 +53,33 @@ class login extends Controller
         }
     }
 
+
+
+    public function updateProfile(Request $request,$id){
+        $r = json_decode($request->input("user_data"),true);
+
+        $user = User::find($id);
+
+        if($request->hasFile('image')){
+            unlink(public_path('storage/images/'.$user->image));
+
+            $image = $request->file('image');
+            $ext = $image->extension();
+            $file = time().'.'.$ext;
+            $image->storeAs('public/images', $file);
+            $user->image = $file;
+            $user->save();
+        }
+
+
+        $user->username = $r['username'];
+        $user->save();
+
+
+    }
+
+
+
     public function staffLists(){
         return User::where('role', '0')->paginate(5);
     }

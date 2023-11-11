@@ -147,22 +147,20 @@
                     :data="chartData"/> -->
 
 
-                        <div class="row container-fluid">
+                        <div class="mt-4" style=" position: relative;
+                        margin: auto; height: 50vh; width: 80vw;">
                     
-                                <Bar
+                                <!-- <Bar
                                 id="my-chart-id"
                                 :options="chartOptions"
                                 :data="chartData" :style="styles"
-                                />
+                                /> -->
+        
 
-
-                               
- 
                                 <Line
                                 id="my-chart-id2"
                                 :options="chartOptions2"
-                                :data="chartData2"
-                                />
+                                :data="chartData2" :style="styles"/>
                        
                         </div>
                        
@@ -350,7 +348,7 @@ Chart.register(...registerables); */
                 data: data.value,
                 fill: false,
                 borderColor: 'rgb(75, 192, 192)',
-                tension: 0.1
+                tension: 0.3
             }],
         }));
 
@@ -368,17 +366,16 @@ Chart.register(...registerables); */
 
 
         const styles = ref({
-            position: 'relative',
-            height: '300px',
-            responsive: true,
+            width: '100%',
+            height: '100%',
         })
 
 
 
         const chartOptions2 = ref ({
             responsive: true,
-            backgroundColor: '#f87979'
-            
+            backgroundColor: '#f87979',
+
         })
 
 

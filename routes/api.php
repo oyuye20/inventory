@@ -47,13 +47,22 @@ Route::post('/auth_login', [login::class, 'login']);
 Route::post('/auth_register', [login::class, 'register']);
 
 
+Route::post('/updateProfile/{id}', [login::class, 'updateProfile']);
+
+
+
+
+
 Route::get('/accounts/lists', [login::class, 'staffLists']);
 
 
 /* PRODUCT CRUD */
 Route::post('/add_product', [product_crud::class, 'add_product']);
 
-Route::put('/update_product/{id}', [product_crud::class, 'action_update_product']);
+
+Route::post('/update_product/{id}', [product_crud::class, 'action_update_product']);
+
+
 Route::get('/products', [product_crud::class, 'index']);
 Route::get('/product/edit/{id}', [product_crud::class, 'index_update_product']);
 Route::put('/delete/{id}', [product_crud::class, 'delete_product']);
@@ -142,7 +151,7 @@ Route::get('/expiring/products', [stats::class, 'expiringItems']);
 
 
 
-Route::get('/notification/stocks', [notify::class, 'checkStocks']);
+
 
 
 
@@ -199,6 +208,14 @@ Route::get('archive/product/search/{data}', [archive::class, 'searchProdArchived
 /* NOTIFICATIONS */
 Route::post('/notify', [notifications_user::class, 'notify']);
 Route::get('/notify/lists', [notifications_user::class, 'indexNotif']);
+
+
+
+Route::get('/notification/stocks', [notify::class, 'checkStocks']);
+Route::put('/readNotifications', [notify::class, 'readNotifications']);
+
+
+
 
 
 

@@ -48,10 +48,27 @@ thead {
 
 
 
+#modal-main {
+  width: 100%; 
+  height: 100%; 
+  position: fixed; 
+  z-index: 5; 
+  overflow: auto;
+  display: block;
+  background-color: rgba(0, 0, 0, 0.605);
+}
+
+
+#modal-content {
+  position: relative;
+}
+
+
+
 
 
   #wrapper {
-    overflow-x: hidden;
+    /* overflow-x: hidden; */
     /* background-image: linear-gradient(
       to right,
       #baf3d7,

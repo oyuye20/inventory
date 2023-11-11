@@ -18,8 +18,8 @@ class inventory extends Model
     ];
 
     protected $casts = [
-        'production_date' => 'datetime:m-d-Y h:i:s a',
-        'expiration_date' => 'datetime:m-d-Y h:i:s a',
+        'production_date' => 'datetime:m-d-Y',
+        'expiration_date' => 'datetime:m-d-Y',
         'created_at' => 'datetime:m-d-Y h:i:s a',
     ];
 

@@ -1,8 +1,8 @@
 <template>
 
 <transition name="modalAnim">
-<div v-if="modalActive" class="container-fluid d-flex justify-content-center align-items-center" 
-style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; background-color: rgba(0, 0, 0, 0.605); overflow: auto;">
+<div v-if="modalActive" class="container-fluid d-flex justify-content-center align-items-center p-4" 
+style="width: 100%; height: 100%; z-index: 5; background-color: rgba(0, 0, 0, 0.605); overflow: auto;">
     
     <div class="row container d-flex 
     justify-content-center align-items-center">
@@ -47,18 +47,277 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
 </transition>
 
 
+<!-- ADD NEW PRODUCT MODAL -->
+<transition name="modalAnim">
+<div v-if="addProduct" class="p-3" id="modal-main">
+    
+    <div class="row d-flex justify-content-center align-items-center p-3" 
+    id="modal-content">
+
+            <div class="col-xxl-7 col-md-8 text-start p-3" 
+            style="background-color: rgb(4, 180, 116);">
+
+
+                <div class="col-12">
+                    <span class="fw-bold fs-3 text-white">
+                    <i class="fas fa-circle-plus me-3">
+                    </i>Add new Product</span>
+                </div>
+               
+            </div>
+
+            <div class="col-xxl-7 col-md-8 text-start p-3 bg-light">
+
+
+            <div class="col-12 mb-2 d-flex justify-content-center">
+                <qrcode-scanner v-if="showcam" :qrbox="250" :fps="20"  
+                style="width: 500px;"
+                @result="onScan"/>
+            </div>
+
+
+            <div class="col-12 mb-2 d-flex justify-content-center">
+                <div class="mb-3" v-if="imageURL">
+                    <img :src="imageURL" class="img-fluid" width="300" height="300">
+                </div>
+            </div>
+
+
+            <div class="col-12 mb-2">
+                <label for="" class="form-label fw-bold">Category</label>
+                <select class="form-control" v-model="add_prod.category">    
+                    <option selected v-for="cat in category_lists" :key="cat.id" :value="cat.id">{{cat.category}}</option>
+                </select>
+            </div>
+
+
+
+
+            <div class="col-12 mb-2">
+
+                <div class="div" v-if="serialField">
+
+                <label for="" class="form-label fw-bold">Serial Number</label>
+
+                <div class="d-flex" >
+                    <input type="text" v-model="serialRes" 
+                    class="form-control" @input="filter_input()">
+
+                    <button class="btn btn-primary w-10" @click="toggleCam" 
+                    data-bs-toggle="tooltip" data-bs-placement="top" 
+                    data-bs-title="Tooltip on top"><i class="fas fa-barcode">        
+                    </i></button>
+                </div>
+
+                </div>
+                
+
+                <div class="div mt-2">
+                    <input class="form-check-input me-2" v-model="noSerial" 
+                    type="checkbox" @click="serialHide" id="flexCheckDefault">
+                    <label class="form-check-label" for="flexCheckDefault">
+                        No Serial Number
+                    </label>
+                </div>
+                
+            </div>
+
+
+            <div class="col-12 mb-2">
+                <label for="" class="form-label fw-bold">Product name</label>
+                <input type="text" v-model="add_prod.product_name" 
+                class="form-control">
+            </div>
+
+            <div class="col-12 mb-2">
+                <label for="" class="form-label fw-bold">Manufacturer</label>
+                <input type="text" v-model="add_prod.manufacturer" 
+                class="form-control">
+            </div>
+
+
+            <div class="col-12 mb-2 d-flex">
+                <div class="price w-50">
+                    <label for="" class="form-label fw-bold">Price</label>
+                    <input type="text" v-model="add_prod.price" 
+                    @input="filter_input()" class="form-control" placeholder="">
+
+                </div>
+
+                <div class="price w-50 mx-2">
+                    <label for="" class="form-label fw-bold">Selling Price</label>
+                    <input type="text" v-model="add_prod.sellingPrice" 
+                    @input="filter_input()" class="form-control" placeholder="">
+                </div>
+            </div>
+
+            <div class="col-12 mb-2">
+                <label for="" class="form-label fw-bold">Size</label>
+                <input type="text" v-model="add_prod.size" class="form-control">
+            </div>
+
+
+            <div class="col-12 mb-2">
+                <label for="" class="form-label fw-bold">Description</label>
+                <textarea name="" v-model="add_prod.description" 
+                class="form-control"></textarea>
+            </div>
+
+
+            <div class="col-12 mb-2">
+                <label for="" class="form-label fw-bold">Image File</label>
+                <input type="file" class="form-control"  @change="imageUpload" 
+                aria-describedby="helpId" placeholder="">
+            </div>
+
+
+     
+            <div class="col-12 d-flex justify-content-end"> 
+                <button role="button" class="btn btn-danger mt-3 fw-bold" 
+                @click="toggleProduct">Close</button>
+
+                <form @submit.prevent="add_btn()">
+                    <button type="submit" class="btn btn-success 
+                    mt-3 fw-bold">Add new product</button>
+                </form>
+
+                </div>      
+            </div>      
+    </div>
+</div>
+</transition>
+
+<!-- EDIT PRODUCT MODAL -->
+<transition name="modalAnim">
+<div v-if="editProduct" class="p-3" id="modal-main">
+    
+    <div class="row d-flex justify-content-center align-items-center p-3" 
+    id="modal-content">
+
+            <div class="col-xxl-7 col-md-8 text-start p-3" 
+            style="background-color: rgb(4, 180, 116);">
+
+
+                <div class="col-12">
+                    <span class="fw-bold fs-3 text-white">
+                    <i class="fas fa-circle-plus me-3">
+                    </i>Edit Product</span>
+                </div>
+               
+            </div>
+
+            <div class="col-xxl-7 col-md-8 text-start p-3 bg-light">
+
+
+
+            <div class="col-12 mb-2 d-flex justify-content-center">
+                <div class="mb-3" v-if="imageURL">
+                    <img :src="imageURL" class="img-fluid" width="300" height="300">
+                </div>
+            </div>
+
+
+            <!-- <div class="col-12 mb-2">
+                <label for="" class="form-label fw-bold">Category</label>
+                <select class="form-control" v-model="add_prod.category">    
+                    <option selected v-for="cat in category_lists" :key="cat.id" :value="cat.id">{{cat.category}}</option>
+                </select>
+            </div> -->
+
+
+
+
+            <div class="col-12 mb-2">
+
+                <label for="" class="form-label fw-bold">Serial Number</label>
+
+                <div class="d-flex" >
+                    <input type="text" readonly v-model="editProdData.serial_number" 
+                    class="form-control" @input="filter_input()">
+                </div>
+        
+                
+            </div>
+
+
+            <div class="col-12 mb-2">
+                <label for="" class="form-label fw-bold">Product name</label>
+                <input type="text" v-model="editProdData.product_name" 
+                class="form-control">
+            </div>
+
+            <div class="col-12 mb-2">
+                <label for="" class="form-label fw-bold">Manufacturer</label>
+                <input type="text" v-model="editProdData.manufacturer" 
+                class="form-control">
+            </div>
+
+
+            <div class="col-12 mb-2 d-flex">
+                <div class="price w-50">
+                    <label for="" class="form-label fw-bold">Price</label>
+                    <input type="text" v-model="editProdData.price" 
+                    @input="filter_input()" class="form-control" placeholder="">
+
+                </div>
+
+                <div class="price w-50 mx-2">
+                    <label for="" class="form-label fw-bold">Selling Price</label>
+                    <input type="text" v-model="editProdData.sellingPrice" 
+                    @input="filter_input()" class="form-control" placeholder="">
+                </div>
+            </div>
+
+            <div class="col-12 mb-2">
+                <label for="" class="form-label fw-bold">Size</label>
+                <input type="text" v-model="editProdData.size" class="form-control">
+            </div>
+
+
+            <div class="col-12 mb-2">
+                <label for="" class="form-label fw-bold">Description</label>
+                <textarea name="" v-model="editProdData.description" 
+                class="form-control"></textarea>
+            </div>
+
+
+            <div class="col-12 mb-2">
+                <label for="" class="form-label fw-bold">Image File</label>
+                <input type="file" class="form-control"  @change="imageUpload" 
+                aria-describedby="helpId" placeholder="">
+            </div>
+
+
+     
+            <div class="col-12 d-flex justify-content-end"> 
+                <button role="button" class="btn btn-danger mt-3 fw-bold" 
+                @click="editProduct = !editProduct">Close</button>
+
+                <form @submit.prevent="updateProdBtn(editProdData.id)">
+                    <button type="submit" class="btn btn-success 
+                    mt-3 fw-bold">Update product</button>
+                </form>
+
+                </div>      
+            </div>      
+    </div>
+</div>
+</transition>
+
+
+
+
+
+<!-- <add_product :addProduct="addProduct" @close="toggleProduct"/> -->
+
 
 <body>
 <div class="d-flex" id="wrapper">
-
-
         <!-- Sidebar -->
-
             <div class="sidebar_wrapper" :class ="{side: isSidebar}">
                 <sidebar/>
             </div>
-     
-
+    
         <!-- /#sidebar-wrapper -->
 
         <!-- Page Content -->
@@ -66,7 +325,6 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
         <div id="page-content-wrapper">
 
             <!-- navbar navbar-expand-lg navbar-light bg-transparent --> 
-
             <nav class="py-4 px-4">  
                 <div class="d-flex justify-content-between w-100">
                     <a v-on:click="isSidebar =! isSidebar" role="button" id="toggle_icon"><i class="fas fa-bars me-3 fa-2x"></i></a>
@@ -84,191 +342,22 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
                 </div>
             </nav>
 
-        <div class="container-fluid px-4">
+            <div class="container-fluid px-4">
+                <button class="btn btn-dark mt-3 modal-add" 
+                @click="toggleModal">Add new category</button>
 
-                <button class="btn btn-dark mt-3 modal-add" @click="toggleModal">Add new category</button>
+                <button type="button" class="btn btn-dark mt-3 
+                modal-add" @click="toggleProduct">
+                    Add new product
+                </button>
 
-                <router-link :to="{name: 'add_product'}">
-                    <button type="button" class="btn btn-dark mt-3 modal-add">
-                        Add new product
-                    </button>
-                </router-link>
+                <button @click="exportExcel" class="btn 
+                btn-success modal-add"><i class="far fa-file-excel me-2">         
+                </i> Export product excel </button>  
+            </div>
 
-                <button @click="exportExcel" class="btn btn-success modal-add"><i class="far fa-file-excel me-2">         
-                </i> Export product excel </button>
-
-            
-
-               
-
-
-                 <div class="row container-fluid mb-3 mt-3  ">
-
-                    <div class="col-xxl-12 d-flex justify-content-between ">
-
-                        <div class="col-10 me-3">
-                            <input type="text" @keydown.enter="search" role="searchbox" v-model="search_box" class="form-control rounded-5 p-2" 
-                            style="box-shadow: 3px 3px 3px rgb(197, 197, 197); 
-                            border: 1.9px solid rgb(215, 214, 214);" placeholder="Search Product">
-                        </div>
-
-                        <div class="col-2 d-flex justify-content-center p-0 m-0">
-                            <button class="btn btn-success" @click="search"><i class="fas fa-magnifying-glass"></i></button>
-                        </div>
-
-                    </div>
-
-
-
-
-
-                    <!-- <div class="col-xl-10 col-lg-9 col-md-9 col-xs-7  border border-dark">
-                        <input type="text" @keydown.enter="search" role="searchbox" v-model="search_box" class="form-control rounded-5 p-2" 
-                        style="box-shadow: 3px 3px 3px rgb(197, 197, 197); 
-                        border: 1.9px solid rgb(215, 214, 214);" placeholder="Search Product">
-                    </div>
-
-                    <div class="col-1 d-flex justify-content-center p-0 m-0 mx-4 border border-dark">
-                        <button class="btn btn-success" @click="search"><i class="fas fa-magnifying-glass"></i></button>
-                    </div>  -->      
-                </div>
-
-                
-                
-                <div v-if="loading" class="p-3 d-flex justify-content-center align-items-center container-fluid h-100 mt-3">
-                    <span class="spinner-border spinner-border-lg  p-3" aria-hidden="true" style="font-size: ;"></span>
-                 </div>  
-       
-                
-                 <!-- PRODUCT TABLE -->
-                <div v-else class="table-responsive mt-3">
-
-   
-
-                    <h4 class="mt-3 mb-3 w-100 bg-light p-3"><i class="fas fa-box-open me-2"></i>Product Info Lists</h4>
-
-                    
-
-
-
-                    <div class="div">
-                        <table class="table table-hover table-borderless text-center w-100">
-                            <thead>
-                                <tr>
-                                    <th scope="col" class="fw-bold p-3">Image</th>
-                                    <th scope="col" class="fw-bold">Serial Number</th>
-                                    <th scope="col" class="fw-bold">Category</th>     
-                                    <th scope="col" class="fw-bold">Manufacturer</th>
-                                    <th scope="col" class="fw-bold">Product Name</th>
-                                    <th scope="col" class="fw-bold">Description</th>
-                                    <th scope="col" class="fw-bold">Size Name</th>
-                                    <th scope="col" class="fw-bold">Price</th>
-                                    <th class="fw-bold" >Actions</th>
-                                </tr>
-
-                            </thead>
-                        <tbody v-for="product in product_lists.data" :key="product.id">
-            
-                            <tr>
-                                <td class="fw-bold" @click="showImage(product.image, product.product_name)" style="cursor: pointer;">
-                                    <img v-bind:src="storageLink + product.image" 
-                                 width="50" height="50">
-                                </td>                              
-                                <td hidden>{{product.id}}</td>
-
-                                    <!-- <td v-if="product.serial_number == 'No Serial Number'">
-                                        <span class="text-danger fw-bold">{{product.serial_number}}</span>
-                                    </td> -->
-
-                                    <td>{{product.serial_number}}</td>
-                                    <td>{{product.category.category}}</td>
-                                    <td>{{product.manufacturer}}</td>
-                                    <td>{{product.product_name}}</td>
-                                    <td style="padding: 0; margin: 0; word-wrap:break-word;">{{product.description}}</td>
-                                    <td>{{product.size}}</td>
-                                    <td>₱ {{product.price}}</td>
-                                <td class="m-3">
-
-                                    <RouterLink :to="{name: 'edit_product', params:{id:product.id} }">
-                                        <button class="btn btn-success"><i class="bi bi-pencil-square"></i></button>
-                                    </RouterLink>
-                                    
-                                    <button type="button" class="btn btn-warning mx-1 mt-2" @click.prevent="del_prod(product.id, product.product_name)">
-                                    <i class="fas fa-box-archive"></i></button>
-
-                                </td>
-                            </tr>
-                            
-                        </tbody>
-                        </table>
-
-                        <div class="d-flex justify-content-end align-items-center" >
-                            <Bootstrap5Pagination :limit="1" :keepLength="true" :data="product_lists" class="shadow-sm"  
-                            @pagination-change-page="search"/>
-                        </div>   
-                    </div>
-               
-
-                </div>
-                <!-- END OF PRODUCT TABLE -->
-
-
-                <!-- CATEGORY TABLE -->
-                <div class="table-responsive mt-4">
-                    <h4 class="mt-3 w-100 bg-light p-3"><i class="fas fa-filter me-2"></i>Category Lists</h4>
-    
-                    <table class="table table-hover table-borderless text-center w-100">
-                        <thead>
-                            <tr>
-                                <th scope="col" class="fw-bold">ID</th>
-                                <th scope="col" class="fw-bold">Category Name</th>
-                                <th scope="col" class="fw-bold">Description</th>
-                                <th class="fw-bold" >Actions</th>
-                            </tr>
-
-                        </thead>
-                    <tbody v-for="cat in category_lists.data" :key="cat.id">
-                        <tr>
-                            <td>{{cat.id}}</td>
-                            <td>{{cat.category}}</td>
-                            <td>{{cat.description}}</td>
-  
-                            <td class="m-3">
-
-                                <RouterLink :to="{name: 'edit_product', params:{id:cat.id} }">
-                                    <button class="btn btn-success" data-mdb-toggle="tooltip" 
-                                    data-mdb-placement="left" title="Edit"><i class="bi bi-pencil-square">
-                                    </i></button>
-                                </RouterLink>
-                                
-                                <button type="button" class="btn btn-warning mx-1 mt-2" data-mdb-toggle="tooltip" 
-                                data-mdb-placement="left" title="Edit" @click.prevent="del_cat(cat.id, cat.category)">
-                                <i class="fas fa-box-archive"></i></button>
-
-                            </td>
-                        </tr>
-                    </tbody>
-                    </table>
-
-
-                    <div class="d-flex justify-content-end align-items-center" >
-                        <Bootstrap5Pagination :limit="1" :keepLength="true" :data="category_lists" class="shadow-sm"  
-                        @pagination-change-page="getCat"
-                        />
-                    </div>            
-                </div>
-                <!-- END OF CATEGORY TABLE -->
-
-
-        </div>
-
-
-
-
-
-
-
-
+        
+            <products_content v-on:editProd="editProdModal" :key="updateProdLists"/>
 
 
 
@@ -293,14 +382,18 @@ import { computed, toHandlers } from "vue";
 import {reactive, onMounted} from 'vue';
 import axios_client from '../axios';
 import { ref, watchEffect } from 'vue';
-import {useVuelidate} from '@vuelidate/core'
-import { required, email } from '@vuelidate/validators'
 import  modalComponent  from '@/components/modalComponent.vue';
-import { StreamBarcodeReader } from "vue-barcode-reader";
 import logout from '../components/modal/logout.vue';
 import Swal from 'sweetalert2'
 import sidebar from '../components/sidebar/sidebar.vue';
 import { inject } from 'vue'
+import products_content from '../components/products_content.vue';
+
+
+import {useToast} from 'vue-toast-notification';
+import {useVuelidate} from '@vuelidate/core'
+import { required, email } from '@vuelidate/validators'
+import { useRouter } from "vue-router";
 
 
 export default {
@@ -308,78 +401,213 @@ export default {
 
     components: {
     Bootstrap5Pagination,
-    StreamBarcodeReader,
     logout,
-    sidebar
+    sidebar,
+    products_content
 },
 
 
 
     setup(){
-        const storageLink = inject('$storageLink');
-        
-        let product_lists = ref([]);
-        let productSearchResults = ref([]);
+        /* FOR ADD PRODUCT MODAL */
+        const updateProductLists = ref(0);
+
+        const addProduct = ref(false);
+
+        function toggleProduct(){
+            addProduct.value = !addProduct.value
+        }
+
+        const loading = ref(false);
+        const showcam = ref(false);
+        const serialField = ref(true);
+        const router = useRouter();
+
+
         let category_lists = ref([]);
+        const noSerial = ref();
+        const serialRes = ref('');
+
+        /* FOR IMAGE UPLOAD FUNCTIONS */
+        const imageFile = ref('');
+        const imageURL = ref ('');
 
 
-        const isOpen = ref(false);
-        const search_box = ref('');
+        const add_prod  = ref({
+            manufacturer: '',
+            product_name: '',
+            description : '',
+            size : '',
+            price : '',
+            category: '',
+            sellingPrice: '',
+        })
 
 
-        const typing = ref(false);
-        const isSidebar = ref(false);
-        const loading = ref(true);
-        const modalActive = ref(false);
+        const config = {
+            headers: {
+                'content-type': 'multipart/form-data'
+            }
+        }
 
-    
+      
 
-          /* GET PRODUCT TABLE */
-        const getProduct = async(page = 1) => {
-            axios_client.get('/products?page=' + page)
+
+        function serialHide(){
+            serialField.value = !serialField.value;
+        }
+
+        function toggleCam(){
+            showcam.value = !showcam.value;
+        }
+
+
+        function imageUpload(e){    
+            const file = imageFile.value = e.target.files[0]
+            imageURL.value = URL.createObjectURL(file) 
+        }
+
+        function onScan(decodedText){
+            serialRes.value = decodedText
+        }
+
+
+        const getCat = async() => {
+            axios_client.get('/select/category')
             .then(response=>{
-                product_lists.value = response.data;
-
-                loading.value = false;
+                category_lists.value = response.data;
             }).catch(error =>{
                 console.log(error.response.data)
             })
         }
 
 
-        /* SEARCH FUNCTION */
-        const search  = async(page = 1) => {
 
-            if(search_box.value == ''){
-                axios_client.get('/products?page=' + page)
-                .then(response=>{
-                    product_lists.value = response.data;
+        function add_btn(){
+            loading.value = true;
+      
+            let new_manu =  add_prod.value.manufacturer.replace(/^./, add_prod.value.manufacturer[0].toUpperCase());
+            let new_prod = add_prod.value.product_name.replace(/^./, add_prod.value.product_name[0].toUpperCase());
 
-                    loading.value = false;
-                }).catch(error =>{
-                    console.log(error.response.data)
-                })
+            let formData = new FormData();
+            
+            if(serialRes.value == ''){
+                formData.append('serial_number', Math.floor(Math.random() * 99999999999999) + 1);
             }
 
             else {
-                axios_client.get('/search/' + search_box.value + '?page=' + page)
-                .then(response=>{ 
-                    
-                    product_lists.value = response.data;
-                                   
-                }).catch(error =>{
-                    console.log(error.response.data)
-                })
+                formData.append('serial_number', serialRes.value);
             }
+
+
+            formData.append('manufacturer', new_manu);
+            formData.append('product_name', new_prod);
+            formData.append('description', add_prod.value.description);
+            formData.append('size', add_prod.value.size);
+            formData.append('price', add_prod.value.price);
+            formData.append('sellingPrice', add_prod.value.sellingPrice);
+            formData.append('category', add_prod.value.category);
+            formData.append('image', imageFile.value);
+
+
+            let url = '/add_product';
+            axios_client.post(url,formData, config).then(response => {
+
+            console.log(response.data)
+
+            loading.value = false;
+
+            const $toast = useToast();
+            updateProductLists.value += 1;
+            addProduct.value = false;
+
+            let instance = $toast.success('Product added successfully', {position: 'top'});      
+            
+            
+        
+
+            }).catch(error =>{
+                loading.value = false;
+                console.log(error.response.data)
+            })
+            
+
+        }
+        /* END OF ADD PRODUCT MODAL  */
+
+
+
+
+        /* FOR UPDATE PRODUCT */
+        const editProduct = ref (false);
+        const editProdData = ref ([]);
+        const updateProdLists = ref(0);
+
+
+        function editProdModal(id){
+            console.log(id);
+
+            axios_client.get(`/product/edit/` 
+            + id).then(response=>{
+
+                editProdData.value = response.data
+
+            }).catch(error =>{
+                console.log(error)
+            })
+
+            editProduct.value = true;
+        }
+
+
+        function updateProdBtn(id){
+            let formData = new FormData();
+            formData.append('image2', imageFile.value);
+            formData.append('product_data', JSON.stringify(editProdData.value));
+
+            axios_client.post(`/update_product/`
+            + id, formData, config).then(response=>{
+                loading.value = true;
+
+                editProduct.value = false;
+                updateProdLists.value += 1;
+
+                const $toast = useToast();
+                $toast.success('Product updated successfully', {position: 'top'});  
+
+                    
+
+            }).catch(error =>{
+                console.log(error.response.data)
+            })
+        }
+        /* END OF FOR UPDATE PRODUCT */
+
+
+
+
+        function filter_input(){
+            serialRes.value = serialRes.value.replace(/[^\d.-]+/g, '');
+            add_prod.value.price = add_prod.value.price.replace(/[^\d.-]+/g, '');
+            add_prod.value.sellingPrice = add_prod.value.sellingPrice.replace(/[^0-9]/g, "");
+
+            editProdData.value.price = editProdData.value.price.replace(/[^\d.-]+/g, '');
+            editProdData.value.sellingPrice = editProdData.value.sellingPrice.replace(/[^0-9]/g, "");
         }
 
 
 
+        const isOpen = ref(false);
+        const typing = ref(false);
+        const isSidebar = ref(false);
+        const modalActive = ref(false);
+
+
     
-        const category  = reactive({
+        /* const category  = reactive({
             desc: '',
             catname: '',
-        })
+        }) */
 
 
         
@@ -444,107 +672,6 @@ export default {
         })
 
 
-
-        /* DELETE A PRODUCT */
-        function del_prod(id, product){
-
-            swalWithBootstrapButtons.fire({
-            title: 'Are you sure you want to archive ' + product + '?',
-            text: "You won't be able to revert this!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Yes',
-            cancelButtonText: 'No',
-            reverseButtons: true
-
-            }).then((result) => {
-
-            if (result.isConfirmed) {
-
-                let url = '/delete/' + id;
-                axios_client.put(url).then(response => {
-                    this.search()
-                }).catch(error => {
-                    console.log(error.response.data)
-                })
-
-                swalWithBootstrapButtons.fire(
-                'Archived!',
-                'Your product has been archived successfuly.',
-                'success'
-                )
-            } 
-            
-            else (result.dismiss === Swal.DismissReason.cancel) 
-            })
-      
-
-        }
-
-        function showImage(image, product) {
-            Swal.fire({
-                title: 'Image',
-                text: product,
-                imageUrl: storageLink + image,
-                imageWidth: 400,
-                imageHeight: 200,
-                imageAlt: image,
-            })
-        }
-
-
-
-
-        /* DELETE A CATEGORY */
-         function del_cat(id, category){
-
-            swalWithBootstrapButtons.fire({
-            title: 'Are you sure you want to archive ' + category + '?',
-            text: "You won't be able to revert this!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Yes',
-            cancelButtonText: 'No',
-            reverseButtons: true
-
-            }).then((result) => {
-
-            if (result.isConfirmed) {
-
-            let url = '/delete/category/' + id;
-            axios_client.put(url).then(response => {
-                this.getCat()
-            }).catch(error => {
-                console.log(error.response.data)
-            })
-
-            swalWithBootstrapButtons.fire(
-            'Archived!',
-            'Your category has been archived successfuly.',
-            'success'
-            )
-            } 
-            
-            else (result.dismiss === Swal.DismissReason.cancel) 
-            })
-    
-        }
-
-
-      
-
-        /* GET CATEGORY TABLE */
-        const getCat = async(page = 1) => {
-            axios_client.get('/index/category?page=' + page)
-            .then(response=>{
-                category_lists.value = response.data;
-            }).catch(error =>{
-                console.log(error.response.data)
-            })
-        }
-
-
-
         /* CREATE CATEGORY */
         function create_category(){
             let formData = new FormData();
@@ -563,8 +690,7 @@ export default {
 
 
         function exportExcel(){
-            axios_client
-            ({
+            axios_client({
                 url: '/export-excel',
                 method: 'GET',
                 responseType: 'blob',
@@ -579,17 +705,29 @@ export default {
         }
 
 
-
-    
         onMounted(()=> {
-            search()
             getCat()
         })
 
         return {
-            product_lists,del_prod,typing,loading,isSidebar,exportExcel,
-            modalActive,toggleModal,create_category,category,getCat,category_lists,del_cat,isOpen,formatDate
-            ,search,search_box,productSearchResults,getProduct,showImage,storageLink
+            typing,loading,isSidebar,exportExcel,
+            modalActive,toggleModal,create_category,isOpen,formatDate
+            ,toggleProduct,addProduct
+
+
+            /* FOR ADD PRODUCT */
+            ,close,serialHide,toggleCam,imageUpload,onScan,add_btn,getCat,filter_input
+            ,loading,showcam,category_lists,noSerial,config
+            ,add_prod,imageFile,imageURL,serialRes,serialField,updateProductLists
+            /* END OF ADD PRODUCT */
+
+
+
+            /* FOR UPDATE PRODUCT */
+            ,editProduct,editProdModal,editProdData,updateProdBtn,updateProdLists
+
+
+            /* END FOR UPDATE PRODUCT */
         }
 
     }

@@ -1,6 +1,6 @@
 <template>
 
-    <button class="btn btn-primary">Add new account</button>
+    <!-- <button class="btn btn-primary">Add new account</button> -->
 
     <div class="table-responsive mt-4">
         <h4 class="mt-3 w-100 bg-light p-3"><i class="fas fa-user me-2"></i>Account Lists</h4>
