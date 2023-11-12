@@ -14,7 +14,7 @@ class transactions extends Model
 
     protected $fillable = [
         'transactions_id','customer_name','gross_total','discount','net_total','status','purchase_date','change'
-        ,'orderedBy'
+        ,'orderedBy','amount'
     ];
 
     protected $casts = [

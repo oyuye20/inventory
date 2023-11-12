@@ -118,6 +118,10 @@ Route::put('/delete/category/{id}', [inventory1::class, 'delete_category']);
 Route::get('/stats', [stats::class, 'total_prod']);
 Route::get('/expiration', [stats::class, 'expProduct']);
 
+Route::get('/netSales', [stats::class, 'netSales']);
+
+
+
 
 
 Route::get('/expiration/count', [stats::class, 'expired_count']);
@@ -147,8 +151,8 @@ Route::get('/yearly', [stats::class, 'yearlyItems']);
 Route::get('/expiring/products', [stats::class, 'expiringItems']);
 
 
-
-
+/* SHOW INVOICE */
+Route::get('/showInvoice/{id}', [stats::class, 'showInvoice']);
 
 
 
@@ -163,26 +167,11 @@ Route::get('/search/{data}', [filter::class, 'search']);
 Route::get('/filter/daily/{date}', [filter::class, 'filterDaily']);
 Route::get('/filter/month/{date}', [filter::class, 'filterMonth']);
 
-
 Route::get('/inventory/search/{data}', [filter::class, 'searchInventory']);
 
-
-
 Route::get('/inventoryLists/search/{data}', [filter::class, 'searchInventoryLists']);
-
-
-
-
-
-
 Route::get('/critical/search/{data}', [filter::class, 'searchCritical']);
-
-
-
-
-
 Route::get('/sold-out-inventory/{data}', [filter::class, 'searchSoldOutItems']);
-
 Route::get('/relation', [product_crud::class, 'sample']);
 
 

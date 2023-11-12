@@ -1,174 +1,144 @@
 <template>
 
-<!-- v-if="modalActive" -->
-
 
 <transition name="modalAnim">
-<div v-if="modalActive" class="container-fluid d-flex justify-content-center align-items-center" 
-style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; background-color: rgba(0, 0, 0, 0.605); overflow: auto;">
+<div v-if="modalActive" class="p-3" id="modal-main">
     
-    <div class="row container d-flex 
-    justify-content-center align-items-center">
+    <div class="row d-flex justify-content-center align-items-center" 
+    id="modal-content">
 
-        <div class="col-lg-8 bg-light shadow-sm p-0">
 
-            <div class="col-12 mb-4 text-start p-3" style="background-color: rgb(4, 180, 116);">
-                <span class="fw-bold fs-5 text-white">Transaction ID: {{transID}}</span>
+
+    <div class="col-xxl-7 col-xl-8 col-lg-10 col-md-11 col-sm-12 p-3" >
+
+        <div class="col-12">
+            <div class="fw-bold text-dark d-flex justify-content-between p-3"
+            style="background-color: rgb(4, 180, 116);"> 
+                <span>Transaction ID: {{transID}}</span>
+                <span>Date: {{ formatDate }}</span>    
             </div>
-
-
-            <div class="d-flex text-center flex-column p-0 m-0">
-                <p class="fw-bold">J.R. AMADOR PET AND POULTRY SUPPLIES</p>
-                <p class="fw-bold">Unit Sample Malolos KM 42</p>
-                <p class="fw-bold">McArthur Hway Bulihan, Malolos City Bul</p>
-                <p class="fw-bold">TEL NO : (044)1234-567</p>
-            </div>
-
-                <div class="col-12 border border-black"></div>
-
-               <!--  v-for="(list, i) in cart_lists" :key="list.product_id" -->
-
-
-            <!-- <div class="div p-0 m-1 border border-dark" v-for="(list, i) in cart_lists" :key="list.product_id">
-
-                <div class="col-12 d-flex">
-                          
-                    <div class="col-8 d-flex border">
-                        <span class="fw-bold">{{list.product_name}}</span>
-                    </div>
-
-                    <div class="col-2 d-flex justify-content-center">
-                        <span class="fw-bold">{{list.quantity}}</span>
-                    </div>    
-                    
-                    <div class="col-2 d-flex justify-content-center">
-                        <span class="fw-bold">{{list.price}}</span>
-                    </div> 
-                </div>
-         
-            </div> -->
-
-            <div class="div p-2 m-1 " v-for="(list, i) in cart_lists" :key="list.product_id">
-                <div class="col-10 d-flex mb-2 ">
-                    <div class="col-10">
-                        <span class="fw-bold">{{list.product_name}}</span>
-                    </div>
-
-                    
-                    <div class="col-2 text-center">
-                        <span class="fw-bold">{{list.quantity}}</span>
-                    </div>
-
-                    <div class="col-2 text-center">
-                        <span class="fw-bold">₱ {{list.price}}</span>
-                    </div>
-                </div>          
-            </div>
-
-                
-
-            <div class="div p-2 m-1;k">
-
-                <div class="col-12 d-flex mb-2 ">
-                    <div class="col-10">
-                        <span class="fw-bold">Sub Total</span>
-                    </div>
-
-                    
-                    <div class="col-2 text-center">
-                        <span class="fw-bold">{{Intl.NumberFormat('en-PH', 
-                        { style: 'currency', currency: 'PHP' }).format(CartStore.grand_total)}}</span>
-                    </div>    
-                </div>
-
-                <!-- <div class="col-12 d-flex mb-2 ">
-                    <div class="col-10">
-                        <span class="fw-bold">Vat</span>
-                    </div>
-
-                    
-                    <div class="col-2 text-center">
-                        <span class="fw-bold">{{Intl.NumberFormat('en-PH', 
-                        { style: 'currency', currency: 'PHP' })
-                        .format((CartStore.grand_total * 0.12))}}</span>
-                    </div>    
-                </div> -->
-
-
-                <div class="col-12 d-flex mb-2 ">
-                    <div class="col-10">
-                        <span class="fw-bold">Total Amount</span>
-                    </div>
-
-                    
-                    <div class="col-2 text-center">
-                        <span class="fw-bold">{{Intl.NumberFormat('en-PH', 
-                        { style: 'currency', currency: 'PHP' }).format
-                        ((CartStore.grand_total))}}</span>
-                    </div>    
-                </div>
-
-                         
-            </div>
-
-
-
-
-            <div class="div p-3 m-1">
-
-                <div class="col-12 d-flex mb-2">
-                    <div class="col-10">
-                        <span class="fw-bold">Total Payment</span>
-                    </div>
-                    
-                    <div class="col-2 ">
-                        <span class="fw-bold">{{Intl.NumberFormat('en-PH', 
-                        { style: 'currency', currency: 'PHP' }).format(CashAmount)}}</span>
-                    </div>    
-                </div>
-
-               
-                <div class="col-12 d-flex mb-2">
-                    <div class="col-10">
-                        <span class="fw-bold">Change</span>
-                    </div>
-                    
-                    <div class="col-2 ">
-                        <span class="fw-bold">{{Intl.NumberFormat('en-PH', 
-                        { style: 'currency', currency: 'PHP' }).format(changeMoney)}}</span>
-                    </div>    
-                </div>
-
-                         
-            </div>
-
-
-
-
-                
-
-                
-
-
-
-
-
-
-
-            <div class="d-flex justify-content-end p-3">
-                <!-- <button class="btn btn-danger me-2" @click="modalActive =! modalActive">Close</button> -->
-
-                <form @submit.prevent="completeOrder()">
-                    <button type="submit" class="btn btn-success">Complete Order</button>
-                </form>
-                
-            </div>
-
+        </div>
         
+
+        <div class="col-12 bg-light p-3">
+            <p class="col-12 mb-1 text-center fw-bold text-dark">J.R. AMADOR PET AND POULTRY SUPPLIES</p>
+            <p class="col-12 mb-1 text-center fw-bold text-dark">Unit Sample Malolos KM 42</p>
+            <p class="col-12 mb-1 text-center fw-bold text-dark">McArthur Hway Bulihan,</p>
+            <p class="col-12 mb-1 text-center fw-bold text-dark">Malolos City Bulacan</p>
+            <p class="col-12 mb-1 text-center fw-bold text-dark">TEL NO : (044)1234-567</p>
+
+        <hr style=" border-top: 3px dashed black;">
+        
+
+        <div class="table-responsive">
+        <table class="table table-borderless">
+        <thead style="background-color: transparent;">
+            <tr>
+            <th class="fw-bold" scope="col">Serial Number</th>
+            <th class="fw-bold" scope="col">Product Name</th>
+            <th class="fw-bold" scope="col">Quantity</th>
+            <th class="fw-bold" scope="col">Price</th>
+            </tr>
+        </thead>
+        <tbody v-for="i in cart_lists">
+            <tr>
+            <td class="fw-bold text-dark">{{i.serial_number}}</td>
+            <td class="fw-bold text-dark">{{i.product_name}}</td>
+            <td class="fw-bold text-dark">{{i.quantity }}</td>
+
+            <td class="fw-bold text-dark">{{Intl.NumberFormat('en-PH', 
+                { style: 'currency', currency: 'PHP' }).
+                format(i.selling_price)}}</td>
+            </tr>
+        </tbody>
+        </table>
+
+        </div>
+
+        <hr style=" border-top: 2.5px dashed black;">
+
+
+        <div class="d-flex justify-content-center mb-3">
+            <div class="col-7 d-flex justify-content-between">
+                <span class="fw-bold text-dark">Sub total: </span>
+
+                <span class="fw-bold text-dark">{{Intl.NumberFormat('en-PH', 
+                { style: 'currency', currency: 'PHP' }).
+                format(CartStore.grand_total)}}</span>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-center">
+            <div class="col-7 d-flex justify-content-between">
+                <span class="fw-bold text-dark">Grand total: </span>
+
+                <span class="fw-bold text-dark">{{Intl.NumberFormat('en-PH', 
+                { style: 'currency', currency: 'PHP' }).
+                format(CartStore.grand_total)}}</span>
+            </div>
+        </div>
+
+
+        <hr style=" border-top: 3px dashed black;">
+
+
+        <div class="d-flex justify-content-center mb-3">
+            <div class="col-7 d-flex justify-content-between">
+                <span class="fw-bold text-dark">Total Payment: </span>
+
+                <span class="fw-bold text-dark">{{Intl.NumberFormat('en-PH', 
+                { style: 'currency', currency: 'PHP' }).
+                format(CashAmount)}}</span>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-center mb-5">
+            <div class="col-7 d-flex justify-content-between">
+                <span class="fw-bold text-dark">Change: </span>
+
+                <span class="fw-bold text-dark">{{Intl.NumberFormat('en-PH', 
+                { style: 'currency', currency: 'PHP' }).
+                format(changeMoney)}}</span>
+            </div>
+        </div>
+
+
+        <div class="d-flex justify-content-center">
+            <div class="col-12 d-flex justify-content-end">
+
+
+                <button class="btn btn-danger me-2 fw-bold" id="printBtn" v-if="orderCompleted"
+                @click="modalActive =! modalActive">Cancel</button>
+
+                <button class="btn btn-primary me-2 fw-bold" id="printBtn" v-if="orderCompleted == false"
+                @click="printInvoice">Print Invoice</button>
+
+                <button class="btn btn-success me-2 fw-bold" id="printBtn" v-if="orderCompleted == false"
+                @click="closeTransaction">Continue</button>
+
+
+
+                <form @submit.prevent="completeOrder()" id="printBtn" v-if="orderCompleted">
+                    <button :disabled="submit_btn" type="submit" class="btn btn-success fw-bold d-flex
+                    justify-content-center align-items-center">
+                    <span v-if="submit_btn" class="spinner-border spinner-border-sm me-3" 
+                    aria-hidden="true"></span>Complete Order</button>
+                </form>
+
+
+                
+            </div>
+        </div>
+        
+
         </div>
     </div>
+ </div>
 </div>
 </transition>
+
+
+
 
 <transition name="modalAnim">
 <div v-if="modalCash" class="container-fluid d-flex justify-content-center align-items-center" 
@@ -202,8 +172,7 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
             <div class="d-flex justify-content-end p-3">
                 <button class="btn btn-danger me-2" @click="modalCash =! modalCash">Cancel</button>
 
-                    <button class="btn btn-success" @click="invoice()">Continue</button>
-                
+                <button class="btn btn-success" @click="invoice()">Continue</button>        
             </div>
 
         
@@ -368,7 +337,7 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
                                             <th scope="col" class="fw-bold">Image</th>
                                             <th scope="col" class="fw-bold">Product Name</th>
                                             <th scope="col" class="fw-bold">Quantity</th>
-                                            <th scope="col" class="fw-bold">Price</th>
+                                            <th scope="col" class="fw-bold">Selling Price</th>
                                             <th scope="col" class="fw-bold">Action</th>
                                             </tr>
                                         </thead>
@@ -382,6 +351,11 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
                                                 <td>{{p.product.product_name}}</td>
                           
                                                 <td>{{p.stocks}}</td>
+
+
+
+
+
                                                 
                                                 <td>
                                                     {{Intl.NumberFormat('en-PH', 
@@ -394,7 +368,8 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
                                                 <td>
                                                     <button class="btn btn-primary" 
                                                     @click="cart_add.add_cart(p.id,p.product.
-                                                    product_name,p.stocks,p.product.selling_price,p.product.serial_number)">
+                                                    product_name,p.stocks,p.product.selling_price,
+                                                    p.product.serial_number,p.product.price)">
                                                     +</button>
                                                 </td>
 
@@ -503,6 +478,7 @@ export default {
         const quantity = ref('');
         const search_box = ref('');
         const username = ref('');
+        
 
 
         
@@ -513,6 +489,12 @@ export default {
         const isSidebar = ref(false);
         const typing = ref(false);
 
+        const orderCompleted = ref(true);
+        
+
+
+        
+
 
         /* DATE TIME  */
         const date = new Date();
@@ -520,50 +502,12 @@ export default {
         /* END OF DATE TIME */
 
         
-        
     
         const toggleModal = () =>{
             modalActive.value = !modalActive.value;
         }
 
-        /* watchEffect((onvalidate) =>{
-        search_box.value
-
-            if(search_box.value.length>0)
-            {
-                typing.value = true
-
-                const typing_stats = setTimeout(()=>{
-                    typing.value = false
-                }, 700)
-
-                onvalidate(()=>{
-                    clearInterval(typing_stats)
-
-                    axios_client.get('/search/' + search_box.value).then((res)=>{
-                    product_lists.value = res.data
-
-                
-                    }).catch(error => {
-                        console.log(error)
-                    })
-                })
-
-            }
-
-            else 
-            {
-                const typing_stats = setTimeout(()=>{
-                    typing.value = false
-                }, 1000)
-
-                onvalidate(()=>{
-                    clearInterval(typing_stats)
-                })
-            }
-
-        }) */
-
+        
        
         const userData = async() => {
             axios_client.get('/user').then(response=>{
@@ -621,6 +565,8 @@ export default {
 
 
         function completeOrder(){
+            submit_btn.value = true;
+
             const today = new Date();
                 const date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
                 const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
@@ -632,7 +578,7 @@ export default {
                 form.append('change', changeMoney.value)
                 form.append('grand_total', CartStore.grand_total)
                 form.append('orderedBy', username.value)
-
+                form.append('amount', CashAmount.value)
 
                 form.append('cart', JSON.stringify(cart_lists.value))
                 form.append('purchase_date', dateTime)
@@ -641,20 +587,49 @@ export default {
 
 
                 axios_client.post("/checkout", form).then(response=>{
-                    console.log(response.data)     
-                    customer_name.value = ''
-                    show_alert.value = true
-                    CartStore.clear_cart()
-                    CartStore.getProduct()
+                    console.log(response.data)    
+
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Order placed',
+                        icon: 'success',
+                        confirmButtonText: 'OK',
+                        allowOutsideClick: false
+                    })
+
+
                     submit_btn.value = false
-                    modalActive.value = false
-                    transID.value = Math.floor(Math.random() * 99999999999999) + 1
+                    orderCompleted.value = false;
+                           
 
                 }).catch(error =>{
                     console.log(error.response.data)
                     submit_btn.value = false
                 })
         }
+
+        function printInvoice(){
+            window.print();
+        }
+
+
+        function closeTransaction(){
+            customer_name.value = ''
+            CartStore.clear_cart()
+            CartStore.getProduct()
+            transID.value = Math.floor(Math.random() * 99999999999999) + 1
+            modalActive.value = false;
+
+
+            Swal.fire({
+                title: 'Success!',
+                text: 'Order completed',
+                icon: 'success',
+                confirmButtonText: 'OK',
+                allowOutsideClick: false
+            })
+        }
+
 
 
         onMounted(()=> {
@@ -677,7 +652,10 @@ export default {
 
             lists,cart_add,cart_lists,CartStore,search_data,customer_name,show_alert,cart_order
             
-            ,submit_btn,CashAmount,modalCash,changeMoney,storageLink,transID,formatDate,loadingPage
+            ,submit_btn,CashAmount,modalCash,changeMoney,storageLink,transID,formatDate,loadingPage,printInvoice
+
+            ,orderCompleted,closeTransaction
+
         }
 
     }

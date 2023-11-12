@@ -1,50 +1,58 @@
 <template>
 
+
+
 <transition name="modalAnim">
-<div v-if="modalActive" class="container-fluid d-flex justify-content-center align-items-center p-4" 
-style="width: 100%; height: 100%; z-index: 5; background-color: rgba(0, 0, 0, 0.605); overflow: auto;">
+<div v-if="modalActive" class="p-3" id="modal-main">
     
-    <div class="row container d-flex 
-    justify-content-center align-items-center">
+    <div class="row d-flex justify-content-center align-items-center p-3" 
+    id="modal-content">
 
-        <div class="col-lg-5 bg-light shadow-sm rounded-5 p-0">
+            <div class="col-xxl-7 col-md-8 text-start p-3" 
+            style="background-color: rgb(4, 180, 116);">
 
-            <div class="col-12 mb-4 text-start rounded-top-3 p-3" style="background-color: rgb(4, 180, 116);">
-                <span class="fw-bold fs-3 text-white"><i class="fas fa-circle-plus me-3">
-                </i>Add new category</span>
-            </div>
-
-            <div class="div p-4">          
-
-                <div class="col-12 mb-4">
-                    <input type="text" class="form-control" v-model="category.catname" placeholder="Enter category name">
-                </div>
 
                 <div class="col-12">
-                    <input type="text" class="form-control" v-model="category.desc" placeholder="Description">
+                    <span class="fw-bold fs-3 text-white">
+                    <i class="fas fa-circle-plus me-3">
+                    </i>Add new Category</span>
                 </div>
-
+               
             </div>
 
+            <div class="col-xxl-7 col-md-8 text-start p-3 bg-light">
 
-            <div class="col-12 border border-black px-3">
-                
+
+            <div class="col-12 mb-2">
+                <label for="" class="form-label fw-bold">Category name</label>
+                <input type="text" v-model="category.catname" 
+                class="form-control">
             </div>
 
-            <div class="d-flex justify-content-end p-3">
-                <button class="btn btn-danger me-2" @click="toggleModal">Close</button>
+            <div class="col-12 mb-2">
+                <label for="" class="form-label fw-bold">Description</label>
+                <textarea type="text" v-model="category.desc" 
+                class="form-control"></textarea>  
+            </div>
+
+     
+            <div class="col-12 d-flex justify-content-end"> 
+                <button role="button" class="btn btn-danger mt-3 fw-bold" 
+                @click="toggleModal">Close</button>
 
                 <form @submit.prevent="create_category()">
-                    <button type="submit" class="btn btn-success">Save</button>
+                    <button type="submit" class="btn btn-success 
+                    mt-3 fw-bold">Add new category</button>
                 </form>
-                
-            </div>
 
-        
-        </div>
+                </div>      
+            </div>      
     </div>
 </div>
 </transition>
+
+
+
 
 
 <!-- ADD NEW PRODUCT MODAL -->
@@ -565,6 +573,8 @@ export default {
             formData.append('image2', imageFile.value);
             formData.append('product_data', JSON.stringify(editProdData.value));
 
+            console.log(editProdData.value)
+
             axios_client.post(`/update_product/`
             + id, formData, config).then(response=>{
                 loading.value = true;
@@ -604,10 +614,10 @@ export default {
 
 
     
-        /* const category  = reactive({
+        const category  = reactive({
             desc: '',
             catname: '',
-        }) */
+        })
 
 
         
@@ -683,6 +693,16 @@ export default {
                 console.log(response.data);
                 this.getCat();
                 modalActive.value = !modalActive.value;
+
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Category added successfully',
+                    icon: 'success',
+                    confirmButtonText: 'OK',
+                    allowOutsideClick: false
+                })
+
+
             }).catch(error =>{
                 console.log(error.response.data)
             })
@@ -712,7 +732,7 @@ export default {
         return {
             typing,loading,isSidebar,exportExcel,
             modalActive,toggleModal,create_category,isOpen,formatDate
-            ,toggleProduct,addProduct
+            ,toggleProduct,addProduct,category
 
 
             /* FOR ADD PRODUCT */
@@ -725,8 +745,6 @@ export default {
 
             /* FOR UPDATE PRODUCT */
             ,editProduct,editProdModal,editProdData,updateProdBtn,updateProdLists
-
-
             /* END FOR UPDATE PRODUCT */
         }
 

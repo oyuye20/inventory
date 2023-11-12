@@ -27,14 +27,15 @@ export const useCartStore = defineStore('CartStore', () =>{
     const deplete = ref(false);
 
 
-    const add_cart = (product_id, product_name, stocks, price, serial_number) => {
+    const add_cart = (product_id, product_name, stocks, selling_price, serial_number,price) => {
         const data_cart = {
             product_id,
             product_name,
-            quantity: 1,
             price,
+            quantity: 1,
+            selling_price,
             serial_number,
-            total: price,
+            total: selling_price,
             stocks
         }
 
@@ -60,13 +61,13 @@ export const useCartStore = defineStore('CartStore', () =>{
             else 
             {
                 find_id.quantity += 1
-                find_id.total = (find_id.price * find_id.quantity);
+                find_id.total = (find_id.selling_price * find_id.quantity);
             }
         }
 
         else 
         {
-            cart.value.push(data_cart)     
+            cart.value.push(data_cart)
         }
 
     }
@@ -100,7 +101,7 @@ export const useCartStore = defineStore('CartStore', () =>{
 
 
     const grand_total = computed(() => {
-        return cart.value.reduce((num, prd) => (num + prd.price * prd.quantity) ,0)
+        return cart.value.reduce((num, prd) => (num + prd.selling_price * prd.quantity) ,0)
     })
     
 
@@ -140,7 +141,7 @@ export const useCartStore = defineStore('CartStore', () =>{
 
 
 
-    const increment = (i,stocks,price,product_id) => {
+    const increment = (i,stocks,selling_price,product_id) => {
 
         const find_id = cart.value.find(e => e.product_id === product_id)
 
@@ -161,7 +162,7 @@ export const useCartStore = defineStore('CartStore', () =>{
 
         else {
             cart.value[i].quantity += 1
-            find_id.total = (find_id.price * find_id.quantity);
+            find_id.total = (find_id.selling_price * find_id.quantity);
 
         }
       
@@ -176,7 +177,7 @@ export const useCartStore = defineStore('CartStore', () =>{
         const find_id = cart.value.find(e => e.product_id === product_id)
         
         cart.value[i].quantity -= 1
-        find_id.total -= (find_id.price * 1);
+        find_id.total -= (find_id.selling_price * 1);
         
         /* deplete.value = false
         message_stock.value = '' */

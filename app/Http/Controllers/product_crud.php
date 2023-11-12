@@ -54,6 +54,7 @@ class product_crud extends Controller
             "transactions_id" => $request->input("transactions_id"),
             "gross_total" => $request->input("sub_total"),
             "discount" => "0",
+            "amount" => $request->input("amount"),
             "net_total" => $request->input("grand_total"),
             "purchase_date" => $request->input("purchase_date"),
             "orderedBy" => $request->input("orderedBy"),
@@ -68,6 +69,7 @@ class product_crud extends Controller
                 "serial_number" => $values['serial_number'],
                 "product_name" => $values['product_name'],
                 "quantity" => $values['quantity'],
+                "selling_price" => $values['selling_price'],
                 "price" => $values['price'],
                 "total" => $values['total'],
             ]);
@@ -174,7 +176,7 @@ class product_crud extends Controller
         $prod->description = $r['description'];
         $prod->size = $r['size'];
         $prod->price = $r['price'];
-        $prod->selling_price = $r['selling_price'];
+        $prod->selling_price = $r['sellingPrice'];
         $prod->save();
 
         return response()->json([

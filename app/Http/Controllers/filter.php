@@ -88,9 +88,6 @@ class filter extends Controller
 
 
 
-
-
-
     public function filterDaily($date){
 
       $start = $date.' 00:00:00';

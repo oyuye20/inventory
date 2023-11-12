@@ -64,13 +64,33 @@
                 <div class="d-flex flex-column">
                     <div class="p-3 shadow-sm d-flex justify-content-around 
                     flex-column align-items-center rounded-5" style="height: 12rem; 
-                    background-color: rgb(192, 64, 207);">
+                    background-color: rgb(100, 221, 158)">
 
                         <div class="p-3 d-flex rounded-5 w-100">
                             <div>
                                 <h3 class="fs-5 text-light mb-3"><i class="fas fa-money-bill me-2"></i>Total of Sales</h3>
                                 <p class="fs-2 text-light fw-bold">{{Intl.NumberFormat
                                 ('en-PH', { style: 'currency', currency: 'PHP' }).format((sale_total))}}</p>
+                                
+                            </div>
+                        </div>
+        
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-xxl-3 col-xl-4">
+                <div class="d-flex flex-column">
+                    <div class="p-3 shadow-sm d-flex justify-content-around 
+                    flex-column align-items-center rounded-5" style="height: 12rem; 
+                    background-color: rgb(192, 64, 207);">
+
+                        <div class="p-3 d-flex rounded-5 w-100">
+                            <div>
+                                <h3 class="fs-5 text-light mb-3"><i class="fas fa-money-bill me-2"></i>Net total of sales</h3>
+                                <p class="fs-2 text-light fw-bold" v-for="n in netTotal">{{Intl.NumberFormat
+                                ('en-PH', { style: 'currency', currency: 'PHP' }).format((n.total))}}</p>
                                 
                             </div>
                         </div>
@@ -297,6 +317,9 @@ Chart.register(...registerables); */
         const lowStocks = ref('');
 
         const search_box = ref('');
+        const netTotal = ref('');
+
+
         const typing = ref(false);
 
 
@@ -421,6 +444,19 @@ Chart.register(...registerables); */
 
 
 
+        /* NET SALES */
+        const net_sales = async()=> {
+            axios_client.get('/netSales').then(response=>{
+                netTotal.value = response.data
+               
+            }).catch(error =>{
+
+            })
+        }
+
+
+
+
         /* EXPIRED PRODUCT COUNT */
         const exp_count_f = async() => {
             axios_client.get('/expiration/count').then(response=>{
@@ -484,6 +520,7 @@ Chart.register(...registerables); */
             total_sales()
             lowStocksCount()
             sold_items()
+            net_sales()
         })
 
 
@@ -498,7 +535,7 @@ Chart.register(...registerables); */
             ,getNotifications,notifCount,notifLists,lowStocksCount,lowStocks,
 
 
-            chartData2,chartOptions2,styles
+            chartData2,chartOptions2,styles,net_sales,netTotal
 
             /* , barChartProps, barChartRef,isloaded */
         }

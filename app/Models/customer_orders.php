@@ -14,6 +14,7 @@ class customer_orders extends Model
 
     protected $fillable = [
         'transactions_id','product_name','quantity','price','total','serial_number'
+        ,'selling_price'
     ];
 
     public function transactions(): BelongsTo{

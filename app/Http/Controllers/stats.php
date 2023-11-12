@@ -81,10 +81,23 @@ class stats extends Controller
 
 
 
+    public function netSales(){
+        return DB::table('customer_orders')
+        ->selectRaw('SUM(selling_price * quantity) - SUM(price * quantity) as total')
+        ->get();
+    }
 
 
 
+    /* FUNCTION FOR VIEW INVOICE ORDER */
+    public function showInvoice($id){
+        return DB::table('customer_orders')
+        ->join('transactions','customer_orders.transactions_id', '=','transactions.id')
+        ->where('transactions.id', '=', $id)
+        ->get();
 
+        /* return customer_orders::where('transactions_id','=',$id)->get(); */
+    }
 
 
 

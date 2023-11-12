@@ -630,7 +630,7 @@
                             <th class="fw-bold">Purchase Date</th>
                             <th class="fw-bold">Ordered By</th>
                             <th class="fw-bold">Status</th>
-                           <!--  <th class="fw-bold">View Order</th> -->
+                            <th class="fw-bold">View Order</th>
                             </tr>
                         </thead>
 
@@ -645,9 +645,9 @@
                                 <td>{{o.purchase_date}}</td>
                                 <td>{{o.orderedBy}}</td>
                                 <td>{{o.status}}</td>
-                                <!-- <td class="m-3">
-                                    <button class="btn btn-primary"><i class="far fa-eye"></i></button>
-                                </td> -->
+                                <td class="m-3">
+                                    <button class="btn btn-primary" @click="$emit('openInvoice', o.id)"><i class="far fa-eye"></i></button>
+                                </td>
                             </tr>
 
                         </tbody>
