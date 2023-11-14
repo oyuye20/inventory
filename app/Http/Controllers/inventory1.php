@@ -19,9 +19,13 @@ class inventory1 extends Controller
             echo $as->stocks;
         }
  */
-        /* return inventory::with('product')->where('stocks','>', 100)->paginate(5); */
 
-        return inventory::with('product')->where('stocks','>','0')->orderBy('created_at','ASC')->groupBy('product_id')->paginate(5);
+        return inventory::with('product')->where('stocks','>','0')->orderBy('created_at')->groupBy('product_id')->paginate(5);
+
+        /* return inventory::with('product')->where('stocks','>','0')
+        ->whereHas('product', function ($query) {
+         $query->orderBy('product_name')->groupBy('product_name');
+        })->paginate(5); */
 
 
         /* return DB::table('product_infos')
@@ -40,11 +44,27 @@ class inventory1 extends Controller
 
 
     public function inventoryLists(){
-        return inventory::with('product')->where('stocks','>','0')->orderBy('id','ASC')->paginate(5);
+        /* return inventory::with('product')->where('stocks','>','0')->orderBy('id','ASC')->paginate(5); */
+
+
+
+        return DB::table('inventories')
+        ->join('product_infos', 'inventories.product_id','=','product_infos.id')
+
+        ->select('product_infos.product_name','product_infos.serial_number','product_infos.image',
+        'product_infos.price','product_infos.selling_price','inventories.category',
+        'inventories.supplier','inventories.supplier_number','inventories.production_date'
+        ,'inventories.expiration_date',DB::raw('SUM(stocks) as stocksTotal, SUM(safety_stocks) as 
+        safety_stocksTotal'))
+        ->where('stocks','>','0')
+        ->groupBy('inventories.product_id')->paginate(5);
+
+
+        /* return inventory::with('product')->where('stocks','>','0')
+        ->whereHas('product', function ($query) {
+         $query->orderBy('product_name')->groupBy('product_name');
+        })->paginate(5); */
     }
-
-
-
 
 
 
@@ -53,14 +73,32 @@ class inventory1 extends Controller
     }
 
 
+    public function getStockID($id){
+        return inventory::where('id','=',$id)->get();
+    }
 
 
+    public function updateStockID(Request $request, $id){
+        $r = json_decode($request->input("stock_data"),true);
 
+        $stock = inventory::find($id);
+        
 
+        foreach($r as $value){
+            $stock->update([
+                'supplier'=>$value['supplier'],
+                'supplier_email'=>$value['supplier_email'],
+                'supplier_number'=>$value['supplier_number'],
+                'stocks'=>$value['stocks'],
+            ]);
+        }
 
+        
+        return response()->json([
+            "status" => 200
+         ]);
 
-
-
+    }   
 
 
 

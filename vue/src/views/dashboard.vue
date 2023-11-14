@@ -41,22 +41,27 @@
             <!-- CARD FOR DASHBOARD -->
             <div class="row g-3 my-2 d-flex justify-content-center">
 
-                <div class="col-xxl-3 col-xl-4">
-                <div class="d-flex flex-column">
-                    <div class="p-3 shadow-sm d-flex justify-content-around 
-                    flex-column align-items-center rounded-5" style="height: 12rem; 
-                    background-color: rgb(237, 106, 219);">
+                <router-link :to="{name: 'products'}" class="col-xxl-3 col-xl-4">
+                    <div class="d-flex flex-column">
+                        <div class="p-3 shadow-sm d-flex justify-content-around 
+                        flex-column align-items-center rounded-5" style="height: 12rem; 
+                        background-color: rgb(237, 106, 219);">
 
-                    <div class="p-3 d-flex rounded-5 w-100">
-                        <div>
-                            <h3 class="fs-5 text-light mb-3 fw-bold"><i class="fas fa-box me-2"></i>Products</h3>
-                            <p class="fs-2 text-light fw-bold">{{ product_total }}</p>
+                        <div class="p-3 d-flex rounded-5 w-100">
+                            <div>
+                                <h3 class="fs-5 text-light mb-3 fw-bold"><i class="fas fa-box me-2"></i>Products</h3>
+                                <p class="fs-2 text-light fw-bold">{{ product_total }}</p>
+                            </div>
+                        </div>
+
                         </div>
                     </div>
+                </router-link>
 
-                    </div>
-                </div>
-                </div>
+
+               
+                
+              
 
 
 

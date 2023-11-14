@@ -133,19 +133,25 @@
                             <tr>
                             <th class="fw-bold">Serial Number</th>
                             <th class="fw-bold">Product Name</th>
+                            <th class="fw-bold">Price</th>
+                            <th class="fw-bold">Selling Price</th>
                             <th class="fw-bold">Total of sold items</th>
                             <th class="fw-bold">Total Income</th>
+                            <th class="fw-bold">Net Sales</th>
 
                             <!-- <th>Actions</th> -->
                             </tr>
                         </thead>
 
-                    <tbody v-for="sold in items_sold">
+                    <tbody v-for="sold in items_sold.data">
                         <tr>
                             <td>{{sold.serial_number}}</td>
                             <td>{{sold.product_name}}</td>
+                            <td>{{sold.price}}</td>
+                            <td>{{sold.selling_price}}</td>
                             <td>{{sold.sold_items}}</td>
                             <td>₱ {{sold.money}}</td>
+                            <td>₱ {{sold.net_total}}</td>
 
                             <!-- <td class="m-3">
                                 <button class="btn btn-primary"><i class="bi bi-pencil-square"></i></button>
@@ -157,11 +163,11 @@
                     </table>
 
 
-                    <!-- <div class="d-flex justify-content-end align-items-center" >
-                        <Bootstrap5Pagination :limit="1" :keepLength="true" :data="product_lists" class="shadow-sm"  
-                        @pagination-change-page="getProduct"
+                    <div class="d-flex justify-content-end align-items-center" >
+                        <Bootstrap5Pagination :limit="1" :keepLength="true" :data="items_sold" class="shadow-sm"  
+                        @pagination-change-page="sold_items"
                         />
-                    </div> -->
+                    </div>
 
                 </div>
 
@@ -176,13 +182,13 @@
 
                 <div class="container-fluid col-xxl-12 d-flex justify-content-between mb-3">
                     <div class="col-10 me-3">
-                        <input type="text" @keydown.enter="search" role="searchbox" class="form-control rounded-5 p-2" 
+                        <input type="text" @keydown.enter="supplierLists" role="searchbox" class="form-control rounded-5 p-2" 
                         style="box-shadow: 3px 3px 3px rgb(197, 197, 197); 
-                        border: 1.9px solid rgb(215, 214, 214);" placeholder="Search sold items">
+                        border: 1.9px solid rgb(215, 214, 214);" v-model="search_supplier" placeholder="Search sold items">
                     </div>
 
                     <div class="col-2 d-flex justify-content-center p-0 m-0">
-                        <button class="btn btn-success" @click="search"><i class="fas fa-magnifying-glass"></i></button>
+                        <button class="btn btn-success" @click="supplierLists"><i class="fas fa-magnifying-glass"></i></button>
                     </div>
                 </div>
 
@@ -199,7 +205,7 @@
                             </tr>
                         </thead>
 
-                    <tbody v-for="s in stockHistory_lists.data">
+                    <tbody v-for="s in supplierData.data">
                         <tr>
                             <td>{{s.supplier}}</td>
                             <td>{{s.supplier_email}}</td>
@@ -216,8 +222,8 @@
 
 
                     <div class="d-flex justify-content-end align-items-center" >
-                        <Bootstrap5Pagination :limit="1" :keepLength="true" :data="stockHistory_lists" class="shadow-sm"  
-                        @pagination-change-page="stockHistory"
+                        <Bootstrap5Pagination :limit="1" :keepLength="true" :data="supplierData" class="shadow-sm"  
+                        @pagination-change-page="supplierLists"
                         />
                     </div>
 
@@ -256,7 +262,7 @@
                             <th class="fw-bold">Stock</th>
                             <th class="fw-bold">Stock By</th>
                             <th class="fw-bold">Stock Date</th>
-                            <!-- <th>Actions</th> -->
+                            <th>Actions</th>
                             </tr>
                         </thead>
 
@@ -272,10 +278,9 @@
                             <td>{{i.created_at}}</td>
 
 
-                            <!-- <td class="m-3">
-                                <button class="btn btn-primary"><i class="bi bi-pencil-square"></i></button>
-                                <button type="button" class="btn btn-danger mx-1 mt-2" @click.prevent="del_prod(product.id)"><i class="bi bi-trash3-fill"></i></button>
-                            </td> -->
+                            <td class="m-3">
+                                <button class="btn btn-primary" @click="$emit('openStock', i.id)"><i class="bi bi-pencil-square"></i></button>
+                            </td>
                         </tr>
 
                     </tbody>
@@ -427,12 +432,12 @@
                         <tbody v-for="c in criticalStocks.data" :key="c.id" >
                             <tr>
                                 <td hidden>{{c.id}}</td>
-                                <td>{{c.product.serial_number}}</td>
-                                <td>{{c.product.manufacturer}}</td>
-                                <td>{{c.product.product_name}}</td>
-                                <td>{{c.product.size}}</td>
-                                <td>{{c.safety_stocks}}</td>
-                                <td class="fw-bold text-danger">{{c.stocks}}</td>
+                                <td>{{c.serial_number}}</td>
+                                <td>{{c.manufacturer}}</td>
+                                <td>{{c.product_name}}</td>
+                                <td>{{c.size}}</td>
+                                <td>{{c.safeStocks}}</td>
+                                <td class="fw-bold text-danger">{{c.stocks1}}</td>
                                 <td class="fw-bold text-danger">Critical</td>
                             </tr>
                         </tbody>
@@ -462,15 +467,19 @@
 
                     <div class="container-fluid col-xxl-12 d-flex justify-content-between mb-3">
                         <div class="col-10 me-3">
-                            <input type="text" @keydown.enter="search" role="searchbox" class="form-control rounded-5 p-2" 
+                            <input type="text" @keydown.enter="expired_prod" role="searchbox" class="form-control rounded-5 p-2" 
                             style="box-shadow: 3px 3px 3px rgb(197, 197, 197); 
-                            border: 1.9px solid rgb(215, 214, 214);" placeholder="Search expired products">
+                            border: 1.9px solid rgb(215, 214, 214);" placeholder="Search expired products"
+                            v-model="search_expired">
                         </div>
 
                         <div class="col-2 d-flex justify-content-center p-0 m-0">
-                            <button class="btn btn-success" @click="search"><i class="fas fa-magnifying-glass"></i></button>
+                            <button class="btn btn-success" @click="expired_prod"><i class="fas fa-magnifying-glass"></i></button>
                         </div>
                     </div>
+
+
+                    
 
                     <div class="table-responsive">
                     
@@ -605,13 +614,13 @@
 
                     <div class="container-fluid col-xxl-12 d-flex justify-content-between mb-3">
                         <div class="col-10 me-3">
-                            <input type="text" @keydown.enter="search" role="searchbox" v-model="search_inventory" class="form-control rounded-5 p-2" 
+                            <input type="text" @keydown.enter="getOrders" role="searchbox" v-model="search_order" class="form-control rounded-5 p-2" 
                             style="box-shadow: 3px 3px 3px rgb(197, 197, 197); 
                             border: 1.9px solid rgb(215, 214, 214);" placeholder="Search inventory">
                         </div>
 
                         <div class="col-2 d-flex justify-content-center p-0 m-0">
-                            <button class="btn btn-success" @click="search"><i class="fas fa-magnifying-glass"></i></button>
+                            <button class="btn btn-success" @click="getOrders"><i class="fas fa-magnifying-glass"></i></button>
                         </div>
                     </div>
 
@@ -700,6 +709,7 @@ export default {
         const orders = ref([]);
         const stockHistory_lists = ref([]);
         const expiringStocks = ref([]);
+        const supplierData = ref([]);
 
 
 
@@ -709,6 +719,7 @@ export default {
         const search_order = ref('');
         const search_critical = ref('');
         const search_sold = ref('');
+        const search_supplier = ref('');
 
 
 
@@ -741,7 +752,24 @@ export default {
         }
 
 
+        /* GET SUPPLIER TABLE */
+        const supplierLists = async(page = 1) => {
+            if(search_supplier.value == ''){
+                axios_client.get('/supplierLists?page=' + page).then(response=>{
+                    supplierData.value = response.data;      
+                }).catch(error =>{
+                    console.log(error.response.data)
+                })
+            }
 
+            else {
+                axios_client.get('/supplier/search/' + search_supplier.value  + '?page=' + page).then(response=>{
+                    supplierData.value = response.data
+                }).catch(error =>{
+                    console.log(error.response.data)
+                })   
+            }
+        }
 
 
 
@@ -749,11 +777,21 @@ export default {
 
         /* GET ORDERS TABLE */
         const getOrders = async(page = 1) => {
-            axios_client.get('/orders?page=' + page).then(response=>{
-                orders.value = response.data;
-            }).catch(error =>{
-                console.log(error.response.data)
-            })
+            if(search_order.value == ''){
+                axios_client.get('/orders?page=' + page).then(response=>{
+                    orders.value = response.data;
+                }).catch(error =>{
+                    console.log(error.response.data)
+                })
+            }
+
+            else {
+                axios_client.get('/orders/search/' + search_order.value  + '?page=' + page).then(response=>{
+                    orders.value = response.data
+                }).catch(error =>{
+                    console.log(error.response.data)
+                })   
+            }
         }
 
 
@@ -805,15 +843,24 @@ export default {
 
 
 
-
-
         /* LISTS OF EXPIRED PRODUCT */
         const expired_prod = async(page = 1) => {
-            axios_client.get('/expiration?page=' + page).then(response=>{
-                expired_lists.value = response.data;           
-            }).catch(error =>{
-                console.log(error.response)
-            })
+
+            if(search_expired.value == ''){
+                axios_client.get('/expiration?page=' + page).then(response=>{
+                    expired_lists.value = response.data;           
+                }).catch(error =>{
+                    console.log(error.response)
+                })
+            }
+
+            else{
+                axios_client.get('/expiration/search/' + search_expired.value  + '?page=' + page).then(response=>{
+                    expired_lists.value = response.data;           
+                }).catch(error =>{
+                    console.log(error.response.data)
+                })
+            }
         }
 
 
@@ -822,9 +869,10 @@ export default {
 
 
         /* LISTS OF SOLD ITEMS */
-        const sold_items = async() => {
-            axios_client.get('/sold').then(response=>{       
-                items_sold.value = response.data.sold;
+        const sold_items = async(page = 1) => {
+            axios_client.get('/sold?page=' + page).then(response=>{       
+                items_sold.value = response.data;
+
             }).catch(error =>{
                 console.log(error.response.data)
             })
@@ -848,13 +896,15 @@ export default {
             getOrders()
             stockHistory()
             filterExpiringProd()
+            supplierLists()
         })
 
         return {
             soldOutLists,stock_lists,expiringStocks,getSoldoutItems,del_prod,loading,expired_prod,expired_lists,items_sold,sold_items
             ,getCriticalStocks,stockHistory,filterExpiringProd,criticalStocks,getOrders,orders,stockHistory_lists,
 
-            search_inventory, search_expired, search_order, search_critical, search_sold, 
+            supplierLists,
+            search_inventory, search_expired, search_order, search_critical, search_sold, supplierData,search_supplier
         }
 
 

@@ -61,24 +61,68 @@ class filter extends Controller
     }
 
     public function searchCritical($data){
-      return inventory::with('product')->whereHas('product', function ($query) use($data) {
+
+      return DB::table('inventories as i')
+        ->join('product_infos as p','i.product_id','=','p.id')
+
+        ->select('p.product_name','p.serial_number','p.manufacturer','p.size',
+        DB::raw('SUM(i.stocks) as stocks1,SUM(i.safety_stocks) as safeStocks'))
+
+        ->where('p.product_name','LIKE','%'.$data.'%')
+        ->orWhere('p.serial_number','LIKE','%'.$data.'%')
+        ->orWhere('p.manufacturer','LIKE','%'.$data.'%')
+
+        ->groupBy('i.product_id')
+
+        ->havingRaw('safeStocks > stocks1')
+    
+        ->paginate(10);
+
+  
+
+      /* return inventory::with('product')->whereHas('product', function ($query) use($data) {
         $query->whereColumn('safety_stocks','>','stocks')->where(function($query) use($data) {
           $query->where('product_name','LIKE','%'.$data.'%');
         });
-      }) ->paginate(5);
+      }) ->paginate(5); */
+
+
 
     }
 
 
     
 
-    public function searchExpired(){
+    public function searchExpired($data){
+      return inventory::with('product')->whereDate('expiration_date', '<=', now())
+      ->whereHas('product', function ($query) use($data) {
+        $query->where('product_name','LIKE','%'.$data.'%')
+          ->orWhere('manufacturer','LIKE','%'.$data.'%')
+          ->orWhere('serial_number','LIKE','%'.$data.'%')
+          ->orWhere('product_name','LIKE','%'.$data.'%');
+      })->paginate(10);
 
     }
 
-    public function searchOrder(){
-
+    public function searchOrder($data){
+      return transactions::orderBy('purchase_date','DESC')
+      ->where('transactions_id',$data)
+      ->orWhere('customer_name',$data)
+      ->orWhere('orderedBy',$data)
+      ->paginate(10);
     }
+
+
+    public function searchSupplier($data){
+      return inventory::where('supplier','LIKE','%'.$data.'%')
+      ->orWhere('supplier_number','LIKE','%'.$data.'%')
+      ->orWhere('supplier_email','LIKE','%'.$data.'%')
+      ->paginate(10);
+    }
+
+
+
+
 
 
     public function searchSoldOutItems($data){

@@ -130,6 +130,60 @@
 
 
 
+<transition name="modalAnim">
+<div v-if="stockModal" class="p-3" id="modal-main">
+    
+    <div class="row d-flex justify-content-center align-items-center" 
+    id="modal-content">
+
+
+
+    <div class="col-xxl-5 col-xl-6 col-lg-7 col-md-9 col-sm-11 p-3" >
+
+        <div class="col-12" >
+            <div class="fw-bold text-light fs-4 d-flex justify-content-between p-3"
+            style="background-color: rgb(4, 180, 116);"> 
+                Update Stocks
+            </div>
+        </div>
+        
+
+        <div class="col-12 bg-light p-3" v-for="s in stockData">
+            <label for="" class="form-label fw-bold">Supplier name</label>
+            <input type="text"  
+            class="form-control mb-2" v-model="s.supplier">
+
+            <label for="" class="form-label fw-bold">Supplier email</label>
+            <input type="text"  
+            class="form-control mb-2" v-model="s.supplier_email">
+
+            <label for="" class="form-label fw-bold">Supplier contact number</label>
+            <input type="text"  
+            class="form-control mb-2" v-model="s.supplier_number">
+
+            <label for="" class="form-label fw-bold">Stocks</label>
+            <input type="text" 
+            class="form-control mb-3" v-model="s.stocks">
+
+            <label for="" class="form-label fw-bold">Stock By</label>
+            <input type="text" 
+            class="form-control mb-3" readonly v-model="s.stock_by">
+
+
+           <div class="d-flex justify-content-end">
+                <button class="btn btn-danger fw-bold" @click="stockModal =! stockModal">Close</button>
+                <form @submit.prevent="updateStocks(s.id)">
+                    <button type="submit" class="btn btn-success fw-bold">Update Stocks</button>
+                </form>
+               
+           </div>
+
+        </div>
+    </div>
+ </div>
+</div>
+</transition>
+
 
 
 
@@ -178,7 +232,7 @@
                 <!-- <tutorial/> -->
                 
 
-                <records_content v-on:openInvoice="openModalInvoice"/>
+                <records_content v-on:openInvoice="openModalInvoice" v-on:openStock="editStocks" :key="refreshRecords"/>
                 
             </div>
 
@@ -207,6 +261,7 @@ import { ref } from 'vue'
 import sidebar from '../components/sidebar/sidebar.vue';
 import logout from '../components/modal/logout.vue';
 import axios_client from '../axios';
+import Swal from 'sweetalert2';
 
 export default {
     name: 'records',
@@ -226,8 +281,12 @@ export default {
 
         const isSidebar = ref(false);
         const modalActive = ref(false);
+        const stockModal = ref(false);
+        const stockData = ref([]);
 
         const orderData = ref([]);
+        const refreshRecords = ref(0);
+
 
 
         function openModalInvoice(id){
@@ -243,6 +302,44 @@ export default {
             })
         }
 
+        function editStocks(id){
+            stockModal.value = true;
+            console.log(id)
+
+            axios_client.get('/getStockID/' + id).then(response=>{
+                stockData.value = response.data
+
+                console.log(response.data)
+            }).catch(error =>{
+                console.log(error.response.data)
+            })
+        }
+
+        function updateStocks(id){
+            
+            let formData = new FormData();
+            formData.append('stock_data', JSON.stringify(stockData.value));
+
+            axios_client.post('/updateStockID/' + id ,formData).then(response=>{
+                stockModal.value = false;
+
+                refreshRecords.value += 1;
+
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Stocks updated successfully',
+                    icon: 'success',
+                    confirmButtonText: 'OK',
+                    allowOutsideClick: false
+                })
+
+            }).catch(error =>{
+                console.log(error.response.data)
+            })
+        }
+
+
+
         function printInvoice(){
             window.print();
         }
@@ -255,7 +352,8 @@ export default {
 
 
         return {
-            logout,isSidebar,openModalInvoice,modalActive,orderData,printInvoice
+            logout,isSidebar,openModalInvoice,modalActive,orderData,printInvoice,editStocks,stockModal,stockData
+            ,updateStocks,refreshRecords
         }
 
 

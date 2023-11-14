@@ -26,7 +26,7 @@
             <th class="fw-bold" style="color: rgba(0, 0, 0, 0.915);">Image</th>
             <th class="fw-bold" style="color: rgba(0, 0, 0, 0.915);">Serial Number</th>
             <th class="fw-bold" style="color: rgba(0, 0, 0, 0.915);">Product Name</th>
-            <th class="fw-bold" style="color: rgba(0, 0, 0, 0.915);">Supplier</th>
+            <!-- <th class="fw-bold" style="color: rgba(0, 0, 0, 0.915);">Supplier</th> -->
             <th class="fw-bold" style="color: rgba(0, 0, 0, 0.915);">Category</th>
             <th class="fw-bold" style="color: rgba(0, 0, 0, 0.915);">Price</th>
             <th class="fw-bold" style="color: rgba(0, 0, 0, 0.915);">Selling Price</th>
@@ -43,28 +43,28 @@
 
       <td @click="showImage(i.product.image, i.product.product_name)"
       style="cursor: pointer;">
-        <img v-bind:src="storageLink + i.product.image" 
+        <img v-bind:src="storageLink + i.image" 
         width="50" height="50">
       </td>
 
-      <td>{{i.product.serial_number}}</td>
+      <td>{{i.serial_number}}</td>
 
-      <td>{{i.product.product_name}}</td>
-      <td>{{i.supplier}}</td>
+      <td>{{i.product_name}}</td>
+      <!-- <td>{{i.supplier}}</td> -->
       <td>{{i.category}}</td>
 
       <td>
         {{Intl.NumberFormat('en-PH', { style: 'currency', 
-        currency: 'PHP' }).format((i.product.price))}}              
+        currency: 'PHP' }).format((i.price))}}              
       </td>
 
       <td>
         {{Intl.NumberFormat('en-PH', { style: 'currency', 
-        currency: 'PHP' }).format((i.product.selling_price))}}              
+        currency: 'PHP' }).format((i.selling_price))}}              
       </td>
 
-      <td>{{i.stocks}}</td>
-      <td>{{i.safety_stocks}}</td>
+      <td>{{i.stocksTotal}}</td>
+      <td>{{i.safety_stocksTotal}}</td>
 
 
       <td v-if="i.production_date == null">

@@ -90,6 +90,16 @@
                 </div>
             </div>
 
+            <div class="col-12 mb-2 d-flex justify-content-center flex-column" v-for="(error, index) in validationErrors" :key="`error_${index}`">
+
+                <div class="div fw-bold text-danger p-2 rounded-5">{{ error[0] }}</div>
+
+                <!-- <li v-for="(error, index) in validationErrors" :key="`error_${index}`" class="text-danger fw-bold">
+                    {{ error[0] }}</li> -->
+            </div>
+
+            
+
 
             <div class="col-12 mb-2">
                 <label for="" class="form-label fw-bold">Category</label>
@@ -185,7 +195,7 @@
                 @click="toggleProduct">Close</button>
 
                 <form @submit.prevent="add_btn()">
-                    <button type="submit" class="btn btn-success 
+                    <button :disabled="loading" type="submit" class="btn btn-success 
                     mt-3 fw-bold">Add new product</button>
                 </form>
 
@@ -490,12 +500,14 @@ export default {
         }
 
 
+        const validationErrors = ref([]);
+
 
         function add_btn(){
             loading.value = true;
       
-            let new_manu =  add_prod.value.manufacturer.replace(/^./, add_prod.value.manufacturer[0].toUpperCase());
-            let new_prod = add_prod.value.product_name.replace(/^./, add_prod.value.product_name[0].toUpperCase());
+            /* let new_manu =  add_prod.value.manufacturer.replace(/^./, add_prod.value.manufacturer[0].toUpperCase());
+            let new_prod = add_prod.value.product_name.replace(/^./, add_prod.value.product_name[0].toUpperCase()); */
 
             let formData = new FormData();
             
@@ -508,8 +520,8 @@ export default {
             }
 
 
-            formData.append('manufacturer', new_manu);
-            formData.append('product_name', new_prod);
+            formData.append('manufacturer', add_prod.value.manufacturer);
+            formData.append('product_name', add_prod.value.product_name);
             formData.append('description', add_prod.value.description);
             formData.append('size', add_prod.value.size);
             formData.append('price', add_prod.value.price);
@@ -536,7 +548,7 @@ export default {
 
             }).catch(error =>{
                 loading.value = false;
-                console.log(error.response.data)
+                validationErrors.value = error.response.data.errors
             })
             
 
@@ -744,7 +756,7 @@ export default {
 
 
             /* FOR UPDATE PRODUCT */
-            ,editProduct,editProdModal,editProdData,updateProdBtn,updateProdLists
+            ,editProduct,editProdModal,editProdData,updateProdBtn,updateProdLists,validationErrors
             /* END FOR UPDATE PRODUCT */
         }
 

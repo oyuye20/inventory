@@ -53,7 +53,7 @@ class product_crud extends Controller
             "customer_name" => $request->input("customer_name"),
             "transactions_id" => $request->input("transactions_id"),
             "gross_total" => $request->input("sub_total"),
-            "discount" => "0",
+            "discount" => $request->input("discount"),
             "amount" => $request->input("amount"),
             "net_total" => $request->input("grand_total"),
             "purchase_date" => $request->input("purchase_date"),
@@ -116,7 +116,20 @@ class product_crud extends Controller
     /* ADD NEW PRODUCT */
     public function add_product(Request $request){
 
-        $product = new product_info();
+        $validated = $request->validate([
+            'category' => 'required',
+            'manufacturer' => 'required',
+            'product_name' => 'required',
+            'description' => 'required',
+            'size' => 'required',
+            'price' => 'required',
+            'sellingPrice' => 'required',
+            'serial_number' => 'required|unique:product_infos',
+        ]);
+
+
+        if($validated){
+            $product = new product_info();
 
         if ($request->hasFile('image')){
             $image = $request->file('image');
@@ -141,6 +154,10 @@ class product_crud extends Controller
         $product->selling_price = $request->sellingPrice;
   
         $product->save();
+        }
+
+
+        
 
         return response()->json([
             'message' => 'Product Added Successfully'

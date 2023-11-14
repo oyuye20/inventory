@@ -68,13 +68,21 @@
             </div>
         </div>
 
+        <div class="d-flex justify-content-center mb-3">
+            <div class="col-7 d-flex justify-content-between">
+                <span class="fw-bold text-dark">Sub total: </span>
+
+                <span class="fw-bold text-dark">{{discount}} %</span>
+            </div>
+        </div>
+
         <div class="d-flex justify-content-center">
             <div class="col-7 d-flex justify-content-between">
                 <span class="fw-bold text-dark">Grand total: </span>
 
                 <span class="fw-bold text-dark">{{Intl.NumberFormat('en-PH', 
                 { style: 'currency', currency: 'PHP' }).
-                format(CartStore.grand_total)}}</span>
+                format(GrandTotal)}}</span>
             </div>
         </div>
 
@@ -154,15 +162,26 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
             </div>
 
             <div class="div p-4">          
-                <div class="col-12 mb-4">
-
+                <div class="col-12 mb-2">
+                    <label class="form-label fw-bold">Cash</label>
                     <input type="text" class="form-control" 
                     @input="filter_input()" v-model="CashAmount"  
                     @keydown.enter="invoice()"
-
                     placeholder="Enter Amount">
                 </div>
+
+                <div class="col-12 mb-4">
+                    <label class="form-label fw-bold">Discount</label>
+                    <select class="form-control" v-model="discount">
+                        <option value="0">None</option>
+                        <option value="0.05">5%</option>
+                        <option value="0.10">10%</option>
+                        <option value="0.15">15%</option>
+                        <option value="0.20">20%</option>
+                    </select>
+                </div>
             </div>
+
             
 
             <div class="col-12 border border-black px-3">
@@ -472,14 +491,22 @@ export default {
         const transID = ref(Math.floor(Math.random() * 99999999999999) + 1)
         let product_lists = ref([]);
         let search_data = ref([]); 
+
         const customer_name = ref("");
         const CashAmount = ref("");
         const changeMoney = ref("");
         const quantity = ref('');
         const search_box = ref('');
         const username = ref('');
-        
+        const discount = ref('');
 
+
+
+
+
+
+        const discountVal = ref('');
+        const GrandTotal = ref('');
 
         
         const show_alert = ref(false);
@@ -546,6 +573,10 @@ export default {
         function invoice(){
             let total = (CartStore.grand_total);
 
+            discountVal.value = (CartStore.grand_total * discount.value)
+
+
+
             if(CashAmount.value == '')
             {
                 $toast.error("Please Enter amount", {position: 'top'}); 
@@ -559,7 +590,11 @@ export default {
             else {
                 modalCash.value = !modalCash.value
                 modalActive.value = true
-                changeMoney.value = (CashAmount.value - total)       
+
+
+                GrandTotal.value = (total - discountVal.value);
+                changeMoney.value = (CashAmount.value - GrandTotal.value)
+  
             }
         }
 
@@ -576,7 +611,8 @@ export default {
                 form.append('sub_total', CartStore.grand_total)
                 form.append('customer_name', customer_name.value)
                 form.append('change', changeMoney.value)
-                form.append('grand_total', CartStore.grand_total)
+                form.append('grand_total', GrandTotal.value)
+                form.append('discount', discount.value)
                 form.append('orderedBy', username.value)
                 form.append('amount', CashAmount.value)
 
@@ -614,7 +650,15 @@ export default {
 
 
         function closeTransaction(){
+            orderCompleted.value = true;
             customer_name.value = ''
+            discountVal.value = ''
+            GrandTotal.value = ''
+            CashAmount.value = ''
+            discount.value = ''
+            changeMoney.value = ''
+
+
             CartStore.clear_cart()
             CartStore.getProduct()
             transID.value = Math.floor(Math.random() * 99999999999999) + 1
@@ -654,7 +698,7 @@ export default {
             
             ,submit_btn,CashAmount,modalCash,changeMoney,storageLink,transID,formatDate,loadingPage,printInvoice
 
-            ,orderCompleted,closeTransaction
+            ,orderCompleted,closeTransaction,discount,discountVal,GrandTotal
 
         }
 

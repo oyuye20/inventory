@@ -68,10 +68,10 @@
                         data-mdb-toggle="tooltip" data-mdb-placement="left" title="Restore"
                         @click="restore(p.id, p.product_name)"><i class="fas fa-arrow-rotate-right"></i></button>
        
-                        <button type="button" class="btn btn-danger mx-1 mt-2" 
+                        <!-- <button type="button" class="btn btn-danger mx-1 mt-2" 
                         @click.prevent="permanentDeleteProd(p.id,p.product_name)" data-mdb-toggle="tooltip" 
                         data-mdb-placement="left" title="Delete Permanently">
-                        <i class="fas fa-trash"></i></button>
+                        <i class="fas fa-trash"></i></button> -->
                     </td>
                 </tr>
             </tbody>
@@ -111,10 +111,10 @@
                             data-mdb-toggle="tooltip" data-mdb-placement="left" title="Restore"
                             @click="restoreCat(c.id)"><i class="fas fa-arrow-rotate-right"></i></button>
         
-                            <button type="button" class="btn btn-danger mx-1 mt-2" 
+                            <!-- <button type="button" class="btn btn-danger mx-1 mt-2" 
                             @click.prevent="del_cat(c.id)" data-mdb-toggle="tooltip" 
                             data-mdb-placement="left" title="Delete Permanently">
-                            <i class="fas fa-trash"></i></button>
+                            <i class="fas fa-trash"></i></button> -->
                         </td>
 
                     </tr>

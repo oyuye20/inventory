@@ -62,7 +62,25 @@ class stats extends Controller
 
     /* LISTS OF CRITICAL STOCKS*/
     public function criticalStocks(){
-         return inventory::with('product')->whereColumn('safety_stocks','>','stocks')->paginate(10);
+
+
+        /* SELECT product_id, SUM(stocks) as stocks1,SUM(safety_stocks) as 
+        safeStocks FROM `inventories` GROUP BY product_id HAVING safeStocks > stocks1  */
+ 
+        return DB::table('inventories as i')
+        ->join('product_infos as p','i.product_id','=','p.id')
+
+        ->select('p.product_name','p.serial_number','p.manufacturer','p.size',
+        DB::raw('SUM(i.stocks) as stocks1,SUM(i.safety_stocks) as safeStocks'))
+        ->groupBy('i.product_id')
+
+        ->havingRaw('safeStocks > stocks1')
+    
+        ->paginate(10);
+
+
+
+         /* return inventory::with('product')->whereColumn('safety_stocks','>','stocks')->paginate(10); */
     }
 
 
@@ -74,7 +92,18 @@ class stats extends Controller
 
 
 
+    public function supplierLists(){
+        return inventory::select('supplier','supplier_number','supplier_email')->paginate(10);
+    }
+
+
+
+
+
+
     public function expiringItems(){
+
+        /* SELECT product_id, CURRENT_DATE, expiration_date, DATEDIFF(expiration_date, CURRENT_DATE) as diff FROM `inventories` HAVING diff = 90; */
         return inventory::with('product')
         ->where(DB::raw('DATEDIFF(expiration_date, CURDATE())'),'>=', 90)->paginate(10);
     }
@@ -114,46 +143,16 @@ class stats extends Controller
     }
 
     public function sold_items(){
-        /* SELECT
-        pi.id,
-        pi.product_name,
-        pi.price,
-        inv.id,
-        SUM(inv.stocks) AS total_quantity
-        FROM
-            product_info pi
-        JOIN
-            inventory inv
-        ON
-            pi.id = inv.product_id
-        GROUP BY
-            pi.id, pi.product_name, pi.price, inv.product_id
-         HAVING
-    		SUM(inv.stocks) < 100; */
-
-
-
-       /*  $sold = DB::table('inventory')->groupBy('product_name')
-        ->selectRaw('product_name,sum(quantity) as sold_items')
-        ->orderBy('quantity', 'ASC')
-        ->get();
- */
-
-        $sold =  DB::table('customer_orders')
-        ->join('transactions','customer_orders.transactions_id', '=','transactions.id')
+        return DB::table('customer_orders as c')
+        ->join('transactions as t','c.transactions_id', '=','t.id')
         
-        ->selectRaw('transactions.purchase_date, customer_orders.serial_number, 
-        customer_orders.product_name,sum(customer_orders.quantity) 
-        as sold_items, sum(customer_orders.total) as money')
+        ->selectRaw('t.purchase_date, c.serial_number, 
+        c.product_name,sum(c.quantity) as sold_items, sum(c.total) as money, 
+        c.price, c.selling_price, SUM(c.selling_price * c.quantity) - SUM(c.price * c.quantity) as net_total')
         ->orderBy('money', 'DESC')
-        ->groupBy('customer_orders.product_name')
-        ->get();
-        
+        ->groupBy('c.product_name')
+        ->paginate(10);
 
-        return response()->json([
-            'sold' => $sold,
-            'code' => 200
-        ]);
     }
 
 
@@ -215,11 +214,12 @@ class stats extends Controller
 
         ->get(); */
 
-        $monthly = DB::table('transactions')->selectRaw('MONTH(purchase_date) as month, sum(net_total) as total_sold')
-                    ->whereYear('purchase_date', date('Y'))
-                    ->groupBy('month')
-                    ->orderBy('month')
-                    ->get();
+        $monthly = DB::table('transactions')
+        ->selectRaw('MONTH(purchase_date) as month, sum(net_total) as total_sold')
+        ->whereYear('purchase_date', date('Y'))
+        ->groupBy('month')
+        ->orderBy('month')
+        ->get();
 
 
         $labels = [];
