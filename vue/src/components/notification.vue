@@ -116,6 +116,7 @@ export default {
             axios_client.get('/notification/stocks?page=' + page).then(response=>{
                 notifLists.value = response.data.notification
 
+
             }).catch(error =>{
                 console.log(error.response.data)
             })

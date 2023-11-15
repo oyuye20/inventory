@@ -14,6 +14,17 @@
 
 
 
+<div class="container-fluid col-xxl-12 mt-3">
+  <label for="select" class="form-label">Sort by category</label>
+  <select class="form-control" v-model="category_lists.category" 
+  @change="getSelectedCat(category_lists.category)">
+    <option v-for="c in category_lists">{{c.category}}</option>
+  </select>
+</div>
+
+
+
+
 
 
 <div class="container-fluid mt-3 table-responsive">
@@ -41,10 +52,10 @@
   <tbody v-for="i in inv_lists.data">
     <tr>
 
-      <td @click="showImage(i.product.image, i.product.product_name)"
+      <td @click="showImage(i.image, i.product_name)"
       style="cursor: pointer;">
         <img v-bind:src="storageLink + i.image" 
-        width="50" height="50">
+        width="100" height="100">
       </td>
 
       <td>{{i.serial_number}}</td>
@@ -220,8 +231,7 @@ export default {
 
         function showImage(image, product) {
             Swal.fire({
-                title: 'Image',
-                text: product,
+                title: product,
                 imageUrl: storageLink + image,
                 imageWidth: 400,
                 imageHeight: 200,
@@ -268,14 +278,37 @@ export default {
         }
 
 
+        const getCat = async() => {
+            axios_client.get('/select/category')
+            .then(response=>{
+                category_lists.value = response.data;
+            }).catch(error =>{
+                console.log(error.response.data)
+            })
+        }
+
+
+        function getSelectedCat(category){     
+          axios_client.get('/inventoryLists/category/' + category)
+            .then(response=>{
+              inv_lists.value = response.data
+            }).catch(error =>{
+                console.log(error.response.data)
+            })
+        }
+
+        
+
+
 
         onMounted(()=> {
             getInventory()
             userData()
+            getCat()
         })
 
         return {showImage,getInventory,inv_lists,category_lists,productinfo,
-        storageLink,search_box,expire_radio,userData,username,catRes}
+        storageLink,search_box,expire_radio,userData,username,catRes,getCat,getSelectedCat}
 
     }
 

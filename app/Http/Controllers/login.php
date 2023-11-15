@@ -94,17 +94,31 @@ class login extends Controller
             'email' => 'required',
             'password' => 'required',
             'role' => 'required',
-            'image' => 'required'
+            'image' => 'required',
         ]);
+
+
+
+        if($request->hasFile('image')){
+            $image = $request->file('image');
+            $ext = $image->extension();
+            $file = time().'.'.$ext;
+            $image->storeAs('public/images', $file);
+        }
 
 
         $user = User::create([
             'username' => $data['username'],
             'email' => $data['email'],
             'role' => $data['role'],
+            'isActivated' => 1,
             'image' => $data['image'],
-            'password' => bcrypt($data['password'])
+            'password' => bcrypt($data['password']),
+            'image' => $file,
         ]);
+
+
+
 
         $token = $user->createToken('token')->plainTextToken;
 

@@ -26,10 +26,17 @@ class stats extends Controller
     }
 
 
+
     /* REMINDER OF EXPIRED PRODUCTS WITH PAGINATION*/
     public function expProduct(){
-        return inventory::with('product')->whereDate('expiration_date', '<=', now())->paginate(10);
+        return inventory::with('product')->whereDate('expiration_date', '<=', now())
+        ->where(function($query)   {
+            return $query
+        ->where('stocks','>',0);
+        })->paginate(10);
     }
+
+
 
 
     /* NUMBER OF EXPIRED PRODUCTS */
@@ -74,7 +81,7 @@ class stats extends Controller
         DB::raw('SUM(i.stocks) as stocks1,SUM(i.safety_stocks) as safeStocks'))
         ->groupBy('i.product_id')
 
-        ->havingRaw('safeStocks > stocks1')
+        ->havingRaw('safeStocks > stocks1 AND stocks1 > 0')
     
         ->paginate(10);
 
@@ -93,7 +100,7 @@ class stats extends Controller
 
 
     public function supplierLists(){
-        return inventory::select('supplier','supplier_number','supplier_email')->paginate(10);
+        return inventory::select('supplier','supplier_number','supplier_email')->groupBy('supplier')->paginate(10);
     }
 
 
@@ -105,7 +112,7 @@ class stats extends Controller
 
         /* SELECT product_id, CURRENT_DATE, expiration_date, DATEDIFF(expiration_date, CURRENT_DATE) as diff FROM `inventories` HAVING diff = 90; */
         return inventory::with('product')
-        ->where(DB::raw('DATEDIFF(expiration_date, CURDATE())'),'>=', 90)->paginate(10);
+        ->where(DB::raw('DATEDIFF(expiration_date, CURDATE())'),'=', 90)->paginate(10);
     }
 
 
@@ -178,6 +185,29 @@ class stats extends Controller
         WHERE MONTHNAME(purchase_date) = 'September' 
         GROUP BY MONTHNAME(purchase_date); */
     }
+
+
+    public function weeklyItems(){
+        /* return DB::table('transactions')
+        ->join('customer_orders','transactions.id', '=','customer_orders.transactions_id')
+        
+        ->select('customer_orders.product_name','customer_orders.price',
+        DB::raw('DATE_FORMAT(transactions.purchase_date, "%m/%d/%y %r") AS purchase_date'),
+        DB::raw('sum(customer_orders.quantity) as total_quantity'),
+        DB::raw('sum(customer_orders.total) as total_sold'))
+
+
+        ->whereDate('purchase_date', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])
+
+        ->groupBy('customer_orders.product_name')
+        ->paginate(5); */
+    }
+
+
+
+
+
+
 
 
     public function monthlyItems(){

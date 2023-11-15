@@ -74,7 +74,7 @@
             </div>
         </div>
 
-        <div class="col-12 d-flex justify-content-center mb-3"> 
+        <!-- <div class="col-12 d-flex justify-content-center mb-3"> 
             <div class="col-10 me-2">
                 <label class="fw-bold">Password</label>
                 <input type="password" class="form-control">
@@ -86,7 +86,7 @@
                 <label class="fw-bold">Contact Number</label>
                 <input type="text" class="form-control">
             </div>
-        </div>
+        </div> -->
 
 
         <form class="col-12 d-flex justify-content-center mb-3" @submit.prevent="updateProfile(user_details.id)"> 

@@ -145,6 +145,7 @@ Route::get('/sold', [stats::class, 'sold_items']);
 
 
 Route::get('/daily', [stats::class, 'dailyItems']);
+Route::get('/weekly', [stats::class, 'weeklyItems']);
 Route::get('/monthly', [stats::class, 'monthlyItems']);
 Route::get('/yearly', [stats::class, 'yearlyItems']);
 
@@ -171,6 +172,12 @@ Route::get('/filter/month/{date}', [filter::class, 'filterMonth']);
 Route::get('/inventory/search/{data}', [filter::class, 'searchInventory']);
 
 Route::get('/inventoryLists/search/{data}', [filter::class, 'searchInventoryLists']);
+
+
+Route::get('/inventoryLists/category/{data}', [filter::class, 'filterInventoryCat']);
+
+
+
 Route::get('/critical/search/{data}', [filter::class, 'searchCritical']);
 
 
@@ -182,6 +189,8 @@ Route::get('/relation', [product_crud::class, 'sample']);
 Route::get('/expiration/search/{data}', [filter::class, 'searchExpired']);
 Route::get('/orders/search/{data}', [filter::class, 'searchOrder']);
 Route::get('/supplier/search/{data}', [filter::class, 'searchSupplier']);
+
+
 
 
 

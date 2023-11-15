@@ -43,6 +43,17 @@
                     </li>
 
 
+                    <!-- <li class="nav-item col-lg-2 me-2" role="presentation">
+                        <button class="nav-link fs-5 w-100" id="pills-weekly-tab" 
+                        data-bs-toggle="pill" data-bs-target="#pills-weekly" type="button" 
+                        role="tab" aria-controls="pills-weekly" aria-selected="true"
+                        style="color: #04B474">
+                        <i class="fas fa-calendar-day me-2"></i>Weekly</button>
+                    </li> -->
+
+
+
+
                     <li class="nav-item col-lg-2 me-2" role="presentation">
                         <button class="nav-link fs-5 w-100" id="pills-monthly-tab" 
                         data-bs-toggle="pill" data-bs-target="#pills-monthly" type="button" 
@@ -134,6 +145,81 @@
 
                         </div>
                     </div>
+
+
+                    <div class="tab-pane fade show" id="pills-weekly" role="tabpanel" 
+                    aria-labelledby="pills-weekly-tab" tabindex="0">
+                        
+                    <div class="mt-3 w-100 bg-light p-3 d-flex justify-content-between">
+                        <div class="title">
+                            <span class="fs-5 fw-bold"><i class="far fa-calendar-days me-2">
+                            </i>Weekly Sales</span>
+                        </div>
+
+                        <div class="date">
+                            <span class="fs-5 fw-bold">{{ formatDate }}</span>
+                        </div>
+                    </div>
+
+
+
+                    <div class="mt-3 w-100 mb-3">
+                        <label for="date" class="form-label fw-bold">Start Date</label>
+                        <input type="date" class="form-control mb-2" v-model="start_date">
+
+                        <label for="date" class="form-label fw-bold">End Date</label>
+                        <input type="date" class="form-control" v-model="end_date">
+
+                        <form @submit.prevent="searchWeekly">
+                            <button type="submit" class="btn btn-primary fw-bold mt-3">Submit</button>
+                        </form>
+                        
+                    </div>
+
+                        <div class="table-responsive">     
+                            <table class="table table-hover table-borderless text-center">
+                                <thead class="" style="background-color: #04b4738e;">
+                                    <tr>
+                                    <th scope="col" class="fw-bold">Product Name</th>
+                                    <th scope="col" class="fw-bold">Unit Price</th>
+                                    <th scope="col" class="fw-bold">Total Products Sold</th>
+                                    <th scope="col" class="fw-bold">Total Sales</th>
+                                    <th scope="col" class="fw-bold">Date</th>
+                                    <th scope="col" class="fw-bold">Month Of</th>
+
+                                    <!-- <th>Actions</th> -->
+                                    </tr>
+                                </thead>
+
+                            <tbody>
+                                <tr>
+                                 <!--    <td>{{ m.product_name }}</td>
+                                    <td>₱ {{m.price}}</td>
+                                    <td>{{ m.total_quantity }}</td>          
+                                    <td>₱ {{m.total_sold}}</td>  
+                                    <td>{{ m.purchase_date }}</td>                      
+                                    <td>{{ m.Month }}</td> -->
+                                </tr>
+
+                            </tbody>
+                            </table>
+
+
+                          <!--   <div class="d-flex justify-content-end align-items-center" >
+                                <Bootstrap5Pagination :limit="1" :keepLength="true" :data="montly" class="shadow-sm"  
+                                @pagination-change-page="getMonthly, filterMonthly"
+                                />
+                            </div> -->
+
+                        </div>
+                    
+                    </div>
+
+
+
+
+
+
 
 
                     <div class="tab-pane fade show" id="pills-monthly" role="tabpanel" 
@@ -320,6 +406,10 @@ export default {
         const filterMonth = ref('');
         const filterDay = ref('');
 
+
+        const start_date = ref('');
+        const end_date = ref('');
+
         
         onMounted(()=> {
             filterMonthly()
@@ -386,10 +476,9 @@ export default {
         }
 
 
-
-
-
-
+        function searchWeekly(){
+            
+        }
 
 
     
@@ -424,7 +513,9 @@ export default {
 
         return {
             user: computed(() => store.state.user.data),logout,isSidebar,daily,yearly,
-            formatDate,montly,filterMonth,filterMonthly,filterYearly,filterDaily,filterDay
+            formatDate,montly,filterMonth,filterMonthly,filterYearly,filterDaily,filterDay,searchWeekly
+
+            ,start_date,end_date
         }
 
 

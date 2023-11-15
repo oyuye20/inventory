@@ -55,155 +55,7 @@
 
 
 
-<!-- ADD NEW PRODUCT MODAL -->
-<transition name="modalAnim">
-<div v-if="addProduct" class="p-3" id="modal-main">
-    
-    <div class="row d-flex justify-content-center align-items-center p-3" 
-    id="modal-content">
 
-            <div class="col-xxl-7 col-md-8 text-start p-3" 
-            style="background-color: rgb(4, 180, 116);">
-
-
-                <div class="col-12">
-                    <span class="fw-bold fs-3 text-white">
-                    <i class="fas fa-circle-plus me-3">
-                    </i>Add new Product</span>
-                </div>
-               
-            </div>
-
-            <div class="col-xxl-7 col-md-8 text-start p-3 bg-light">
-
-
-            <div class="col-12 mb-2 d-flex justify-content-center">
-                <qrcode-scanner v-if="showcam" :qrbox="250" :fps="20"  
-                style="width: 500px;"
-                @result="onScan"/>
-            </div>
-
-
-            <div class="col-12 mb-2 d-flex justify-content-center">
-                <div class="mb-3" v-if="imageURL">
-                    <img :src="imageURL" class="img-fluid" width="300" height="300">
-                </div>
-            </div>
-
-            <div class="col-12 mb-2 d-flex justify-content-center flex-column" v-for="(error, index) in validationErrors" :key="`error_${index}`">
-
-                <div class="div fw-bold text-danger p-2 rounded-5">{{ error[0] }}</div>
-
-                <!-- <li v-for="(error, index) in validationErrors" :key="`error_${index}`" class="text-danger fw-bold">
-                    {{ error[0] }}</li> -->
-            </div>
-
-            
-
-
-            <div class="col-12 mb-2">
-                <label for="" class="form-label fw-bold">Category</label>
-                <select class="form-control" v-model="add_prod.category">    
-                    <option selected v-for="cat in category_lists" :key="cat.id" :value="cat.id">{{cat.category}}</option>
-                </select>
-            </div>
-
-
-
-
-            <div class="col-12 mb-2">
-
-                <div class="div" v-if="serialField">
-
-                <label for="" class="form-label fw-bold">Serial Number</label>
-
-                <div class="d-flex" >
-                    <input type="text" v-model="serialRes" 
-                    class="form-control" @input="filter_input()">
-
-                    <button class="btn btn-primary w-10" @click="toggleCam" 
-                    data-bs-toggle="tooltip" data-bs-placement="top" 
-                    data-bs-title="Tooltip on top"><i class="fas fa-barcode">        
-                    </i></button>
-                </div>
-
-                </div>
-                
-
-                <div class="div mt-2">
-                    <input class="form-check-input me-2" v-model="noSerial" 
-                    type="checkbox" @click="serialHide" id="flexCheckDefault">
-                    <label class="form-check-label" for="flexCheckDefault">
-                        No Serial Number
-                    </label>
-                </div>
-                
-            </div>
-
-
-            <div class="col-12 mb-2">
-                <label for="" class="form-label fw-bold">Product name</label>
-                <input type="text" v-model="add_prod.product_name" 
-                class="form-control">
-            </div>
-
-            <div class="col-12 mb-2">
-                <label for="" class="form-label fw-bold">Manufacturer</label>
-                <input type="text" v-model="add_prod.manufacturer" 
-                class="form-control">
-            </div>
-
-
-            <div class="col-12 mb-2 d-flex">
-                <div class="price w-50">
-                    <label for="" class="form-label fw-bold">Price</label>
-                    <input type="text" v-model="add_prod.price" 
-                    @input="filter_input()" class="form-control" placeholder="">
-
-                </div>
-
-                <div class="price w-50 mx-2">
-                    <label for="" class="form-label fw-bold">Selling Price</label>
-                    <input type="text" v-model="add_prod.sellingPrice" 
-                    @input="filter_input()" class="form-control" placeholder="">
-                </div>
-            </div>
-
-            <div class="col-12 mb-2">
-                <label for="" class="form-label fw-bold">Size</label>
-                <input type="text" v-model="add_prod.size" class="form-control">
-            </div>
-
-
-            <div class="col-12 mb-2">
-                <label for="" class="form-label fw-bold">Description</label>
-                <textarea name="" v-model="add_prod.description" 
-                class="form-control"></textarea>
-            </div>
-
-
-            <div class="col-12 mb-2">
-                <label for="" class="form-label fw-bold">Image File</label>
-                <input type="file" class="form-control"  @change="imageUpload" 
-                aria-describedby="helpId" placeholder="">
-            </div>
-
-
-     
-            <div class="col-12 d-flex justify-content-end"> 
-                <button role="button" class="btn btn-danger mt-3 fw-bold" 
-                @click="toggleProduct">Close</button>
-
-                <form @submit.prevent="add_btn()">
-                    <button :disabled="loading" type="submit" class="btn btn-success 
-                    mt-3 fw-bold">Add new product</button>
-                </form>
-
-                </div>      
-            </div>      
-    </div>
-</div>
-</transition>
 
 <!-- EDIT PRODUCT MODAL -->
 <transition name="modalAnim">
@@ -330,6 +182,170 @@
 
 
 <body>
+
+<!-- ADD NEW PRODUCT MODAL -->
+<transition name="modalAnim">
+<div v-if="addProduct" class="p-3" id="modal-main">
+    
+    <div class="row d-flex justify-content-center align-items-center p-3" 
+    id="modal-content">
+
+            <div class="col-xxl-7 col-md-8 text-start p-3" 
+            style="background-color: rgb(4, 180, 116);">
+
+
+                <div class="col-12">
+                    <span class="fw-bold fs-3 text-white">
+                    <i class="fas fa-circle-plus me-3">
+                    </i>Add new Product</span>
+                </div>
+               
+            </div>
+
+            <div class="col-xxl-7 col-md-8 text-start p-3 bg-light">
+
+
+            <div class="col-12 mb-2 d-flex justify-content-center">
+
+                <div id="qr-code-full-region" class="border border-dark"></div>
+
+
+                <qrcode-scanner v-if="showcam" :qrbox="250" :fps="20"
+                @result="onScan"/>
+            </div>
+
+
+            <div class="col-12 mb-2 d-flex justify-content-center">
+                <div class="mb-3" v-if="imageURL">
+                    <img :src="imageURL" class="img-fluid" width="300" height="300">
+                </div>
+            </div>
+
+            <div class="col-12 mb-2 d-flex justify-content-center flex-column" v-for="(error, index) in validationErrors" :key="`error_${index}`">
+
+                <div class="div fw-bold text-danger p-2 rounded-5">{{ error[0] }}</div>
+
+                <!-- <li v-for="(error, index) in validationErrors" :key="`error_${index}`" class="text-danger fw-bold">
+                    {{ error[0] }}</li> -->
+            </div>
+
+            
+
+
+            <div class="col-12 mb-2">
+                <label for="" class="form-label fw-bold">Category</label>
+                <select class="form-control" v-model="add_prod.category">    
+                    <option selected v-for="cat in category_lists" :key="cat.id" :value="cat.id">{{cat.category}}</option>
+                </select>
+            </div>
+
+
+
+
+            <div class="col-12 mb-2">
+
+                <div class="div" v-if="serialField">
+
+                <label for="" class="form-label fw-bold">Serial Number</label>
+
+                <div class="d-flex" >
+                    <input type="text" v-model="serialRes" 
+                    class="form-control" @input="filter_input()">
+
+                    <button class="btn btn-primary w-10" @click="toggleCam" 
+                    data-bs-toggle="tooltip" data-bs-placement="top" 
+                    data-bs-title="Tooltip on top"><i class="fas fa-barcode">        
+                    </i></button>
+                </div>
+
+                </div>
+                
+
+                <div class="div mt-2">
+                    <input class="form-check-input me-2" v-model="noSerial" 
+                    type="checkbox" @click="serialHide" id="flexCheckDefault">
+                    <label class="form-check-label" for="flexCheckDefault">
+                        No Serial Number
+                    </label>
+                </div>
+                
+            </div>
+
+
+            <div class="col-12 mb-2">
+                <label for="" class="form-label fw-bold">Product name</label>
+                <input type="text" v-model="add_prod.product_name" 
+                class="form-control">
+            </div>
+
+            <div class="col-12 mb-2">
+                <label for="" class="form-label fw-bold">Manufacturer</label>
+                <input type="text" v-model="add_prod.manufacturer" 
+                class="form-control">
+            </div>
+
+
+            <div class="col-12 mb-2 d-flex">
+                <div class="price w-50">
+                    <label for="" class="form-label fw-bold">Price</label>
+                    <input type="text" v-model="add_prod.price" 
+                    @input="filter_input()" class="form-control" placeholder="">
+
+                </div>
+
+                <div class="price w-50 mx-2">
+                    <label for="" class="form-label fw-bold">Selling Price</label>
+                    <input type="text" v-model="add_prod.sellingPrice" 
+                    @input="filter_input()" class="form-control" placeholder="">
+                </div>
+            </div>
+
+            <div class="col-12 mb-2">
+                <label for="" class="form-label fw-bold">Size</label>
+                <input type="text" v-model="add_prod.size" class="form-control">
+            </div>
+
+
+            <div class="col-12 mb-2">
+                <label for="" class="form-label fw-bold">Description</label>
+                <textarea name="" v-model="add_prod.description" 
+                class="form-control"></textarea>
+            </div>
+
+
+            <div class="col-12 mb-2">
+                <label for="" class="form-label fw-bold">Image File</label>
+                <input type="file" class="form-control"  @change="imageUpload" 
+                aria-describedby="helpId" placeholder="">
+            </div>
+
+
+     
+            <div class="col-12 d-flex justify-content-end"> 
+                <button role="button" class="btn btn-danger mt-3 fw-bold" 
+                @click="toggleProduct">Close</button>
+
+                <form @submit.prevent="add_btn()">
+                    <button :disabled="loading" type="submit" class="btn btn-success 
+                    mt-3 fw-bold">Add new product</button>
+                </form>
+
+                </div>      
+            </div>      
+    </div>
+</div>
+</transition>
+
+
+
+
+
+
+
+
+
+
+
 <div class="d-flex" id="wrapper">
         <!-- Sidebar -->
             <div class="sidebar_wrapper" :class ="{side: isSidebar}">

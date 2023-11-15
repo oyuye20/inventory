@@ -20,6 +20,30 @@
             Sold Items</button>
         </li>
 
+        <li class="nav-item col-lg-1.5 me-3" role="presentation" >
+            <button class="nav-link fs-5" id="pills-soldout-tab" 
+            data-bs-toggle="pill" data-bs-target="#pills-soldout" type="button" 
+            role="tab" aria-controls="pills-soldout" aria-selected="false" style="color: #04B474">
+            <i class="fas fa-arrow-down me-2"></i>
+            Sold out items</button>
+        </li>
+
+        <li class="nav-item col-lg-1.5 me-3" role="presentation">
+            <button class="nav-link fs-5" id="pills-orders-tab" 
+            data-bs-toggle="pill" data-bs-target="#pills-orders" type="button" 
+            role="tab" aria-controls="#pills-orders" aria-selected="true" style="color: #04B474">
+            <i class="fas fa-cart-shopping me-2"></i>
+            Order History</button>
+        </li>
+
+        <li class="nav-item col-lg-1.5  me-3" role="presentation">
+            <button class="nav-link w-70 fs-5" id="pills-stock-tab" 
+            data-bs-toggle="pill" data-bs-target="#pills-stock" type="button" 
+            role="tab" aria-controls="pills-stock" aria-selected="false" style="color: #04B474">
+            <i class="far fa-clock me-2"></i>
+            Stock History</button>
+        </li>
+
 
         <li class="nav-item col-lg-1.5  me-3" role="presentation">
             <button class="nav-link fs-5" id="pills-critical-tab" 
@@ -27,16 +51,6 @@
             role="tab" aria-controls="pills-critical" aria-selected="true" style="color: #04B474">
             <i class="fas fa-arrow-trend-down me-2"></i>
             Critical Stocks</button>
-        </li>
-
-
-        
-        <li class="nav-item col-lg-1.5 me-3" role="presentation">
-            <button class="nav-link fs-5" id="pills-critical-tab" 
-            data-bs-toggle="pill" data-bs-target="#pills-expired" type="button" 
-            role="tab" aria-controls="#pills-expired" aria-selected="true" style="color: #04B474">
-            <i class="fas fa-calendar-xmark me-2"></i>
-            Expired Products</button>
         </li>
 
 
@@ -49,25 +63,17 @@
         </li>
 
 
-
-
         <li class="nav-item col-lg-1.5 me-3" role="presentation">
-            <button class="nav-link fs-5" id="pills-orders-tab" 
-            data-bs-toggle="pill" data-bs-target="#pills-orders" type="button" 
-            role="tab" aria-controls="#pills-orders" aria-selected="true" style="color: #04B474">
-            <i class="fas fa-cart-shopping me-2"></i>
-            Orders</button>
+            <button class="nav-link fs-5" id="pills-critical-tab" 
+            data-bs-toggle="pill" data-bs-target="#pills-expired" type="button" 
+            role="tab" aria-controls="#pills-expired" aria-selected="true" style="color: #04B474">
+            <i class="fas fa-calendar-xmark me-2"></i>
+            Expired Products</button>
         </li>
 
 
 
-        <li class="nav-item col-lg-1.5 me-3" role="presentation" >
-            <button class="nav-link fs-5" id="pills-soldout-tab" 
-            data-bs-toggle="pill" data-bs-target="#pills-soldout" type="button" 
-            role="tab" aria-controls="pills-soldout" aria-selected="false" style="color: #04B474">
-            <i class="fas fa-arrow-down me-2"></i>
-            Sold out items</button>
-        </li>
+
 
 
         <li class="nav-item col-lg-1.5 me-3" role="presentation" >
@@ -75,7 +81,7 @@
             data-bs-toggle="pill" data-bs-target="#pills-supplier" type="button" 
             role="tab" aria-controls="pills-supplier" aria-selected="false" style="color: #04B474">
             <i class="fas fa-truck me-2"></i>
-            Supplier</button>
+            Supplier Lists</button>
         </li>
 
 
@@ -89,15 +95,7 @@
         </li> -->
 
 
-        <li class="nav-item col-lg-1.5  me-3" role="presentation">
-            <button class="nav-link w-70 fs-5" id="pills-stock-tab" 
-            data-bs-toggle="pill" data-bs-target="#pills-stock" type="button" 
-            role="tab" aria-controls="pills-stock" aria-selected="false" style="color: #04B474">
-            <i class="far fa-clock me-2"></i>
-            Stock History</button>
-        </li>
-
-
+      
         </ul>
 
           
@@ -177,7 +175,7 @@
                 <div class="tab-pane fade show" id="pills-supplier" role="tabpanel" aria-labelledby="pills-supplier-tab" tabindex="0">
 
                    
-                <h4 class="mt-3 w-100 bg-light p-3 fw-bold"><i class="fas fa-truck me-2"></i>Supplier</h4>
+                <h4 class="mt-3 w-100 bg-light p-3 fw-bold"><i class="fas fa-truck me-2"></i>Supplier Lists</h4>
 
 
                 <div class="container-fluid col-xxl-12 d-flex justify-content-between mb-3">
@@ -199,7 +197,7 @@
                             <tr>
                             <th class="fw-bold">Supplier Name</th>
                             <th class="fw-bold">Supplier Email</th>
-                            <th class="fw-bold">Supplier Contact Number</th>
+                            <!-- <th class="fw-bold">Supplier Contact Number</th> -->
 
                             <!-- <th>Actions</th> -->
                             </tr>
@@ -209,7 +207,7 @@
                         <tr>
                             <td>{{s.supplier}}</td>
                             <td>{{s.supplier_email}}</td>
-                            <td>{{s.supplier_number}}</td>
+                            <!-- <td>{{s.supplier_number}}</td> -->
 
                             <!-- <td class="m-3">
                                 <button class="btn btn-primary"><i class="bi bi-pencil-square"></i></button>
@@ -262,7 +260,7 @@
                             <th class="fw-bold">Stock</th>
                             <th class="fw-bold">Stock By</th>
                             <th class="fw-bold">Stock Date</th>
-                            <th>Actions</th>
+                            <th class="fw-bold" v-if="role == 1">Actions</th>
                             </tr>
                         </thead>
 
@@ -278,9 +276,13 @@
                             <td>{{i.created_at}}</td>
 
 
-                            <td class="m-3">
+                            <td class="m-3" v-if="role == 1">
                                 <button class="btn btn-primary" @click="$emit('openStock', i.id)"><i class="bi bi-pencil-square"></i></button>
                             </td>
+
+
+
+
                         </tr>
 
                     </tbody>
@@ -610,7 +612,7 @@
                  <div class="tab-pane fade" id="pills-orders" role="tabpanel" aria-labelledby="pills-orders-tab" tabindex="0">
 
                     <h4 class="mt-3 w-100 bg-light p-3"><i class="fas fa-cart-shopping me-2"></i>
-                    <span class="fw-bold">Orders</span></h4>
+                    <span class="fw-bold">Order History</span></h4>
 
                     <div class="container-fluid col-xxl-12 d-flex justify-content-between mb-3">
                         <div class="col-10 me-3">
@@ -722,6 +724,9 @@ export default {
         const search_supplier = ref('');
 
 
+        const role = ref();
+
+
 
         const loading = ref(true);
 
@@ -829,6 +834,19 @@ export default {
         }
 
 
+        /* GET USERDATA */
+        const userData = async() => {
+            axios_client.get('/user').then(response=>{
+
+                role.value = response.data.role;
+
+
+            }).catch(error =>{
+                console.log(error.response.data)
+            })
+        }
+
+
 
 
         /* GET EXPIRING PRODUCTS */
@@ -897,6 +915,7 @@ export default {
             stockHistory()
             filterExpiringProd()
             supplierLists()
+            userData()
         })
 
         return {
@@ -904,7 +923,8 @@ export default {
             ,getCriticalStocks,stockHistory,filterExpiringProd,criticalStocks,getOrders,orders,stockHistory_lists,
 
             supplierLists,
-            search_inventory, search_expired, search_order, search_critical, search_sold, supplierData,search_supplier
+            search_inventory, search_expired, search_order, search_critical, search_sold, supplierData,search_supplier,userData
+            ,role
         }
 
 

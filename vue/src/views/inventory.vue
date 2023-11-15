@@ -86,7 +86,7 @@
                     </div>
                 </div>
 
-                <div class="col-12 mb-4 d-flex flex-wrap">
+                <div class="col-12 mb-4 d-flex flex-wrap" v-if="expire_radio == 1">
                     <div class="col-6">
                     <label for="" class="fw-bold mb-2">Date of Production   
                     </label>
@@ -159,7 +159,11 @@
 
             <div class="container-fluid px-4">    
 
-                <button class="btn btn-primary" @click="toggleModal">Open inventory modal</button>
+                <div class="container mb-3">
+                    <button class="btn btn-primary fw-bold" @click="toggleModal">Open inventory modal</button>
+                </div>
+
+               
 
                 <inventory_content :key="refreshComponent"/>               
             </div>

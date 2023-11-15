@@ -33,7 +33,7 @@ import PrimeVue from 'primevue/config'
 const app = createApp(App)
 
 
-app.provide('$storageLink', 'https://api.amadorpetsuppliesinventory.online/storage/images/');
+app.provide('$storageLink', 'http://127.0.0.1:8000/storage/images/');
 
 
 app.component('qrcode-scanner', {

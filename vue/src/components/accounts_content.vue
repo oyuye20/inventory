@@ -3,6 +3,14 @@
     <!-- <button class="btn btn-primary">Add new account</button> -->
 
     <div class="table-responsive mt-4">
+
+
+
+        
+        <button class="btn btn-primary" @click="$emit('addModal')">Add new account</button>
+
+
+
         <h4 class="mt-3 w-100 bg-light p-3"><i class="fas fa-user me-2"></i>Account Lists</h4>
 
         <table class="table table-hover table-borderless text-center w-100">

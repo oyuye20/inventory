@@ -22,10 +22,9 @@
 
         <div class="col-12 bg-light p-3">
             <p class="col-12 mb-1 text-center fw-bold text-dark">J.R. AMADOR PET AND POULTRY SUPPLIES</p>
-            <p class="col-12 mb-1 text-center fw-bold text-dark">Unit Sample Malolos KM 42</p>
-            <p class="col-12 mb-1 text-center fw-bold text-dark">McArthur Hway Bulihan,</p>
-            <p class="col-12 mb-1 text-center fw-bold text-dark">Malolos City Bulacan</p>
-            <p class="col-12 mb-1 text-center fw-bold text-dark">TEL NO : (044)1234-567</p>
+            <p class="col-12 mb-1 text-center fw-bold text-dark">National Road, Brgy Muzon</p>
+            <p class="col-12 mb-1 text-center fw-bold text-dark">San Jose Del Monte Bulacan</p>
+            <p class="col-12 mb-1 text-center fw-bold text-dark">TEL NO : 09222178222</p>
 
         <hr style=" border-top: 3px dashed black;">
         
@@ -625,18 +624,8 @@ export default {
                 axios_client.post("/checkout", form).then(response=>{
                     console.log(response.data)    
 
-                    Swal.fire({
-                        title: 'Success!',
-                        text: 'Order placed',
-                        icon: 'success',
-                        confirmButtonText: 'OK',
-                        allowOutsideClick: false
-                    })
-
-
                     submit_btn.value = false
-                    orderCompleted.value = false;
-                           
+                    orderCompleted.value = false;        
 
                 }).catch(error =>{
                     console.log(error.response.data)

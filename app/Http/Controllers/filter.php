@@ -45,13 +45,55 @@ class filter extends Controller
     
 
     public function searchInventoryLists($data){
-      return inventory::with('product')->where('stocks','>','0')->whereHas('product', function ($query) use($data) {
+
+      return DB::table('inventories')
+        ->join('product_infos', 'inventories.product_id','=','product_infos.id')
+
+        ->select('product_infos.product_name','product_infos.serial_number','product_infos.image',
+        'product_infos.price','product_infos.selling_price','inventories.category',
+        'inventories.supplier','inventories.supplier_number','inventories.production_date'
+        ,'inventories.expiration_date',DB::raw('SUM(stocks) as stocksTotal, SUM(safety_stocks) as 
+        safety_stocksTotal'))
+        ->where('stocks','>','0')
+
+        ->where(function($query) use($data)  {
+          return $query
+          ->orWhere('manufacturer','LIKE','%'.$data.'%')
+          ->orWhere('serial_number','LIKE','%'.$data.'%')
+          ->orWhere('product_name','LIKE','%'.$data.'%');
+      })
+
+        ->groupBy('inventories.product_id')->paginate(5);
+
+
+
+
+      /* return inventory::with('product')->where('stocks','>','0')->whereHas('product', function ($query) use($data) {
         $query->where('product_name','LIKE','%'.$data.'%')
           ->orWhere('manufacturer','LIKE','%'.$data.'%')
           ->orWhere('serial_number','LIKE','%'.$data.'%');
-      })->paginate(5);
+      })->paginate(5); */
     }
 
+
+    public function filterInventoryCat($data){
+      return DB::table('inventories')
+        ->join('product_infos', 'inventories.product_id','=','product_infos.id')
+
+        ->select('product_infos.product_name','product_infos.serial_number','product_infos.image',
+        'product_infos.price','product_infos.selling_price','inventories.category',
+        'inventories.supplier','inventories.supplier_number','inventories.production_date'
+        ,'inventories.expiration_date',DB::raw('SUM(stocks) as stocksTotal, SUM(safety_stocks) as 
+        safety_stocksTotal'))
+        ->where('stocks','>','0')
+
+        ->where(function($query) use($data)  {
+          return $query
+          ->orWhere('category','LIKE','%'.$data.'%');
+      })
+
+        ->groupBy('inventories.product_id')->paginate(5);
+    }
 
 
 

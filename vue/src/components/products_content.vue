@@ -53,8 +53,8 @@
                     <th scope="col" class="fw-bold">Product Name</th>
                     <th scope="col" class="fw-bold">Description</th>
                     <th scope="col" class="fw-bold">Size Name</th>
-                    <th scope="col" class="fw-bold">Price</th>
                     <th scope="col" class="fw-bold">Selling Price</th>
+                    <th scope="col" class="fw-bold">Price</th>
                     <th class="fw-bold" >Actions</th>
                 </tr>
 
@@ -64,7 +64,7 @@
             <tr>
                 <td class="fw-bold" @click="showImage(product.image, product.product_name)" style="cursor: pointer;">
                     <img v-bind:src="storageLink + product.image" 
-                 width="50" height="50">
+                 width="100" height="100">
                 </td>                              
                 <td hidden>{{product.id}}</td>
 
@@ -78,11 +78,20 @@
                     <td>{{product.product_name}}</td>
                     <td style="padding: 0; margin: 0; word-wrap:break-word;">{{product.description}}</td>
                     <td>{{product.size}}</td>
-                    <td>₱ {{product.price}}</td>
-                    <td>₱ {{product.selling_price}}</td>
-                <td class="m-3">
 
-                   
+                    <td>               
+                    {{Intl.NumberFormat('en-PH', { style: 'currency', 
+                    currency: 'PHP' }).format((product.selling_price))}}
+                    </td>
+                    
+                    <td> 
+                    {{Intl.NumberFormat('en-PH', { style: 'currency', 
+                    currency: 'PHP' }).format((product.price))}}
+                    </td>  
+                    
+                    
+                <td class="m-3">
+ 
                     <button class="btn btn-success" @click="$emit('editProd', product.id)"><i class="bi bi-pencil-square"></i></button>
                     
                     

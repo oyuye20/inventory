@@ -1,4 +1,103 @@
 <template>
+
+<transition name="modalAnim">
+<div v-if="modal_add" class="p-3" id="modal-main">
+    
+    <div class="row d-flex justify-content-center align-items-center p-3" 
+    id="modal-content">
+
+            <div class="col-xxl-7 col-md-8 text-start p-3" 
+            style="background-color: rgb(4, 180, 116);">
+
+
+                <div class="col-12">
+                    <span class="fw-bold fs-3 text-white">
+                    <i class="fas fa-circle-plus me-3">
+                    </i>Add new account</span>
+                </div>
+               
+            </div>
+
+            <div class="col-xxl-7 col-md-8 text-start p-3 bg-light">
+
+            <div class="col-12 mb-2">
+                <div class="mb-3" v-if="imageURL">
+                    <img :src="imageURL" class="img-fluid" width="300" height="300">
+                </div>
+            </div>
+
+
+            <div class="col-12 mb-2">
+                <label for="" class="form-label fw-bold">Username</label>
+                <input type="text" v-model="user.username"
+                class="form-control">
+            </div>
+  
+
+            <div class="col-12 mb-2">
+                <label for="" class="form-label fw-bold">Email</label>
+                <input type="email" v-model="user.email"
+                class="form-control">
+            </div>
+
+            <div class="col-12 mb-2">
+                <label for="" class="form-label fw-bold">Password</label>
+                <input type="password" v-model="user.password"
+                class="form-control">
+            </div>
+
+            <div class="col-12 mb-2">
+                <label for="" class="form-label fw-bold">Image</label>
+                <input type="file" 
+                class="form-control" @change="imageUpload">
+            </div>
+
+            <div class="col-12 mb-2">
+                <label for="" class="form-label fw-bold">Role</label>
+                <select v-model="user.role" class="form-control">
+                    <option value="1">Admin</option>
+                    <option value="0">Staff</option>
+                </select>
+            </div>
+
+
+     
+            <div class="col-12 d-flex justify-content-end"> 
+                <button role="button" class="btn btn-danger mt-3 fw-bold" 
+                @click="modal_add =! modal_add">Close</button>
+
+                <form @submit.prevent="create_account()">
+                    <button type="submit" class="btn btn-success 
+                    mt-3 fw-bold">Add new account</button>
+                </form>
+
+                </div>      
+            </div>      
+    </div>
+</div>
+</transition>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <body>
     <div class="d-flex" id="wrapper">
         <!-- Sidebar -->
@@ -34,7 +133,7 @@
                 <!-- <tutorial/> -->
                 
 
-                <accounts_content />
+                <accounts_content v-on:addModal="openModal()" :key="updateAccount"/>
                 
             </div>
 
@@ -62,7 +161,8 @@ import tutorial from '../components/tutorial.vue'
 import { ref } from 'vue'
 import sidebar from '../components/sidebar/sidebar.vue';
 import logout from '../components/modal/logout.vue';
-
+import axios_client from '../axios';
+import Swal from 'sweetalert2'
 
 
 
@@ -82,12 +182,79 @@ export default {
         const router = useRouter();
 
         const isSidebar = ref(false);
+        const modal_add = ref(false);
+
+        const user = ref({
+            username: '',
+            email: '',
+            password: '',
+            role: '',
+        })
+
+        const imageFile = ref('');
+        const imageURL = ref ('');
+        const updateAccount = ref(0);
+
+
+        function imageUpload(e){    
+            const file = imageFile.value = e.target.files[0]
+            imageURL.value = URL.createObjectURL(file) 
+        }
+
+
 
     
+     
+
+
+        function openModal(){
+            modal_add.value = true;
+        }
+
+
+        const config = {
+            headers: {
+                'content-type': 'multipart/form-data'
+            }
+        }
+
+        function create_account(){
+
+        let formData = new FormData();
+        formData.append('username', user.value.username);
+        formData.append('email', user.value.username);
+        formData.append('password', user.value.username);
+        formData.append('role', user.value.username);
+        formData.append('image', imageFile.value);
+            
+
+        let url = '/auth_register';
+        axios_client.post(url,formData,config).then(response => {
+
+        modal_add.value = false;
+
+        
+        Swal.fire({
+            title: 'Success!',
+            text: 'account added',
+            icon: 'success',
+            confirmButtonText: 'OK',
+            allowOutsideClick: false
+        })
+
+        updateAccount.value += 1;
+
+
+        }).catch(error =>{
+            console.log(error.response.data)
+        })
+        }
+ 
+
+
         onMounted(()=> {
             
         })
- 
 
 
 
@@ -97,10 +264,29 @@ export default {
         }
 
         return {
-            user: computed(() => store.state.user.data),logout,isSidebar
+            user: computed(() => store.state.user.data),logout,isSidebar,openModal,modal_add,create_account,user
+            ,imageFile,imageURL,imageUpload,updateAccount
         }
 
 
     }
 }
 </script>
+
+<style scoped>
+.modalAnim-leave-to,
+.modalAnim-enter-from{
+    opacity: 0;
+}
+
+.modalAnim-leave-from,
+.modalAnim-enter-to{
+    opacity: 1;
+}
+
+.modalAnim-leave-active,
+.modalAnim-enter-active{
+    transition: opacity 0.3s;
+}
+    
+</style>
