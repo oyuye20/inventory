@@ -112,7 +112,7 @@ class stats extends Controller
 
         /* SELECT product_id, CURRENT_DATE, expiration_date, DATEDIFF(expiration_date, CURRENT_DATE) as diff FROM `inventories` HAVING diff = 90; */
         return inventory::with('product')
-        ->where(DB::raw('DATEDIFF(expiration_date, CURDATE())'),'=', 90)->paginate(10);
+        ->where(DB::raw('DATEDIFF(expiration_date, CURDATE())'),'<=', 90)->paginate(10);
     }
 
 
@@ -168,7 +168,7 @@ class stats extends Controller
         return $customer = DB::table('transactions')
         ->join('customer_orders','transactions.id', '=','customer_orders.transactions_id')
         
-        ->select('customer_orders.product_name','customer_orders.price',
+        ->select('customer_orders.product_name','customer_orders.price','customer_orders.selling_price',
         DB::raw('DATE_FORMAT(transactions.purchase_date, "%m/%d/%y %r") AS purchase_date'),
         DB::raw('sum(customer_orders.quantity) as total_quantity'),
         DB::raw('sum(customer_orders.total) as total_sold'))
@@ -176,7 +176,7 @@ class stats extends Controller
 
         ->whereDate('transactions.purchase_date','=',now())
         ->groupBy('customer_orders.product_name')
-        ->paginate(5);
+        ->paginate(10);
 
 
 
@@ -211,19 +211,31 @@ class stats extends Controller
 
 
     public function monthlyItems(){
-        return $customer = DB::table('transactions')
+
+        /* return DB::table('transactions')
+        ->join('customer_orders','transactions.id', '=','customer_orders.transactions_id')
+
+        ->select('customer_orders.product_name','customer_orders.price','customer_orders.selling_price',
+        'transactions.purchase_date'
+        ,DB::raw('MONTHNAME(transactions.purchase_date) as Month'))
+
+
+        ->orderBy('transactions.purchase_date','desc')
+        ->paginate(10); */
+
+
+        return DB::table('transactions')
         ->join('customer_orders','transactions.id', '=','customer_orders.transactions_id')
         
-        ->select('customer_orders.product_name','customer_orders.price',
-        DB::raw('DATE_FORMAT(purchase_date, "%m/%d/%y %r") AS purchase_date'),
-        DB::raw('MONTHNAME(transactions.purchase_date) as Month'),
+        ->select('customer_orders.product_name','customer_orders.price','customer_orders.selling_price',
+        'transactions.purchase_date',
         DB::raw('sum(customer_orders.quantity) as total_quantity'),DB::raw('sum(customer_orders.total) as total_sold')
         )
 
-        ->groupByRaw('customer_orders.product_name')
-        ->orderBy('transactions.purchase_date')
+        ->groupByRaw('customer_orders.transactions_id')
+        ->orderBy('transactions.purchase_date','desc')
 
-        ->paginate(5);
+        ->paginate(10);
     }
 
 
@@ -293,17 +305,17 @@ class stats extends Controller
         return $customer = DB::table('transactions')
         ->join('customer_orders','transactions.id', '=','customer_orders.transactions_id')
         
-        ->select('customer_orders.product_name','customer_orders.price',
+        ->select('customer_orders.product_name','customer_orders.price','customer_orders.selling_price',
         DB::raw('YEAR(purchase_date) AS yearOf'),
         DB::raw('DATE_FORMAT(purchase_date, "%m/%d/%y %r") AS purchase_date'),
         DB::raw('MONTHNAME(transactions.purchase_date) as Month'),
         DB::raw('sum(customer_orders.quantity) as total_quantity'),DB::raw('sum(customer_orders.total) as total_sold')
         )
 
-        ->groupByRaw('customer_orders.product_name')
+        ->groupByRaw('customer_orders.transactions_id')
         ->orderBy('transactions.purchase_date')
 
-        ->paginate(5);
+        ->paginate(10);
     }
 
 

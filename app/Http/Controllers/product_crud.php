@@ -34,10 +34,6 @@ class product_crud extends Controller
     }
 
 
-    public function sample(){
-        return transactions::with('customer_orders')->get();
-    }
-
 
     /* CHECKOUT */
     public function checkout(Request $request){      
@@ -193,7 +189,7 @@ class product_crud extends Controller
         $prod->description = $r['description'];
         $prod->size = $r['size'];
         $prod->price = $r['price'];
-        $prod->selling_price = $r['sellingPrice'];
+        $prod->selling_price = $r['selling_price'];
         $prod->save();
 
         return response()->json([

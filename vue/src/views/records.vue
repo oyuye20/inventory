@@ -12,21 +12,20 @@
 
     <div class="col-xxl-7 col-xl-8 col-lg-10 col-md-11 col-sm-12 p-3" >
 
-        <div class="col-12" v-for="c in orderData">
+        <div class="col-12">
             <div class="fw-bold text-dark d-flex justify-content-between p-3"
             style="background-color: rgb(4, 180, 116);"> 
-                <span>Transaction ID: {{c.transactions_id}}</span>
-                <span>Date: {{ c.purchase_date }}</span>    
+                <span>Transaction ID: {{transInfo.transactions_id}}</span>
+                <span>Date: {{ transInfo.purchase_date }}</span>
             </div>
         </div>
         
 
         <div class="col-12 bg-light p-3">
             <p class="col-12 mb-1 text-center fw-bold text-dark">J.R. AMADOR PET AND POULTRY SUPPLIES</p>
-            <p class="col-12 mb-1 text-center fw-bold text-dark">Unit Sample Malolos KM 42</p>
-            <p class="col-12 mb-1 text-center fw-bold text-dark">McArthur Hway Bulihan,</p>
-            <p class="col-12 mb-1 text-center fw-bold text-dark">Malolos City Bulacan</p>
-            <p class="col-12 mb-1 text-center fw-bold text-dark">TEL NO : (044)1234-567</p>
+            <p class="col-12 mb-1 text-center fw-bold text-dark">National Road, Brgy Muzon</p>
+            <p class="col-12 mb-1 text-center fw-bold text-dark">San Jose Del Monte Bulacan</p>
+            <p class="col-12 mb-1 text-center fw-bold text-dark">TEL NO : 09222178222</p>
 
         <hr style=" border-top: 3px dashed black;">
         
@@ -39,6 +38,7 @@
             <th class="fw-bold" scope="col">Product Name</th>
             <th class="fw-bold" scope="col">Quantity</th>
             <th class="fw-bold" scope="col">Price</th>
+            <th class="fw-bold" scope="col">Total</th>
             </tr>
         </thead>
         <tbody v-for="c in orderData">
@@ -50,6 +50,10 @@
             <td class="fw-bold text-dark">{{Intl.NumberFormat('en-PH', 
                 { style: 'currency', currency: 'PHP' }).
                 format(c.selling_price)}}</td>
+
+            <td class="fw-bold text-dark">{{Intl.NumberFormat('en-PH', 
+                { style: 'currency', currency: 'PHP' }).
+                format(c.total)}}</td>
             </tr>
         </tbody>
         </table>
@@ -58,7 +62,6 @@
 
         <hr style=" border-top: 2.5px dashed black;">
 
-        <div v-for="c in orderData">
 
             <div class="d-flex justify-content-center mb-3">
                 <div class="col-7 d-flex justify-content-between">
@@ -66,17 +69,25 @@
 
                     <span class="fw-bold text-dark">{{Intl.NumberFormat('en-PH', 
                     { style: 'currency', currency: 'PHP' }).
-                    format(c.gross_total)}}</span>
+                    format(transInfo.gross_total)}}</span>
                 </div>
             </div>
+
+            <div class="d-flex justify-content-center mb-3">
+                <div class="col-7 d-flex justify-content-between">
+                    <span class="fw-bold text-dark">Discount: </span>
+                    <span class="fw-bold text-dark">% {{ transInfo.discount }}</span>
+                </div>
+            </div>
+
 
             <div class="d-flex justify-content-center">
                 <div class="col-7 d-flex justify-content-between">
                     <span class="fw-bold text-dark">Grand total: </span>
 
                     <span class="fw-bold text-dark">{{Intl.NumberFormat('en-PH', 
-                    { style: 'currency', currency: 'PHP' }).
-                    format(c.net_total)}}</span>
+                    { style: 'currency', currency: 'PHP' })
+                    .format(transInfo.net_total)}}</span>
                 </div>
             </div>
 
@@ -90,7 +101,7 @@
 
                     <span class="fw-bold text-dark">{{Intl.NumberFormat('en-PH', 
                     { style: 'currency', currency: 'PHP' }).
-                    format(c.amount)}}</span>
+                    format(transInfo.amount)}}</span>
                 </div>
             </div>
 
@@ -100,10 +111,11 @@
 
                     <span class="fw-bold text-dark">{{Intl.NumberFormat('en-PH', 
                     { style: 'currency', currency: 'PHP' }).
-                    format(c.change)}}</span>
+                    format(transInfo.change)}}</span>
+
                 </div>
             </div>
-        </div>
+ 
 
 
         
@@ -288,6 +300,17 @@ export default {
         const refreshRecords = ref(0);
 
 
+        const transInfo = ref({
+            transactions_id:'',
+            purchase_date:'',
+            gross_total:'',
+            discount:'',
+            net_total:'',
+            amount:'',
+            change: '',
+        })
+
+
 
         function openModalInvoice(id){
             console.log(id)
@@ -296,7 +319,15 @@ export default {
             axios_client.get('/showInvoice/' + id).then(response=>{
                 orderData.value = response.data
 
-                console.log(response.data)
+
+                transInfo.value.transactions_id = response.data[0].transactions_id;
+                transInfo.value.purchase_date = response.data[0].purchase_date;
+                transInfo.value.gross_total = response.data[0].gross_total;
+                transInfo.value.discount = response.data[0].discount;
+                transInfo.value.net_total = response.data[0].net_total;
+                transInfo.value.amount = response.data[0].amount;
+                transInfo.value.change = response.data[0].change;
+
             }).catch(error =>{
                 console.log(error.response.data)
             })
@@ -353,7 +384,7 @@ export default {
 
         return {
             logout,isSidebar,openModalInvoice,modalActive,orderData,printInvoice,editStocks,stockModal,stockData
-            ,updateStocks,refreshRecords
+            ,updateStocks,refreshRecords,transInfo
         }
 
 

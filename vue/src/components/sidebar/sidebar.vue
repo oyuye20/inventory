@@ -2,7 +2,7 @@
 
 <transition name="modalAnim">
     <notification :notification="notification" @close="toggleNotif" @readNotif="readNotif2"
-    style="position: relative; z-index: 3;"></notification>
+    style="position: relative; z-index: 4;"></notification>
 </transition>
 
 

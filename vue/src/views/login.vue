@@ -35,19 +35,18 @@
                         </div> -->
 
 
-
-                        <input type="text" v-model="user.email" 
+                        <input type="email" v-model="user.email" 
                         class="form-control rounded-5 mb-4 p-2 fs-5" 
                         style="box-shadow: 3px 3px 3px rgb(197, 197, 197); 
                         border: 1.9px solid rgb(215, 214, 214);" 
-                        placeholder="Enter Email">
+                        placeholder="Enter Email" required>
 
                     
                         <input type="password" v-model="user.password" 
                         class="form-control rounded-5 p-2 fs-5" 
                         style="box-shadow: 3px 3px 3px rgb(197, 197, 197); 
                         border: 1.9px solid rgb(215, 214, 214);" 
-                        placeholder="Enter Password">
+                        placeholder="Enter Password" required>
 
                         <button class="btn btn-success w-100 fw-bold mb-3"  type="submit"
                         style="box-shadow: 3px 3px 2px rgb(197, 197, 197); 

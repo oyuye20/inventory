@@ -9,6 +9,9 @@ use App\Models\inventory;
 use App\Models\transactions;
 use Illuminate\Support\Facades\DB;
 
+use App\Exports\InventoryExport;
+use Maatwebsite\Excel\Facades\Excel;
+
 class inventory1 extends Controller
 {
     public function inventory_index()
@@ -65,6 +68,15 @@ class inventory1 extends Controller
          $query->orderBy('product_name')->groupBy('product_name');
         })->paginate(5); */
     }
+
+
+
+    public function exportExcelInventory(){
+        return Excel::download(new InventoryExport,'inventory.csv');
+    }
+
+
+
 
 
 
@@ -132,6 +144,8 @@ class inventory1 extends Controller
 
     public function create_category(Request $request)
     {
+
+    
         category::create([
             "category" => $request->category,
             "description" => $request->desc,
@@ -141,6 +155,9 @@ class inventory1 extends Controller
             "status" => 200
          ]);
     }
+
+
+
 
 
     public function stockHistory(){
@@ -177,16 +194,22 @@ class inventory1 extends Controller
 
     public function get_update_cat($id)
     {
-        $category = category::find($id);
-
-        return response()->json([
-            'edit_cat' => $category
-        ]);
+        return category::find($id);
     }
 
 
 
     public function update_category(Request $request,$id){
+        $r = json_decode($request->input("categoryData"),true);
+        $cat = category::find($id);
+        
+
+        $cat->update([
+            'category'=>ucfirst($r['category']),
+            'description'=>ucfirst($r['description']),
+        ]);
+
+        
         
         /* $category = category::find($id)
         ->update([

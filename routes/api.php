@@ -48,12 +48,18 @@ Route::post('/auth_register', [login::class, 'register']);
 
 
 Route::post('/updateProfile/{id}', [login::class, 'updateProfile']);
-
+Route::get('/editAccount/{id}', [login::class, 'editAccount']);
 
 
 
 
 Route::get('/accounts/lists', [login::class, 'staffLists']);
+
+Route::post('/accountListEdit/{id}', [login::class, 'editList']);
+
+
+
+
 
 
 /* PRODUCT CRUD */
@@ -69,11 +75,6 @@ Route::put('/delete/{id}', [product_crud::class, 'delete_product']);
 
 
 Route::get('/sample/{id}', [product_crud::class, 'show1']);
-
-
-
-Route::get('/export-excel', [product_crud::class, 'exportProductExcel']);
-
 
 
 Route::post('/checkout', [product_crud::class, 'checkout']);
@@ -112,7 +113,10 @@ Route::post('/inventory/add', [inventory1::class, 'inventory_add']);
 
 
 
-Route::put('/category/update/{id}', [inventory1::class, 'update_category']);
+Route::post('/category/update/{id}', [inventory1::class, 'update_category']);
+
+
+
 Route::put('/category/archive/{id}', [inventory1::class, 'delete_category']);
 Route::put('/delete/category/{id}', [inventory1::class, 'delete_category']);
 
@@ -175,20 +179,34 @@ Route::get('/inventoryLists/search/{data}', [filter::class, 'searchInventoryList
 
 
 Route::get('/inventoryLists/category/{data}', [filter::class, 'filterInventoryCat']);
-
-
-
 Route::get('/critical/search/{data}', [filter::class, 'searchCritical']);
 
 
+
+
+
+Route::get('/soldItems/{data}', [filter::class, 'searchSoldItems']);
+
+
 Route::get('/sold-out-inventory/{data}', [filter::class, 'searchSoldOutItems']);
-Route::get('/relation', [product_crud::class, 'sample']);
 
 
 
 Route::get('/expiration/search/{data}', [filter::class, 'searchExpired']);
 Route::get('/orders/search/{data}', [filter::class, 'searchOrder']);
 Route::get('/supplier/search/{data}', [filter::class, 'searchSupplier']);
+
+
+Route::get('/expiring/search/{data}', [filter::class, 'searchExpiring']);
+Route::get('/stockHistory/search/{data}', [filter::class, 'searchStockHistory']);
+
+
+
+Route::get('/daily/search/{data}', [filter::class, 'searchDaily']);
+Route::get('/monthly/search/{data}', [filter::class, 'searchMontly']);
+Route::get('/yearly/search/{data}', [filter::class, 'searchYearly']);
+
+
 
 
 
@@ -222,16 +240,17 @@ Route::get('/notification/stocks', [notify::class, 'checkStocks']);
 Route::put('/readNotifications', [notify::class, 'readNotifications']);
 
 
-
-
-
-
 Route::get('/notify/email', [notify::class, 'emailNotif']);
-
 
 
 /* ANALYTICS */
 Route::get('/sample', [analytics::class, 'sample']);
 Route::get('/analytics/monthly', [stats::class, 'monthlyItemsAnalytics']);
 
+
+/* EXPORT EXCEL */
+Route::get('/export-excel', [product_crud::class, 'exportProductExcel']);
+
+
+Route::get('/export-excel/inventory', [inventory1::class, 'exportExcelInventory']);
 

@@ -118,7 +118,7 @@
 
                                 <tr>
                                     <td>{{d.product_name}}</td>
-                                    <td>₱ {{d.price}}</td>
+                                    <td>₱ {{d.selling_price}}</td>
                                     <td>{{d.total_quantity}}</td>
 
                                     <td>{{
@@ -145,80 +145,6 @@
 
                         </div>
                     </div>
-
-
-                    <div class="tab-pane fade show" id="pills-weekly" role="tabpanel" 
-                    aria-labelledby="pills-weekly-tab" tabindex="0">
-                        
-                    <div class="mt-3 w-100 bg-light p-3 d-flex justify-content-between">
-                        <div class="title">
-                            <span class="fs-5 fw-bold"><i class="far fa-calendar-days me-2">
-                            </i>Weekly Sales</span>
-                        </div>
-
-                        <div class="date">
-                            <span class="fs-5 fw-bold">{{ formatDate }}</span>
-                        </div>
-                    </div>
-
-
-
-                    <div class="mt-3 w-100 mb-3">
-                        <label for="date" class="form-label fw-bold">Start Date</label>
-                        <input type="date" class="form-control mb-2" v-model="start_date">
-
-                        <label for="date" class="form-label fw-bold">End Date</label>
-                        <input type="date" class="form-control" v-model="end_date">
-
-                        <form @submit.prevent="searchWeekly">
-                            <button type="submit" class="btn btn-primary fw-bold mt-3">Submit</button>
-                        </form>
-                        
-                    </div>
-
-                        <div class="table-responsive">     
-                            <table class="table table-hover table-borderless text-center">
-                                <thead class="" style="background-color: #04b4738e;">
-                                    <tr>
-                                    <th scope="col" class="fw-bold">Product Name</th>
-                                    <th scope="col" class="fw-bold">Unit Price</th>
-                                    <th scope="col" class="fw-bold">Total Products Sold</th>
-                                    <th scope="col" class="fw-bold">Total Sales</th>
-                                    <th scope="col" class="fw-bold">Date</th>
-                                    <th scope="col" class="fw-bold">Month Of</th>
-
-                                    <!-- <th>Actions</th> -->
-                                    </tr>
-                                </thead>
-
-                            <tbody>
-                                <tr>
-                                 <!--    <td>{{ m.product_name }}</td>
-                                    <td>₱ {{m.price}}</td>
-                                    <td>{{ m.total_quantity }}</td>          
-                                    <td>₱ {{m.total_sold}}</td>  
-                                    <td>{{ m.purchase_date }}</td>                      
-                                    <td>{{ m.Month }}</td> -->
-                                </tr>
-
-                            </tbody>
-                            </table>
-
-
-                          <!--   <div class="d-flex justify-content-end align-items-center" >
-                                <Bootstrap5Pagination :limit="1" :keepLength="true" :data="montly" class="shadow-sm"  
-                                @pagination-change-page="getMonthly, filterMonthly"
-                                />
-                            </div> -->
-
-                        </div>
-                    
-                    </div>
-
-
-
-
-
 
 
 
@@ -260,7 +186,7 @@
                             <tbody v-for="m in montly.data">
                                 <tr>
                                     <td>{{ m.product_name }}</td>
-                                    <td>₱ {{m.price}}</td>
+                                    <td>₱ {{m.selling_price}}</td>
                                     <td>{{ m.total_quantity }}</td>          
                                     <td>₱ {{m.total_sold}}</td>  
                                     <td>{{ m.purchase_date }}</td>                      
@@ -273,7 +199,7 @@
 
                             <div class="d-flex justify-content-end align-items-center" >
                                 <Bootstrap5Pagination :limit="1" :keepLength="true" :data="montly" class="shadow-sm"  
-                                @pagination-change-page="getMonthly, filterMonthly"
+                                @pagination-change-page="filterMonthly"
                                 />
                             </div>
 
@@ -314,7 +240,7 @@
                             <tbody v-for="y in yearly.data">
                                 <tr>
                                     <td>{{ y.product_name }}</td>
-                                    <td>₱ {{y.price}}</td>
+                                    <td>₱ {{y.selling_price}}</td>
                                     <td>{{ y.total_quantity }}</td>          
                                     <td>₱ {{y.total_sold}}</td>  
                                     <td>{{ y.purchase_date }}</td>                      
@@ -326,8 +252,8 @@
 
 
                             <div class="d-flex justify-content-end align-items-center" >
-                                <Bootstrap5Pagination :limit="1" :keepLength="true" :data="montly" class="shadow-sm"  
-                                @pagination-change-page="getMonthly, filterMonthly"
+                                <Bootstrap5Pagination :limit="1" :keepLength="true" :data="yearly" class="shadow-sm"  
+                                @pagination-change-page="filterYearly"
                                 />
                             </div>
 
@@ -425,6 +351,8 @@ export default {
                 axios_client.get('/daily?page=' + page).then(response=>{
                     daily.value = response.data;
 
+                    console.log(response.data)
+
                 }).catch(error =>{
                     console.log(error.response.data)
                 })       
@@ -459,6 +387,7 @@ export default {
             else {
                 axios_client.get('/filter/month/' + filterMonth.value + '?page=').then(response=>{
                     montly.value = response.data;
+                    
                 }).catch(error =>{
                     console.log(error.response.data)
                 })

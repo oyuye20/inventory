@@ -288,14 +288,26 @@ export default {
         }
 
 
-        function getSelectedCat(category){     
-          axios_client.get('/inventoryLists/category/' + category)
+
+        const getSelectedCat = async(category, page = 1) => {
+          axios_client.get('/inventoryLists/category/' + category + '?page=' + page)
             .then(response=>{
               inv_lists.value = response.data
             }).catch(error =>{
                 console.log(error.response.data)
             })
         }
+        
+
+
+        /* function getSelectedCat(category, page = 1){     
+          axios_client.get('/inventoryLists/category/' + category + '?page=' + page)
+            .then(response=>{
+              inv_lists.value = response.data
+            }).catch(error =>{
+                console.log(error.response.data)
+            })
+        } */
 
         
 

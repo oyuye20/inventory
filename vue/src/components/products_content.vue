@@ -137,11 +137,10 @@
 
             <td class="m-3">
 
-                <RouterLink :to="{name: 'edit_product', params:{id:cat.id} }">
-                    <button class="btn btn-success" data-mdb-toggle="tooltip" 
-                    data-mdb-placement="left" title="Edit"><i class="bi bi-pencil-square">
-                    </i></button>
-                </RouterLink>
+                <button class="btn btn-success" data-mdb-toggle="tooltip" @click="$emit('editCat',cat.id)"
+                data-mdb-placement="left" title="Edit"><i class="bi bi-pencil-square">
+                </i></button>
+
                 
                 <button type="button" class="btn btn-warning mx-1 mt-2" data-mdb-toggle="tooltip" 
                 data-mdb-placement="left" title="Edit" @click.prevent="del_cat(cat.id, cat.category)">

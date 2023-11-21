@@ -37,6 +37,7 @@
             <th class="fw-bold" scope="col">Product Name</th>
             <th class="fw-bold" scope="col">Quantity</th>
             <th class="fw-bold" scope="col">Price</th>
+            <th class="fw-bold" scope="col">Total</th>
             </tr>
         </thead>
         <tbody v-for="i in cart_lists">
@@ -48,7 +49,16 @@
             <td class="fw-bold text-dark">{{Intl.NumberFormat('en-PH', 
                 { style: 'currency', currency: 'PHP' }).
                 format(i.selling_price)}}</td>
+
+            <td class="fw-bold text-dark">{{Intl.NumberFormat('en-PH', 
+                { style: 'currency', currency: 'PHP' }).
+                format(i.total)}}</td>  
             </tr>
+
+            
+
+
+            
         </tbody>
         </table>
 
@@ -270,14 +280,14 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
                                     <tr>
 
                                     <td>{{list.product_name}}</td>
-                                    <td>₱ {{list.price}}</td>
+                                    <td>₱ {{list.selling_price}}</td>
 
                                     <td class="d-flex h-100">
                                         <button @click="CartStore.decrement(i,list.product_id)" class="btn btn-sm btn-danger mx-2">-</button>
                                         
                                         <span class="d-flex justify-content-center align-items-center">{{list.quantity}}</span>
 
-                                        <button @click="CartStore.increment(i,list.stocks,list.price,list.product_id)" 
+                                        <button @click="CartStore.increment(i,list.stocks,list.selling_price,list.product_id)" 
                                         class="btn btn-sm btn-success mx-2">+</button>        
                                     </td>
                                 
@@ -370,18 +380,12 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
                           
                                                 <td>{{p.stocks}}</td>
 
-
-
-
-
                                                 
                                                 <td>
                                                     {{Intl.NumberFormat('en-PH', 
                                                     { style: 'currency', currency: 'PHP' }).
                                                     format(p.product.selling_price)}}
-                                                </td>
-
-                                             
+                                                </td>                            
 
                                                 <td>
                                                     <button class="btn btn-primary" 

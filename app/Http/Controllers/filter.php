@@ -21,6 +21,7 @@ class filter extends Controller
         ->where(function($query) use($data)  {
               return $query
                 ->where('manufacturer','LIKE','%'.$data.'%')
+                ->orWhere('serial_number','LIKE','%'.$data.'%')
                 ->orWhere('product_name','LIKE','%'.$data.'%');
         })
         ->paginate(5); 
@@ -40,6 +41,32 @@ class filter extends Controller
         $query->where('product_name','LIKE','%'.$data.'%');
       })->paginate(5); */
     }
+
+
+    public function searchSoldItems($data){
+      return DB::table('customer_orders as c')
+        ->join('transactions as t','c.transactions_id', '=','t.id')
+        
+        ->selectRaw('t.purchase_date, c.serial_number, 
+        c.product_name,sum(c.quantity) as sold_items, sum(c.total) as money, 
+        c.price, c.selling_price, SUM(c.selling_price * c.quantity) - SUM(c.price * c.quantity) as net_total')
+
+
+        ->where(function($query) use($data)  {
+          return $query
+          ->orWhere('c.serial_number','LIKE','%'.$data.'%')
+          ->orWhere('c.product_name','LIKE','%'.$data.'%');
+        })
+
+        ->orderBy('money', 'DESC')
+        ->groupBy('c.product_name')
+        ->paginate(10);
+    }
+
+
+
+
+
 
 
     
@@ -91,8 +118,8 @@ class filter extends Controller
           return $query
           ->orWhere('category','LIKE','%'.$data.'%');
       })
-
         ->groupBy('inventories.product_id')->paginate(5);
+        
     }
 
 
@@ -143,8 +170,42 @@ class filter extends Controller
           ->orWhere('serial_number','LIKE','%'.$data.'%')
           ->orWhere('product_name','LIKE','%'.$data.'%');
       })->paginate(10);
-
     }
+
+    public function searchStockHistory($data){
+      return inventory::with('product')
+      ->whereHas('product', function ($query) use($data) {
+        $query->where('product_name','LIKE','%'.$data.'%')
+          ->orWhere('manufacturer','LIKE','%'.$data.'%')
+          ->orWhere('serial_number','LIKE','%'.$data.'%')
+          ->orWhere('product_name','LIKE','%'.$data.'%');
+      })->orderBy('created_at','asc')->paginate(10);
+      
+    }
+
+
+
+    public function searchExpiring($data){
+      return inventory::with('product')
+      ->where(DB::raw('DATEDIFF(expiration_date, CURDATE())'),'<=', 90)
+      ->whereHas('product', function ($query) use($data) {
+        $query->where('product_name','LIKE','%'.$data.'%')
+          ->orWhere('manufacturer','LIKE','%'.$data.'%')
+          ->orWhere('serial_number','LIKE','%'.$data.'%')
+          ->orWhere('product_name','LIKE','%'.$data.'%');
+      })->paginate(10);
+
+
+      /* return inventory::with('product')
+        ->where(DB::raw('DATEDIFF(expiration_date, CURDATE())'),'<=', 90)->paginate(10); */
+    }
+
+
+
+
+
+
+
 
     public function searchOrder($data){
       return transactions::orderBy('purchase_date','DESC')
@@ -168,7 +229,15 @@ class filter extends Controller
 
 
     public function searchSoldOutItems($data){
-      
+
+      return inventory::with('product')->where('stocks','=','0')
+      ->whereHas('product', function ($query) use($data) {
+        $query->where('product_name','LIKE','%'.$data.'%')
+              ->orWhere('manufacturer','LIKE','%'.$data.'%')
+              ->orWhere('serial_number','LIKE','%'.$data.'%');
+      })->paginate(10);
+
+      /* return inventory::with('product')->where('stocks','=','0')->paginate(10); */
     }
 
 
@@ -182,7 +251,7 @@ class filter extends Controller
       return DB::table('transactions')
         ->join('customer_orders','transactions.id', '=','customer_orders.transactions_id')
         
-        ->select('customer_orders.product_name','customer_orders.price',
+        ->select('customer_orders.product_name','customer_orders.price','customer_orders.selling_price',
         DB::raw('DATE_FORMAT(transactions.purchase_date, "%m/%d/%y %r") AS purchase_date'),
         DB::raw('sum(customer_orders.quantity) as total_quantity'),
         DB::raw('sum(customer_orders.total) as total_sold'))
@@ -190,7 +259,7 @@ class filter extends Controller
       
         ->whereBetween('transactions.purchase_date',[$start, $end])
         ->groupBy('customer_orders.product_name')
-        ->paginate(5);
+        ->paginate(10);
 
     }
 
@@ -227,7 +296,7 @@ class filter extends Controller
         return $customer = DB::table('transactions')
         ->join('customer_orders','transactions.id', '=','customer_orders.transactions_id')
         
-        ->select('customer_orders.product_name','customer_orders.price',
+        ->select('customer_orders.product_name','customer_orders.price','customer_orders.selling_price',
 
         DB::raw('DATE_FORMAT(purchase_date, "%m/%d/%y %r") AS purchase_date')
 
@@ -243,7 +312,7 @@ class filter extends Controller
 
         ->groupByRaw('customer_orders.product_name')
         ->orderBy('transactions.purchase_date')
-        ->paginate(5);
+        ->paginate(10);
 
         /* return transactions::with('customer')->whereYear('purchase_date', $year)
         ->where(function($query) use($month)  {
@@ -253,6 +322,38 @@ class filter extends Controller
         ->paginate(5); 
  */
 
+    }
+
+
+
+
+
+    public function searchDaily($data){
+        return $customer = DB::table('transactions')
+        ->join('customer_orders','transactions.id', '=','customer_orders.transactions_id')
+        
+        ->select('customer_orders.product_name','customer_orders.price','customer_orders.selling_price',
+        DB::raw('DATE_FORMAT(transactions.purchase_date, "%m/%d/%y %r") AS purchase_date'),
+        DB::raw('sum(customer_orders.quantity) as total_quantity'),
+        DB::raw('sum(customer_orders.total) as total_sold'))
+
+        ->whereDate('transactions.purchase_date','=',now())
+
+        ->where(function($query) use($data)  {
+          return $query
+          ->orWhere('customer_orders.product_name','LIKE','%'.$data.'%');
+        })
+
+        ->groupBy('customer_orders.product_name')
+        ->paginate(10);
+    }
+
+    public function searchMontly(){
+      
+    }
+
+    public function searchYearly(){
+      
     }
 
 

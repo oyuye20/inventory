@@ -113,13 +113,14 @@
 
                 <div class="container-fluid col-xxl-12 d-flex justify-content-between mb-3">
                     <div class="col-10 me-3">
-                        <input type="text" @keydown.enter="search" role="searchbox" class="form-control rounded-5 p-2" 
+                        <input type="text" @keydown.enter="sold_items"  v-model="search_soldItems"
+                        role="searchbox" class="form-control rounded-5 p-2" 
                         style="box-shadow: 3px 3px 3px rgb(197, 197, 197); 
                         border: 1.9px solid rgb(215, 214, 214);" placeholder="Search sold items">
                     </div>
 
                     <div class="col-2 d-flex justify-content-center p-0 m-0">
-                        <button class="btn btn-success" @click="search"><i class="fas fa-magnifying-glass"></i></button>
+                        <button class="btn btn-success" @click="sold_items"><i class="fas fa-magnifying-glass"></i></button>
                     </div>
                 </div>
 
@@ -182,7 +183,7 @@
                     <div class="col-10 me-3">
                         <input type="text" @keydown.enter="supplierLists" role="searchbox" class="form-control rounded-5 p-2" 
                         style="box-shadow: 3px 3px 3px rgb(197, 197, 197); 
-                        border: 1.9px solid rgb(215, 214, 214);" v-model="search_supplier" placeholder="Search sold items">
+                        border: 1.9px solid rgb(215, 214, 214);" v-model="search_supplier" placeholder="Search supplier">
                     </div>
 
                     <div class="col-2 d-flex justify-content-center p-0 m-0">
@@ -235,17 +236,18 @@
                     <h4 class="mt-3 w-100 bg-light p-3 fw-bold"><i class="far fa-clock me-2"></i>Stock History</h4>
 
 
-                <!-- <div class="container-fluid col-xxl-12 d-flex justify-content-between mb-3">
+                <div class="container-fluid col-xxl-12 d-flex justify-content-between mb-3">
                     <div class="col-10 me-3">
-                        <input type="text" @keydown.enter="getInventory" role="searchbox" v-model="search_inventory" class="form-control rounded-5 p-2" 
+                        <input type="text" @keydown.enter="stockHistory" role="searchbox" 
+                        class="form-control rounded-5 p-2" v-model="search_stockHistory"
                         style="box-shadow: 3px 3px 3px rgb(197, 197, 197); 
-                        border: 1.9px solid rgb(215, 214, 214);" placeholder="Search inventory">
+                        border: 1.9px solid rgb(215, 214, 214);" placeholder="Search stock history">
                     </div>
 
                     <div class="col-2 d-flex justify-content-center p-0 m-0">
-                        <button class="btn btn-success" @click="getInventory"><i class="fas fa-magnifying-glass"></i></button>
+                        <button class="btn btn-success" @click="stockHistory"><i class="fas fa-magnifying-glass"></i></button>
                     </div>
-                </div> -->
+                </div>
 
                 <div class="table-responsive">
                     
@@ -255,9 +257,10 @@
                             <th class="fw-bold">Serial Number</th>
                             <th class="fw-bold">Manufacturer</th>
                             <th class="fw-bold">Product Name</th>
-                            <th class="fw-bold">Description</th>
-                            <th class="fw-bold">Size Name</th>
-                            <th class="fw-bold">Stock</th>
+                            <th class="fw-bold">Supplier</th>
+                            <th class="fw-bold">Category</th>
+                            <th class="fw-bold">Selling Price</th>
+                            <th class="fw-bold">Stocks</th>
                             <th class="fw-bold">Stock By</th>
                             <th class="fw-bold">Stock Date</th>
                             <th class="fw-bold" v-if="role == 1">Actions</th>
@@ -267,10 +270,11 @@
                     <tbody v-for="i in stockHistory_lists.data" :key="i.id">
                         <tr>
                             <td>{{i.product.serial_number }}</td>
+                            <td>{{i.product.manufacturer }}</td>
                             <td>{{i.product.product_name }}</td>
                             <td>{{i.supplier }}</td>
                             <td>{{i.category }}</td>
-                            <td>{{i.product.price }}</td>
+                            <td>{{i.product.selling_price }}</td>
                             <td>{{i.stocks }}</td>
                             <td>{{i.stock_by }}</td>
                             <td>{{i.created_at}}</td>
@@ -544,17 +548,18 @@
                     <span class="fw-bold">Expiring Products</span></h4>
 
 
-                    <!-- <div class="container-fluid col-xxl-12 d-flex justify-content-between mb-3">
+                    <div class="container-fluid col-xxl-12 d-flex justify-content-between mb-3">
                         <div class="col-10 me-3">
-                            <input type="text" @keydown.enter="search" role="searchbox" class="form-control rounded-5 p-2" 
+                            <input type="text" @keydown.enter="filterExpiringProd" role="searchbox" 
+                            class="form-control rounded-5 p-2" v-model="search_expiring"
                             style="box-shadow: 3px 3px 3px rgb(197, 197, 197); 
-                            border: 1.9px solid rgb(215, 214, 214);" placeholder="Search expired products">
+                            border: 1.9px solid rgb(215, 214, 214);" placeholder="Search expiring products">
                         </div>
 
                         <div class="col-2 d-flex justify-content-center p-0 m-0">
-                            <button class="btn btn-success" @click="search"><i class="fas fa-magnifying-glass"></i></button>
+                            <button class="btn btn-success" @click="filterExpiringProd"><i class="fas fa-magnifying-glass"></i></button>
                         </div>
-                    </div> -->
+                    </div>
 
 
                     <div class="table-responsive">
@@ -717,11 +722,14 @@ export default {
 
 
         const search_inventory = ref('');
+        const search_soldItems = ref('');
         const search_expired = ref('');
         const search_order = ref('');
         const search_critical = ref('');
         const search_sold = ref('');
         const search_supplier = ref('');
+        const search_expiring = ref('');
+        const search_stockHistory = ref('');
 
 
         const role = ref();
@@ -745,7 +753,7 @@ export default {
             }
 
             else {
-                axios_client.get('/inventory/search/' + search_inventory.value  + '?page=' + page).then(response=>{
+                axios_client.get('/sold-out-inventory/' + search_inventory.value  + '?page=' + page).then(response=>{
                     soldOutLists.value = response.data;
                     loading.value = false;
 
@@ -824,13 +832,26 @@ export default {
 
 
         const stockHistory = async(page = 1) => {
-            axios_client.get('/stock/history?page=' + page).then(response=>{
 
-                stockHistory_lists.value = response.data;
-              
-            }).catch(error =>{
-                console.log(error.response)
-            })
+            if(search_stockHistory.value == ''){
+                axios_client.get('/stock/history?page=' + page).then(response=>{
+                    stockHistory_lists.value = response.data;
+
+                    console.log(response.data)
+                }).catch(error =>{
+                    console.log(error.response)
+                })
+            }
+            else{
+                axios_client.get('/stockHistory/search/' + 
+                search_stockHistory.value  + '?page=' + page).then(response=>{
+
+                     stockHistory_lists.value = response.data;
+                }).catch(error =>{
+                    console.log(error.response.data)
+                })   
+            }
+            
         }
 
 
@@ -851,11 +872,21 @@ export default {
 
         /* GET EXPIRING PRODUCTS */
         const filterExpiringProd = async(page = 1) => {
-            axios_client.get('/expiring/products?page=' + page).then(response=>{
-                expiringStocks.value = response.data    
-            }).catch(error =>{
-                console.log(error.response)
-            })
+            if(search_expiring.value == ''){
+                axios_client.get('/expiring/products?page=' + page).then(response=>{
+                    expiringStocks.value = response.data    
+                }).catch(error =>{
+                    console.log(error.response)
+                })
+            }
+            else
+            {
+                axios_client.get('/expiring/search/' + search_expiring.value +'?page='+ page).then(response=>{
+                    expiringStocks.value = response.data    
+                }).catch(error =>{
+                    console.log(error.response)
+                })
+            }     
         }
 
 
@@ -888,12 +919,25 @@ export default {
 
         /* LISTS OF SOLD ITEMS */
         const sold_items = async(page = 1) => {
-            axios_client.get('/sold?page=' + page).then(response=>{       
-                items_sold.value = response.data;
 
-            }).catch(error =>{
-                console.log(error.response.data)
+            if(search_soldItems.value == ''){
+            axios_client.get('/sold?page=' + page).then(response=>{       
+                    items_sold.value = response.data;
+
+                }).catch(error =>{
+                    console.log(error.response.data)
             })
+
+            }
+
+            else{
+            axios_client.get('/soldItems/'+ search_soldItems.value +'?page=' + page).then(response=>{       
+                    items_sold.value = response.data;
+
+                }).catch(error =>{
+                    console.log(error.response.data)
+            })
+            }       
         }
 
 
@@ -924,7 +968,7 @@ export default {
 
             supplierLists,
             search_inventory, search_expired, search_order, search_critical, search_sold, supplierData,search_supplier,userData
-            ,role
+            ,role,search_soldItems,search_expiring,search_stockHistory
         }
 
 

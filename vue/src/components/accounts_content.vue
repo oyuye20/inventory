@@ -7,7 +7,7 @@
 
 
         
-        <button class="btn btn-primary" @click="$emit('addModal')">Add new account</button>
+        <button class="btn btn-dark" @click="$emit('addModal')">Add new account</button>
 
 
 
@@ -25,7 +25,7 @@
                 </tr>
 
             </thead>
-        <tbody v-for="a in accLists.data">
+        <tbody v-for="a in accLists.data" :key="a.id">
             <tr>
                 <td>{{a.id }}</td>
 
@@ -47,16 +47,9 @@
 
 
                 <td class="m-3">
-                    <!-- <RouterLink :to="{name: 'edit_product', params:{id:cat.id} }">
-                        <button class="btn btn-success" data-mdb-toggle="tooltip" 
-                        data-mdb-placement="left" title="Edit"><i class="bi bi-pencil-square">
-                        </i></button>
-                    </RouterLink> -->
-                    
-                    <button type="button" class="btn btn-warning mx-1 mt-2" data-mdb-toggle="tooltip" 
-                    data-mdb-placement="left" title="Edit" @click.prevent="del_cat(cat.id, cat.category)">
-                    <i class="fas fa-box-archive"></i></button>
-
+                    <button class="btn btn-success mx-1 mt-2" data-mdb-toggle="tooltip" 
+                    data-mdb-placement="left" title="Edit" @click="$emit('editacc', a.id)">
+                    <i class="bi bi-pencil-square"></i></button>
                 </td>
 
 

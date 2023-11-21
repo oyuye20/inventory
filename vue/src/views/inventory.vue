@@ -159,11 +159,14 @@
 
             <div class="container-fluid px-4">    
 
-                <div class="container mb-3">
-                    <button class="btn btn-primary fw-bold" @click="toggleModal">Open inventory modal</button>
+                <div class="container-fluid mb-3">
+                    <button class="btn btn-dark fw-bold" @click="toggleModal">Add new stocks</button>
+
+                    <button @click="exportExcel" class="btn 
+                    btn-success modal-add"><i class="far fa-file-excel me-2">         
+                    </i> Export inventory excel </button>  
                 </div>
 
-               
 
                 <inventory_content :key="refreshComponent"/>               
             </div>
@@ -296,6 +299,23 @@ export default {
         }
 
 
+        function exportExcel(){
+            axios_client({
+                url: '/export-excel/inventory',
+                method: 'GET',
+                responseType: 'blob',
+            }).then((response) => {
+                var fileURL = window.URL.createObjectURL(new Blob([response.data]));
+                var fileLink = document.createElement('a');
+                fileLink.href = fileURL;
+                fileLink.setAttribute('download', 'inventory.csv');
+                document.body.appendChild(fileLink);
+                fileLink.click();
+            });
+        }
+        
+
+
 
 
 
@@ -348,7 +368,7 @@ export default {
             user: computed(() => store.state.user.data),logout,getSelectedCat,
             isSidebar,toggleModal,modalActive,inventory,add_inventory,filter_input,userData
 
-            ,category_lists,productinfo,catRes,getCat,expire_radio,refreshComponent
+            ,category_lists,productinfo,catRes,getCat,expire_radio,refreshComponent,exportExcel
         }
 
 

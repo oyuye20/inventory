@@ -81,7 +81,76 @@
 
 
 
+<transition name="modalAnim">
+<div v-if="modal_edit" class="p-3" id="modal-main">
+    
+    <div class="row d-flex justify-content-center align-items-center p-3" 
+    id="modal-content">
 
+            <div class="col-xxl-7 col-md-8 text-start p-3" 
+            style="background-color: rgb(4, 180, 116);">
+
+
+                <div class="col-12">
+                    <span class="fw-bold fs-3 text-white">
+                    <i class="fas fa-circle-plus me-3">
+                    </i>Edit account</span>
+                </div>
+               
+            </div>
+
+            <div class="col-xxl-7 col-md-8 text-start p-3 bg-light" >
+
+            <div class="col-12 mb-2">
+                <div class="mb-3" v-if="imageURL">
+                    <img :src="imageURL" class="img-fluid" width="300" height="300">
+                </div>
+            </div>
+
+            <div class="col-12 mb-2">
+                <label for="" class="form-label fw-bold">Username</label>
+                <input type="text" v-model="editAccData.username"
+                class="form-control">
+            </div>
+  
+
+            <div class="col-12 mb-2">
+                <label for="" class="form-label fw-bold">Email</label>
+                <input type="email" v-model="editAccData.email"
+                class="form-control">
+            </div>
+
+
+            <div class="col-12 mb-2">
+                <label for="" class="form-label fw-bold">Image</label>
+                <input type="file" 
+                class="form-control" @change="imageUpload">
+            </div>
+
+            <!-- <div class="col-12 mb-2">
+                <label for="" class="form-label fw-bold">Role</label>
+                <select class="form-control" v-model="editAccData.role">
+                    <option value="1">Admin</option>
+                    <option value="0">Staff</option>
+                </select>
+            </div> -->
+
+
+     
+            <div class="col-12 d-flex justify-content-end"> 
+                <button role="button" class="btn btn-danger mt-3 fw-bold" 
+                @click="modal_edit =! modal_edit">Close</button>
+
+                <form @submit.prevent="editAccount(editAccData.id)">
+                    <button type="submit" class="btn btn-success 
+                    mt-3 fw-bold">Edit account</button>
+                </form>
+
+                </div>      
+            </div>      
+    </div>
+</div>
+</transition>
 
 
 
@@ -133,7 +202,7 @@
                 <!-- <tutorial/> -->
                 
 
-                <accounts_content v-on:addModal="openModal()" :key="updateAccount"/>
+                <accounts_content v-on:addModal="openModal()" v-on:editacc="editModal($event)" :key="updateAccount"/>
                 
             </div>
 
@@ -163,7 +232,7 @@ import sidebar from '../components/sidebar/sidebar.vue';
 import logout from '../components/modal/logout.vue';
 import axios_client from '../axios';
 import Swal from 'sweetalert2'
-
+import {useToast} from 'vue-toast-notification';
 
 
 export default {
@@ -183,6 +252,7 @@ export default {
 
         const isSidebar = ref(false);
         const modal_add = ref(false);
+        const modal_edit = ref(false);
 
         const user = ref({
             username: '',
@@ -190,6 +260,14 @@ export default {
             password: '',
             role: '',
         })
+
+
+        const editAccData = ref([]);
+
+
+
+
+
 
         const imageFile = ref('');
         const imageURL = ref ('');
@@ -222,9 +300,9 @@ export default {
 
         let formData = new FormData();
         formData.append('username', user.value.username);
-        formData.append('email', user.value.username);
-        formData.append('password', user.value.username);
-        formData.append('role', user.value.username);
+        formData.append('email', user.value.email);
+        formData.append('password', user.value.password);
+        formData.append('role', user.value.role);
         formData.append('image', imageFile.value);
             
 
@@ -233,7 +311,6 @@ export default {
 
         modal_add.value = false;
 
-        
         Swal.fire({
             title: 'Success!',
             text: 'account added',
@@ -249,6 +326,47 @@ export default {
             console.log(error.response.data)
         })
         }
+
+
+        function editModal(id){
+            modal_edit.value = true;
+
+            axios_client.get('/editAccount/' + id)
+            .then(response=>{
+                editAccData.value = response.data
+
+
+            }).catch(error =>{
+                console.log(error.response.data)
+            });
+        }
+
+
+        function editAccount(id){
+            console.log(id)
+            let formData = new FormData();
+            formData.append('accData', JSON.stringify(editAccData.value));
+            formData.append('image', imageFile.value);
+
+
+            axios_client.post(`/accountListEdit/`
+            + id, formData, config).then(response=>{
+
+            updateAccount.value += 1;
+
+            modal_edit.value = false;
+
+            const $toast = useToast();
+            $toast.success('Account updated successfully', {position: 'top'});  
+           
+
+            }).catch(error =>{
+                console.log(error.response.data)
+            })
+
+        }
+
+
  
 
 
@@ -265,7 +383,7 @@ export default {
 
         return {
             user: computed(() => store.state.user.data),logout,isSidebar,openModal,modal_add,create_account,user
-            ,imageFile,imageURL,imageUpload,updateAccount
+            ,imageFile,imageURL,imageUpload,updateAccount,editModal,modal_edit,editAccData,editAccount
         }
 
 

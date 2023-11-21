@@ -65,7 +65,7 @@
 
 
 
-            <div class="col-xxl-3 col-xl-4">
+            <router-link :to="{name: 'records'}" class="col-xxl-3 col-xl-4">
                 <div class="d-flex flex-column">
                     <div class="p-3 shadow-sm d-flex justify-content-around 
                     flex-column align-items-center rounded-5" style="height: 12rem; 
@@ -82,10 +82,11 @@
         
                     </div>
                 </div>
-            </div>
+            </router-link>
+            
 
 
-            <div class="col-xxl-3 col-xl-4">
+            <router-link :to="{name: 'records'}" class="col-xxl-3 col-xl-4">
                 <div class="d-flex flex-column">
                     <div class="p-3 shadow-sm d-flex justify-content-around 
                     flex-column align-items-center rounded-5" style="height: 12rem; 
@@ -102,11 +103,11 @@
         
                     </div>
                 </div>
-            </div>
+            </router-link>
 
 
                 
-                <div class="col-xxl-3 col-xl-4">
+                <router-link :to="{name: 'records'}" class="col-xxl-3 col-xl-4">
                     <div class="d-flex flex-column">
 
                         <div class="p-3 shadow-sm d-flex justify-content-around 
@@ -123,12 +124,12 @@
 
                         </div>
                     </div>
-                </div>
+                </router-link>
 
 
 
 
-                <div class="col-xxl-3 col-xl-4">
+                <router-link :to="{name: 'records'}" class="col-xxl-3 col-xl-4">
                     <div class="d-flex flex-column">
                         <div class="p-3 shadow-sm d-flex justify-content-around 
                         flex-column align-items-center rounded-5" style="height: 12rem; background-color: rgb(47, 165, 151);">
@@ -144,11 +145,11 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </router-link>
 
 
 
-                <div class="col-xxl-3 col-xl-4">
+                <router-link :to="{name: 'records'}" class="col-xxl-3 col-xl-4">
                     <div class="d-flex flex-column">
                         <div class="p-3 shadow-sm d-flex justify-content-around flex-column 
                         align-items-center rounded-5" style="height: 12rem; background-color: rgb(215, 184, 82);">
@@ -164,7 +165,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </router-link>
 
                     <!-- <Bar v-if="isloaded"
                     id="my-chart-id"

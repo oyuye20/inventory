@@ -52,6 +52,55 @@
 </transition>
 
 
+<!-- EDIT CATEGORY -->
+<transition name="modalAnim">
+<div v-if="editCategory" class="p-3" id="modal-main">
+    
+    <div class="row d-flex justify-content-center align-items-center p-3" 
+    id="modal-content">
+
+            <div class="col-xxl-7 col-md-8 text-start p-3" 
+            style="background-color: rgb(4, 180, 116);">
+
+
+                <div class="col-12">
+                    <span class="fw-bold fs-3 text-white">
+                    <i class="fas fa-circle-plus me-3">
+                    </i>Edit Category</span>
+                </div>
+               
+            </div>
+
+            <div class="col-xxl-7 col-md-8 text-start p-3 bg-light">
+
+
+            <div class="col-12 mb-2">
+                <label for="" class="form-label fw-bold">Category name</label>
+                <input type="text" v-model="categoryData.category" 
+                class="form-control">
+            </div>
+
+            <div class="col-12 mb-2">
+                <label for="" class="form-label fw-bold">Description</label>
+                <textarea type="text" v-model="categoryData.description" 
+                class="form-control"></textarea>  
+            </div>
+
+     
+            <div class="col-12 d-flex justify-content-end"> 
+                <button role="button" class="btn btn-danger mt-3 fw-bold" 
+                @click="editCategory =! editCategory">Close</button>
+
+                <form @submit.prevent="edit_category(categoryData.id)">
+                    <button type="submit" class="btn btn-success 
+                    mt-3 fw-bold">Edit Category</button>
+                </form>
+
+                </div>      
+            </div>      
+    </div>
+</div>
+</transition>
 
 
 
@@ -133,7 +182,7 @@
 
                 <div class="price w-50 mx-2">
                     <label for="" class="form-label fw-bold">Selling Price</label>
-                    <input type="text" v-model="editProdData.sellingPrice" 
+                    <input type="text" v-model="editProdData.selling_price"
                     @input="filter_input()" class="form-control" placeholder="">
                 </div>
             </div>
@@ -391,7 +440,7 @@
             </div>
 
         
-            <products_content v-on:editProd="editProdModal" :key="updateProdLists"/>
+            <products_content v-on:editProd="editProdModal" v-on:editCat="editCatModal" :key="updateProdLists"/>
 
 
 
@@ -454,11 +503,17 @@ export default {
 
         const loading = ref(false);
         const showcam = ref(false);
+        const editCategory = ref(false);
         const serialField = ref(true);
         const router = useRouter();
 
 
         let category_lists = ref([]);
+        const categoryData = ref([]);
+
+
+
+
         const noSerial = ref();
         const serialRes = ref('');
 
@@ -753,6 +808,53 @@ export default {
         }
 
 
+        
+        function editCatModal(id){
+            editCategory.value = true;
+
+
+            axios_client.get(`/category/edit/` 
+            + id).then(response=>{
+
+                categoryData.value = response.data;
+
+            }).catch(error =>{
+                console.log(error)
+            })
+        }
+
+
+
+        
+        /* EDIT CATEGORY */
+        function edit_category(id){       
+
+            let formData = new FormData();
+            formData.append('categoryData', JSON.stringify(categoryData.value));
+
+
+            axios_client.post(`/category/update/`
+            + id, formData).then(response=>{
+            
+
+
+            updateProdLists.value += 1;
+
+            const $toast = useToast();
+            editCategory.value = false;
+            $toast.success('Product updated successfully', {position: 'top'});  
+
+                    
+
+            }).catch(error =>{
+                console.log(error.response.data)
+            })
+        }
+
+
+
+
+
         onMounted(()=> {
             getCat()
         })
@@ -772,8 +874,11 @@ export default {
 
 
             /* FOR UPDATE PRODUCT */
-            ,editProduct,editProdModal,editProdData,updateProdBtn,updateProdLists,validationErrors
+            ,editProduct,editProdModal,editProdData,updateProdBtn,updateProdLists,validationErrors,
             /* END FOR UPDATE PRODUCT */
+
+            /* FOR EDITING CATEGORY */
+            editCategory,editCatModal,categoryData,edit_category
         }
 
     }

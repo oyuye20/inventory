@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\PersonalAccessToken;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx\Rels;
 
 class login extends Controller
 {
@@ -13,15 +14,13 @@ class login extends Controller
     /* LOGIN */
     public function login(Request $request)
     {
-        $validate = $request->validate([
+        /* $validate = $request->validate([
             'email' => 'required',
             'password' => 'required',
             'remember' => 'boolean'
-        ]);
+        ]); */
 
         
-
-
     
         /* $rem = $validate['remember'] ?? false;
         unset($validate['remember']); */
@@ -79,9 +78,47 @@ class login extends Controller
     }
 
 
-
     public function staffLists(){
         return User::where('role', '0')->paginate(5);
+    }
+
+
+    public function editAccount($id){
+        return User::find($id);
+    }
+
+
+
+    public function editList(Request $request, $id){
+        $r = json_decode($request->input("accData"),true);
+
+        $acc = User::find($id);
+
+        if($request->hasFile('image')){
+            unlink(public_path('storage/images/'.$acc->image));
+
+            $image = $request->file('image');
+            $ext = $image->extension();
+            $file = time().'.'.$ext;
+            $image->storeAs('public/images', $file);
+            $acc->image = $file;
+            $acc->save();
+        }
+
+
+        $acc->update([
+            'username'=>$r['username'],
+            'email'=>$r['email'],
+        ]); 
+
+
+        /* $cat = category::find($id);
+        
+
+        $cat->update([
+            'category'=>ucfirst($r['category']),
+            'description'=>ucfirst($r['description']),
+        ]); */
     }
 
 
