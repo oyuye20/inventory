@@ -23,9 +23,9 @@
             <div class="col-xxl-7 col-md-8 text-start p-3 bg-light">
 
 
-            <div class="col-12 mb-4">
+            <div class="col-12 mb-1">
                 <label for="" class="fw-bold mb-2">Category</label>
-                <select class="form-control mb-3" v-model="category_lists.category" 
+                <select class="form-control mb-2" v-model="category_lists.category" 
                 @change="getSelectedCat(category_lists.category)">    
                     <option selected v-for="cat in category_lists">{{cat.category}}</option>
                 </select>
@@ -40,26 +40,14 @@
                 </select>
             </div>
 
+            <div class="col-12">
+                <label for="" class="fw-bold mb-2">Supplier Name</label>
+                <select class="form-control mb-3">
+                <option>1</option>
+                </select>
+            </div>
 
-                <div class="col-12 mb-4">
-                    <label for="" class="fw-bold mb-2">Supplier Name</label>
-                    <input type="text" class="form-control mb-3" v-model="inventory.supplier">
-                </div>
-
-
-                <div class="col-12 mb-4">
-                    <label for="" class="fw-bold mb-2">Supplier Email</label>
-                    <input type="email" class="form-control mb-3" v-model="inventory.supplierEmail">
-                </div>
-
-
-                <div class="col-12 mb-4">
-                    <label for="" class="fw-bold mb-2">Supplier Contact Number</label>
-                    <input type="text" class="form-control mb-3" 
-                    v-model="inventory.supplierNumber" @input="filter_input">
-                </div>
-
-                <div class="col-12 mb-4">
+                <div class="col-12 mb-1">
                     <label for="" class="fw-bold mb-2">Number of Stocks</label>
                     <input type="text" class="form-control mb-3" placeholder="Stocks" 
                     @input="filter_input" v-model="inventory.stocks">
@@ -67,28 +55,36 @@
 
 
                 <div class="col-12 mb-4">
+                    <label for="" class="fw-bold mb-2">Safety Stocks</label>
+                    <input type="text" class="form-control mb-3" placeholder="Safety Stocks" 
+                    @input="filter_input" v-model="inventory.safetyStocks">
+                </div>
+
+
+
+                <div class="col-12 mb-1">
                     <label class="mb-3 fw-bold">Choose With or Without Expiration Date</label>
                     <div class="d-flex">
-                    <div class="form-check mb-3 me-4">
-                        <input class="form-check-input" type="radio" 
-                        value="1" v-model="expire_radio" name="expiration" 
-                        id="expiration" checked>
-                        <label class="form-check-label" for="flexRadioDefault1">
-                        With Expiration Date</label>
-                    </div>
+                        <div class="form-check mb-3 me-4">
+                            <input class="form-check-input" type="radio" 
+                            value="1" v-model="expire_radio" name="expiration" 
+                            id="expiration" checked>
+                            <label class="form-check-label" for="flexRadioDefault1">
+                            With Expiration Date</label>
+                        </div>
 
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" value="0" 
-                        v-model="expire_radio" name="expiration" id="expiration">
-                        <label class="form-check-label" for="flexRadioDefault1">
-                        Without Expiration Date</label>
-                    </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" value="0" 
+                            v-model="expire_radio" name="expiration" id="expiration">
+                            <label class="form-check-label" for="flexRadioDefault1">
+                            Without Expiration Date</label>
+                        </div>
                     </div>
                 </div>
 
                 <div class="col-12 mb-4 d-flex flex-wrap" v-if="expire_radio == 1">
                     <div class="col-6">
-                    <label for="" class="fw-bold mb-2">Date of Production   
+                    <label for="" class="fw-bold mb-2">Production Date  
                     </label>
                     <input type="date" class="form-control mb-3" 
                     placeholder="Production Date" 
@@ -162,6 +158,8 @@
                 <div class="container-fluid mb-3">
                     <button class="btn btn-dark fw-bold" @click="toggleModal">Add new stocks</button>
 
+                    <button class="btn btn-dark fw-bold" @click="toggleModal">Add new supplier</button>
+
                     <button @click="exportExcel" class="btn 
                     btn-success modal-add"><i class="far fa-file-excel me-2">         
                     </i> Export inventory excel </button>  
@@ -233,6 +231,7 @@ export default {
           category: '',
           product_info: '',
           stocks: '',
+          safetyStocks: '',
           prod_date: '',
           exp_date: '',
           supplier: '',
@@ -242,6 +241,7 @@ export default {
 
         function filter_input(){
           this.inventory.stocks = this.inventory.stocks.replace(/[^0-9]/g, "");
+          this.inventory.safetyStocks = this.inventory.safetyStocks.replace(/[^0-9]/g, "");
           this.inventory.supplierNumber = this.inventory.supplierNumber.replace(/[^0-9]/g, "");
         }
 
@@ -257,46 +257,73 @@ export default {
         }
 
         function add_inventory(){
-          let safetyStocks = Math.round(this.inventory.stocks * 0.25);
           
           let formData = new FormData();
           formData.append('category', this.inventory.category);
-          formData.append('supplier', this.inventory.supplier);
-          formData.append('supplierEmail', this.inventory.supplierEmail);
-          formData.append('supplierNumber', this.inventory.supplierNumber);
           formData.append('product_info', this.inventory.product_info);
+          formData.append('supplier', this.inventory.supplier);
           formData.append('stocks', this.inventory.stocks);
-          formData.append('safetyStocks', safetyStocks);
+          formData.append('safetyStocks', this.inventory.safetyStocks);
           formData.append('stockBy', username.value);
           formData.append('updatedBy', username.value);
           formData.append('prod_date', this.inventory.prod_date);
           formData.append('exp_date', this.inventory.exp_date);
           formData.append('noExpiration', expire_radio.value);
+
+          var currentdate = new Date(); 
+
+          let dateNow = currentdate.toISOString().split('T')[0];
+          let prod_date = this.inventory.prod_date
+          let exp_date1 = this.inventory.exp_date
+
           
-          let url = '/inventory/add';
-          axios_client.post(url,formData).then(response => {
 
-            refreshComponent.value += 1;
+            if((expire_radio.value == '1') && ((prod_date > dateNow) || (exp_date1 <= dateNow))){
+            $toast.error("Please enter valid date for production or expiration date", {position: 'top'}); 
+            }
+          
+            else if(this.inventory.safetyStocks >= this.inventory.stocks){
+            $toast.error("Safety Stocks must less than stock value", {position: 'top'}); 
+            }
 
-            console.log(response.data)
+            else{
+            let url = '/inventory/add';
+            axios_client.post(url,formData).then(response => {
 
-            modalActive.value = false;
+                refreshComponent.value += 1;
 
-            /* this.inventory.category = ''
-            this.inventory.product_info = ''
-            this.inventory.stocks = ''
-            this.inventory.prod_date = ''
-            this.inventory.exp_date = ''
-            this.inventory.supplier = ''
-            this.inventory.safetyStocks = '' */
+                console.log(response.data)
+
+                modalActive.value = false;
+
+                this.inventory.category = ''
+                this.inventory.product_info = ''
+                this.inventory.stocks = ''
+                this.inventory.prod_date = ''
+                this.inventory.exp_date = ''
+                this.inventory.supplier = ''
+                this.inventory.safetyStocks = ''
 
 
-            $toast.success("Inventory added successfully", {position: 'top'}); 
+                $toast.success("Inventory added successfully", {position: 'top'}); 
 
-          }).catch(error =>{
-              console.log(error.response.data)
-          })
+            }).catch(error =>{
+                console.log(error.response.data)
+            })
+            }
+                  
         }
+
+
+        function addSupplier(){
+            
+        }
+
+
+
+
+
+
 
 
         function exportExcel(){
@@ -320,6 +347,9 @@ export default {
 
 
         function getSelectedCat (category){      
+            console.log(category)
+
+
             axios_client.get('/select/product/info/' + category)
             .then(response=>{
                 productinfo.value = response.data;

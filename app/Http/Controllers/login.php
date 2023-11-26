@@ -33,6 +33,7 @@ class login extends Controller
         );
 
 
+      
         if(Auth::attempt($userdata))
         {
             $user = Auth::user();
@@ -41,9 +42,9 @@ class login extends Controller
             return response([
                 'user' => $user,
                 'token' => $token
-            ]);       
-        }
-        
+            ]);     
+
+        }      
 
         else {
             return response(
@@ -109,6 +110,7 @@ class login extends Controller
         $acc->update([
             'username'=>$r['username'],
             'email'=>$r['email'],
+            'isActivated'=>$r['isActivated'],
         ]); 
 
 

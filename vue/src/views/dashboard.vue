@@ -39,18 +39,18 @@
         <div class="container-fluid px-4">
 
             <!-- CARD FOR DASHBOARD -->
-            <div class="row g-3 my-2 d-flex justify-content-center">
+            <div class="row g-3 my-2 d-flex">
 
-                <router-link :to="{name: 'products'}" class="col-xxl-3 col-xl-4">
+                <router-link :to="{name: 'products'}" class="col-xxl-2 col-xl-3">
                     <div class="d-flex flex-column">
-                        <div class="p-3 shadow-sm d-flex justify-content-around 
-                        flex-column align-items-center rounded-5" style="height: 12rem; 
+                        <div class="shadow-sm rounded-5" style="height: 10rem; 
                         background-color: rgb(237, 106, 219);">
 
                         <div class="p-3 d-flex rounded-5 w-100">
                             <div>
-                                <h3 class="fs-5 text-light mb-3 fw-bold"><i class="fas fa-box me-2"></i>Products</h3>
-                                <p class="fs-2 text-light fw-bold">{{ product_total }}</p>
+                                <h3 class="fs-5 text-light mb-3 fw-bold">
+                                <i class="fas fa-box me-2"></i>Products</h3>
+                                <p class="fs-4 text-light">{{ product_total }}</p>
                             </div>
                         </div>
 
@@ -58,23 +58,16 @@
                     </div>
                 </router-link>
 
-
-               
-                
-              
-
-
-
-            <router-link :to="{name: 'records'}" class="col-xxl-3 col-xl-4">
+  
+            <router-link :to="{name: 'records'}" class="col-xxl-2 col-xl-3">
                 <div class="d-flex flex-column">
-                    <div class="p-3 shadow-sm d-flex justify-content-around 
-                    flex-column align-items-center rounded-5" style="height: 12rem; 
-                    background-color: rgb(100, 221, 158)">
+                    <div class="shadow-sm rounded-5" style="height: 10rem; 
+                    background-color: rgb(77, 184, 129)">
 
                         <div class="p-3 d-flex rounded-5 w-100">
                             <div>
-                                <h3 class="fs-5 text-light mb-3"><i class="fas fa-money-bill me-2"></i>Total of Sales</h3>
-                                <p class="fs-2 text-light fw-bold">{{Intl.NumberFormat
+                                <h3 class="fs-5 text-light mb-3 fw-bold"><i class="fas fa-money-bill me-2"></i>Total of Sales</h3>
+                                <p class="fs-4 text-light fw-bold">{{Intl.NumberFormat
                                 ('en-PH', { style: 'currency', currency: 'PHP' }).format((sale_total))}}</p>
                                 
                             </div>
@@ -86,16 +79,15 @@
             
 
 
-            <router-link :to="{name: 'records'}" class="col-xxl-3 col-xl-4">
+            <router-link :to="{name: 'records'}" class="col-xxl-2 col-xl-3">
                 <div class="d-flex flex-column">
-                    <div class="p-3 shadow-sm d-flex justify-content-around 
-                    flex-column align-items-center rounded-5" style="height: 12rem; 
+                    <div class="shadow-sm rounded-5" style="height: 10rem; 
                     background-color: rgb(192, 64, 207);">
 
                         <div class="p-3 d-flex rounded-5 w-100">
                             <div>
-                                <h3 class="fs-5 text-light mb-3"><i class="fas fa-money-bill me-2"></i>Net total of sales</h3>
-                                <p class="fs-2 text-light fw-bold" v-for="n in netTotal">{{Intl.NumberFormat
+                                <h3 class="fs-5 text-light mb-3 fw-bold"><i class="fas fa-money-bill me-2"></i>Net total of sales</h3>
+                                <p class="fs-4 text-light" v-for="n in netTotal">{{Intl.NumberFormat
                                 ('en-PH', { style: 'currency', currency: 'PHP' }).format((n.total))}}</p>
                                 
                             </div>

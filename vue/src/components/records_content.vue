@@ -41,7 +41,7 @@
             data-bs-toggle="pill" data-bs-target="#pills-stock" type="button" 
             role="tab" aria-controls="pills-stock" aria-selected="false" style="color: #04B474">
             <i class="far fa-clock me-2"></i>
-            Stock History</button>
+            Logs</button>
         </li>
 
 
@@ -233,7 +233,7 @@
 
                 <div class="tab-pane fade show" id="pills-stock" role="tabpanel" aria-labelledby="pills-stock-tab" tabindex="0">
                     
-                    <h4 class="mt-3 w-100 bg-light p-3 fw-bold"><i class="far fa-clock me-2"></i>Stock History</h4>
+                    <h4 class="mt-3 w-100 bg-light p-3 fw-bold"><i class="far fa-clock me-2"></i>Logs</h4>
 
 
                 <div class="container-fluid col-xxl-12 d-flex justify-content-between mb-3">
@@ -280,9 +280,9 @@
                             <td>{{i.created_at}}</td>
 
 
-                            <td class="m-3" v-if="role == 1">
+                            <!-- <td class="m-3" v-if="role == 1">
                                 <button class="btn btn-primary" @click="$emit('openStock', i.id)"><i class="bi bi-pencil-square"></i></button>
-                            </td>
+                            </td> -->
 
 
 

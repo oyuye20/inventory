@@ -122,6 +122,15 @@
 
 
             <div class="col-12 mb-2">
+                <label for="" class="form-label fw-bold">Status</label>
+                <select class="form-control" v-model="editAccData.isActivated">
+                    <option value="1">Activated</option>
+                    <option value="0">Deactivated</option>
+                </select>
+            </div>
+
+
+            <div class="col-12 mb-2">
                 <label for="" class="form-label fw-bold">Image</label>
                 <input type="file" 
                 class="form-control" @change="imageUpload">
@@ -343,7 +352,7 @@ export default {
 
 
         function editAccount(id){
-            console.log(id)
+
             let formData = new FormData();
             formData.append('accData', JSON.stringify(editAccData.value));
             formData.append('image', imageFile.value);

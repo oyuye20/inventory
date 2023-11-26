@@ -14,13 +14,13 @@
 
 
 
-<div class="container-fluid col-xxl-12 mt-3">
+<!-- <div class="container-fluid col-xxl-12 mt-3">
   <label for="select" class="form-label">Sort by category</label>
   <select class="form-control" v-model="category_lists.category" 
   @change="getSelectedCat(category_lists.category)">
     <option v-for="c in category_lists">{{c.category}}</option>
   </select>
-</div>
+</div> -->
 
 
 

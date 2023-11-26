@@ -9,6 +9,7 @@ use App\Models\transactions;
 use League\CommonMark\Node\Query\AndExpr;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
+use PhpOffice\PhpSpreadsheet\Calculation\Category;
 
 use function PHPUnit\Framework\isNull;
 
@@ -19,21 +20,42 @@ class filter extends Controller
     public function search($data){
         return product_info::with('category')->where('isArchived', '=', 0)
         ->where(function($query) use($data)  {
-              return $query
-                ->where('manufacturer','LIKE','%'.$data.'%')
-                ->orWhere('serial_number','LIKE','%'.$data.'%')
-                ->orWhere('product_name','LIKE','%'.$data.'%');
+          return $query
+          ->where('manufacturer','LIKE','%'.$data.'%')
+          ->orWhere('serial_number','LIKE','%'.$data.'%')
+          ->orWhere('product_name','LIKE','%'.$data.'%');
         })
         ->paginate(5); 
-    }  
+    }
+
+
+    public function sortProduct($data){
+
+      if($data == 'price_low'){
+        return product_info::with('category')->where('isArchived',0)->orderBy('price','ASC')->paginate(10);
+      }
+
+
+
+
+
+      /* return inventory::with('product')->whereHas('product', function ($query) use($data) {
+        $query->where('product_name','LIKE','%'.$data.'%');
+      })->paginate(5); */
+    }
+
+
+
+
+
 
 
 
     public function searchInventory($data){
       return inventory::with('product')->where('stocks','>','0')->whereHas('product', function ($query) use($data) {
         $query->where('product_name','LIKE','%'.$data.'%')
-              ->orWhere('manufacturer','LIKE','%'.$data.'%')
-              ->orWhere('serial_number','LIKE','%'.$data.'%');
+        ->orWhere('manufacturer','LIKE','%'.$data.'%')
+        ->orWhere('serial_number','LIKE','%'.$data.'%');
       })->orderBy('created_at','ASC')->groupBy('product_id')->paginate(5);
       
       

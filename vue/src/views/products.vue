@@ -35,6 +35,18 @@
                 class="form-control"></textarea>  
             </div>
 
+            <div class="col-12 mb-2">
+                <label for="" class="form-label fw-bold">Variation</label>
+                <input type="text" v-model="category.variation" 
+                class="form-control">
+            </div>
+
+            <div class="col-12 mb-2">
+                <label for="" class="form-label fw-bold">Measurement</label>
+                <input type="text" v-model="category.measure" 
+                class="form-control">  
+            </div>
+
      
             <div class="col-12 d-flex justify-content-end"> 
                 <button role="button" class="btn btn-danger mt-3 fw-bold" 
@@ -242,7 +254,6 @@
             <div class="col-xxl-7 col-md-8 text-start p-3" 
             style="background-color: rgb(4, 180, 116);">
 
-
                 <div class="col-12">
                     <span class="fw-bold fs-3 text-white">
                     <i class="fas fa-circle-plus me-3">
@@ -255,9 +266,7 @@
 
 
             <div class="col-12 mb-2 d-flex justify-content-center">
-
                 <div id="qr-code-full-region" class="border border-dark"></div>
-
 
                 <qrcode-scanner v-if="showcam" :qrbox="250" :fps="20"
                 @result="onScan"/>
@@ -279,14 +288,15 @@
             </div>
 
             
-
-
             <div class="col-12 mb-2">
-                <label for="" class="form-label fw-bold">Category</label>
-                <select class="form-control" v-model="add_prod.category">    
-                    <option selected v-for="cat in category_lists" :key="cat.id" :value="cat.id">{{cat.category}}</option>
+                <label class="form-label fw-bold">Category</label>
+                <select class="form-control" v-model="add_prod.category"> 
+                    <option selected v-for="cat in category_lists" 
+                    :key="cat.id" :value="cat.id">{{cat.category}}</option>
                 </select>
             </div>
+
+
 
 
 
@@ -295,7 +305,7 @@
 
                 <div class="div" v-if="serialField">
 
-                <label for="" class="form-label fw-bold">Serial Number</label>
+                <label for="" class="form-label fw-bold">Product Number</label>
 
                 <div class="d-flex" >
                     <input type="text" v-model="serialRes" 
@@ -314,7 +324,7 @@
                     <input class="form-check-input me-2" v-model="noSerial" 
                     type="checkbox" @click="serialHide" id="flexCheckDefault">
                     <label class="form-check-label" for="flexCheckDefault">
-                        No Serial Number
+                        No Product number
                     </label>
                 </div>
                 
@@ -349,10 +359,12 @@
                 </div>
             </div>
 
+
             <div class="col-12 mb-2">
-                <label for="" class="form-label fw-bold">Size</label>
+                <label for="" class="form-label fw-bold">Variation</label>
                 <input type="text" v-model="add_prod.size" class="form-control">
             </div>
+
 
 
             <div class="col-12 mb-2">
@@ -512,7 +524,7 @@ export default {
         const categoryData = ref([]);
 
 
-
+        const measurement = ref('');
 
         const noSerial = ref();
         const serialRes = ref('');
@@ -561,10 +573,13 @@ export default {
         }
 
 
+
         const getCat = async() => {
             axios_client.get('/select/category')
             .then(response=>{
                 category_lists.value = response.data;
+
+                
             }).catch(error =>{
                 console.log(error.response.data)
             })
@@ -601,7 +616,7 @@ export default {
             formData.append('image', imageFile.value);
 
 
-            let url = '/add_product';
+            let url = '/products/add_product';
             axios_client.post(url,formData, config).then(response => {
 
             console.log(response.data)
@@ -609,10 +624,10 @@ export default {
             loading.value = false;
 
             const $toast = useToast();
-            updateProductLists.value += 1;
+            updateProdLists.value += 1;
             addProduct.value = false;
 
-            let instance = $toast.success('Product added successfully', {position: 'top'});      
+            $toast.success('Product added successfully', {position: 'top'});      
             
             
         
@@ -700,6 +715,8 @@ export default {
         const category  = reactive({
             desc: '',
             catname: '',
+            variation: '',
+            measure: '',
         })
 
 
@@ -707,45 +724,6 @@ export default {
         const toggleModal = () =>{
             modalActive.value = !modalActive.value;
         }
-
-
-        /* watchEffect((onvalidate) =>{
-        search_box.value
-
-            if(search_box.value.length>0)
-            {
-                typing.value = true
-
-                const typing_stats = setTimeout(()=>{
-                    typing.value = false
-                }, 700)
-
-                onvalidate(()=>{
-                    clearInterval(typing_stats)
-
-                    axios_client.get('/search/' + search_box.value).then((res)=>{
-                    product_lists.value = res.data
-
-                
-                    }).catch(error => {
-                        console.log(error)
-                    })
-                })
-
-            }
-
-            else 
-            {
-                const typing_stats = setTimeout(()=>{
-                    typing.value = false
-                }, 1000)
-
-                onvalidate(()=>{
-                    clearInterval(typing_stats)
-                })
-            }
-
-        }) */
 
 
 
@@ -768,14 +746,22 @@ export default {
         /* CREATE CATEGORY */
         function create_category(){
             let formData = new FormData();
+
             formData.append('category', this.category.catname);
             formData.append('desc', this.category.desc);
+            formData.append('variation', this.category.variation);
+            formData.append('measure', this.category.measure);
+
+
+            
 
             axios_client.post('/category', formData)
             .then(response=>{
                 console.log(response.data);
                 this.getCat();
                 modalActive.value = !modalActive.value;
+
+                updateProdLists.value += 1;
 
                 Swal.fire({
                     title: 'Success!',
@@ -812,7 +798,6 @@ export default {
         function editCatModal(id){
             editCategory.value = true;
 
-
             axios_client.get(`/category/edit/` 
             + id).then(response=>{
 
@@ -824,27 +809,20 @@ export default {
         }
 
 
-
         
         /* EDIT CATEGORY */
         function edit_category(id){       
-
             let formData = new FormData();
             formData.append('categoryData', JSON.stringify(categoryData.value));
-
 
             axios_client.post(`/category/update/`
             + id, formData).then(response=>{
             
-
-
             updateProdLists.value += 1;
 
             const $toast = useToast();
             editCategory.value = false;
             $toast.success('Product updated successfully', {position: 'top'});  
-
-                    
 
             }).catch(error =>{
                 console.log(error.response.data)
@@ -869,6 +847,7 @@ export default {
             ,close,serialHide,toggleCam,imageUpload,onScan,add_btn,getCat,filter_input
             ,loading,showcam,category_lists,noSerial,config
             ,add_prod,imageFile,imageURL,serialRes,serialField,updateProductLists
+            ,measurement
             /* END OF ADD PRODUCT */
 
 

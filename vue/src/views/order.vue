@@ -246,6 +246,94 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
               
                 <div class="row gx-2 mt-3">
 
+                    <!-- PRODUCT LIST TAB -->
+                    <div class="col-xl-6 mt-3">
+                        <div class="bg-light w-100">
+
+                            <h4 class="p-3 text-light" style="background-color: rgb(4, 180, 116);">
+                            <i class="fas fa-box me-2"></i>Products</h4>
+
+
+                            <!-- PRODUCT LISTS -->
+                            <div class="row g-1">
+                                <div class="container-fluid d-flex justify-content-center mb-2 mt-2">
+                                    <div class="col-10">
+                                        <input type="text" @keydown.enter="CartStore.getProduct" role="searchbox" v-model="CartStore.search_box" 
+                                        class="form-control rounded-5 p-2" style="box-shadow: 3px 3px 3px rgb(197, 197, 197); 
+                                        border: 1.9px solid rgb(215, 214, 214);" placeholder="Search Product">
+                                    </div>
+
+                                    <div class="col-1 d-flex justify-content-center p-0 m-0 mx-4">
+                                        <button class="btn btn-success" @click="CartStore.getProduct"><i class="fas fa-magnifying-glass"></i></button>
+                                    </div>                 
+                                </div>
+                              
+                                <div class="table-responsive mt-3 mb-3" style="overflow: auto; ">
+                                    <table class="table table-hover table-borderless text-center" >
+                                        <thead>
+                                            <tr>
+                                            <th scope="col" class="fw-bold">Image</th>
+                                            <th scope="col" class="fw-bold">Product Name</th>
+                                            <th scope="col" class="fw-bold">Quantity</th>
+                                            <th scope="col" class="fw-bold">Selling Price</th>
+                                            <th scope="col" class="fw-bold">Action</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody v-for="p in lists.data" :key="p.id">
+                                            <tr>
+                                                <td class="fw-bold"><img v-bind:src="storageLink + p.product.image" 
+                                                 width="50" height="50"></td>
+
+
+                                                <td>{{p.product.product_name}}</td>
+                          
+                                                <td>{{p.stocks}}</td>
+
+                                                
+                                                <td>
+                                                    {{Intl.NumberFormat('en-PH', 
+                                                    { style: 'currency', currency: 'PHP' }).
+                                                    format(p.product.selling_price)}}
+                                                </td>                            
+
+                                                <td>
+                                                    <button class="btn btn-primary" 
+                                                    @click="cart_add.add_cart(p.id,p.product.
+                                                    product_name,p.stocks,p.product.selling_price,
+                                                    p.product.serial_number,p.product.price)">
+                                                    +</button>
+                                                </td>
+
+                                                <!-- <div v-if="p.stocks == 0" class="div">
+                                                
+                                                </div>
+
+                                                <div v-else class="div">
+                                                
+                                                </div> -->
+
+                                                
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+
+
+                          
+                            </div>
+
+                            
+
+                            
+                            <div class="w-100 d-flex justify-content-center mt-3">
+                                <Bootstrap5Pagination :data="lists" :limit="1" @pagination-change-page="CartStore.getProduct"/>
+                            </div>
+                            
+                    </div>
+                    </div>
+
                     <div class="col-xl-6 mt-3">
                         <div class="bg-light w-100">
                             <h4 class="p-3 text-light" style="background-color: rgb(4, 180, 116);"><i class="fas fa-cash-register me-2"></i>Transaction</h4>
@@ -336,93 +424,7 @@ style="width: 100%; height: 100%; position: fixed; overflow: auto; z-index: 1; b
 
 
 
-                    <!-- PRODUCT LIST TAB -->
-                    <div class="col-xl-6 mt-3">
-                        <div class="bg-light w-100">
-
-                            <h4 class="p-3 text-light" style="background-color: rgb(4, 180, 116);">
-                            <i class="fas fa-box me-2"></i>Products</h4>
-
-
-                            <!-- PRODUCT LISTS -->
-                            <div class="row g-1">
-                                <div class="container-fluid d-flex justify-content-center mb-2 mt-2">
-                                    <div class="col-10">
-                                        <input type="text" @keydown.enter="CartStore.getProduct" role="searchbox" v-model="CartStore.search_box" 
-                                        class="form-control rounded-5 p-2" style="box-shadow: 3px 3px 3px rgb(197, 197, 197); 
-                                        border: 1.9px solid rgb(215, 214, 214);" placeholder="Search Product">
-                                    </div>
-
-                                    <div class="col-1 d-flex justify-content-center p-0 m-0 mx-4">
-                                        <button class="btn btn-success" @click="CartStore.getProduct"><i class="fas fa-magnifying-glass"></i></button>
-                                    </div>                 
-                                </div>
-                              
-                                <div class="table-responsive mt-3 mb-3" style="overflow: auto; ">
-                                    <table class="table table-hover table-borderless text-center" >
-                                        <thead>
-                                            <tr>
-                                            <th scope="col" class="fw-bold">Image</th>
-                                            <th scope="col" class="fw-bold">Product Name</th>
-                                            <th scope="col" class="fw-bold">Quantity</th>
-                                            <th scope="col" class="fw-bold">Selling Price</th>
-                                            <th scope="col" class="fw-bold">Action</th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody v-for="p in lists.data" :key="p.id">
-                                            <tr>
-                                                <td class="fw-bold"><img v-bind:src="storageLink + p.product.image" 
-                                                 width="50" height="50"></td>
-
-
-                                                <td>{{p.product.product_name}}</td>
-                          
-                                                <td>{{p.stocks}}</td>
-
-                                                
-                                                <td>
-                                                    {{Intl.NumberFormat('en-PH', 
-                                                    { style: 'currency', currency: 'PHP' }).
-                                                    format(p.product.selling_price)}}
-                                                </td>                            
-
-                                                <td>
-                                                    <button class="btn btn-primary" 
-                                                    @click="cart_add.add_cart(p.id,p.product.
-                                                    product_name,p.stocks,p.product.selling_price,
-                                                    p.product.serial_number,p.product.price)">
-                                                    +</button>
-                                                </td>
-
-                                                <!-- <div v-if="p.stocks == 0" class="div">
-                                                
-                                                </div>
-
-                                                <div v-else class="div">
-                                                
-                                                </div> -->
-
-                                                
-                                            </tr>
-
-                                        </tbody>
-                                    </table>
-                                </div>
-
-
-                          
-                            </div>
-
-                            
-
-                            
-                            <div class="w-100 d-flex justify-content-center mt-3">
-                                <Bootstrap5Pagination :data="lists" :limit="1" @pagination-change-page="CartStore.getProduct"/>
-                            </div>
-                            
-                    </div>
-                    </div>
+                    
 
                 </div>
             </div>

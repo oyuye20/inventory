@@ -56,10 +56,13 @@
 
 
 
-
- td {
+tr td{
+  padding: 0px !important;
+  margin: 0px !important;
+  word-wrap: break-word !important;
   vertical-align: middle;
- }
+}
+
 
 thead {
   background-color: #04b4738e;

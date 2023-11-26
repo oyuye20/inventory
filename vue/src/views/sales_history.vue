@@ -148,7 +148,7 @@
 
 
 
-                    <div class="tab-pane fade show" id="pills-monthly" role="tabpanel" 
+                    <div class="tab-pane fade show container-fluid" id="pills-monthly" role="tabpanel" 
                     aria-labelledby="pills-monthly-tab" tabindex="0">
                         
                     <div class="mt-3 w-100 bg-light p-3 d-flex justify-content-between">
@@ -163,11 +163,28 @@
                     </div>
 
 
+                    <!-- FILTER DATE -->
+                    <div class="mt-3 w-100 mb-3 input-group">
 
-                    <div class="mt-3 w-100 mb-3">
-                        <input type="month" class="form-control" v-model="filterMonth" @change="filterMonthly">
+                        <div class="input-group me-2">
+                            <label class="fw-bold input-group-text">Start Date</label>
+                            <input type="date" class="form-control" v-model="filterMonth" @change="filterMonthly">
+                        </div>
+                     
+
+                        <div class="input-group">
+                            <label class="fw-bold input-group-text">End Date</label>
+                            <input type="date" class="form-control" v-model="filterMonth" @change="filterMonthly">
+                        </div>
+
+                        
                     </div>
 
+                    <!-- END OF FILTER DATE -->
+
+
+
+                        <!-- TABLE FOR SALES REPORT -->
                         <div class="table-responsive">     
                             <table class="table table-hover table-borderless text-center">
                                 <thead class="" style="background-color: #04b4738e;">
@@ -178,8 +195,6 @@
                                     <th scope="col" class="fw-bold">Total Sales</th>
                                     <th scope="col" class="fw-bold">Date</th>
                                     <th scope="col" class="fw-bold">Month Of</th>
-
-                                    <!-- <th>Actions</th> -->
                                     </tr>
                                 </thead>
 
@@ -204,6 +219,7 @@
                             </div>
 
                         </div>
+                        <!-- END OF TABLE SALES REPORT -->
                     
                     </div>
 

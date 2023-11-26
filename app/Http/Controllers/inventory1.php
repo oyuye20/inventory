@@ -145,10 +145,11 @@ class inventory1 extends Controller
     public function create_category(Request $request)
     {
 
-    
         category::create([
-            "category" => $request->category,
-            "description" => $request->desc,
+            "category" => ucfirst($request->category),
+            "description" => ucfirst($request->desc),
+            "variation" => ucfirst($request->variation),
+            "measure" => ucfirst($request->measure),
         ]);
 
          return response()->json([
