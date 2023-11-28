@@ -1,10 +1,5 @@
 <template>
 
-<!-- <transition name="modalAnim" >
-    <logout :logoutModal="logoutModal" @close="togglelogoutModal" style="position: relative; z-index: 3;"></logout>
-</transition> -->
-
-
 <body>
 
 <div class="d-flex" id="wrapper">
@@ -25,7 +20,7 @@
 
             <div class="d-flex justify-content-between w-100">
                 <a v-on:click="isSidebar =! isSidebar" role="button" id="toggle_icon"><i class="fas fa-bars me-3 fa-2x"></i></a>
-                <h2 class="fs-4 fw-bold"><i class="fas fa-chart-pie me-2"></i>Dashboard</h2>
+                <h2 class="fs-4 fw-bold text-black">Welcome to J.R Amador Inventory</h2>
        
                 <div class="div d-flex justify-content-center align-items-center" >
                     <logout/>
@@ -38,13 +33,15 @@
 
         <div class="container-fluid px-4">
 
+            <a role="button" @click="hideInfo =! hideInfo"><i class="fas fa-eye-slash text-black"></i></a>
+
             <!-- CARD FOR DASHBOARD -->
             <div class="row g-3 my-2 d-flex">
 
-                <router-link :to="{name: 'products'}" class="col-xxl-2 col-xl-3">
+                <router-link :to="{name: 'products'}" class="col-xxl-3 col-xl-4">
                     <div class="d-flex flex-column">
                         <div class="shadow-sm rounded-5" style="height: 10rem; 
-                        background-color: rgb(237, 106, 219);">
+                        background-color: #842CC8;">
 
                         <div class="p-3 d-flex rounded-5 w-100">
                             <div>
@@ -59,17 +56,22 @@
                 </router-link>
 
   
-            <router-link :to="{name: 'records'}" class="col-xxl-2 col-xl-3">
+            <router-link :to="{name: 'records'}" class="col-xxl-3 col-xl-4">
                 <div class="d-flex flex-column">
                     <div class="shadow-sm rounded-5" style="height: 10rem; 
-                    background-color: rgb(77, 184, 129)">
+                    background-color: #30B4F4">
 
                         <div class="p-3 d-flex rounded-5 w-100">
                             <div>
                                 <h3 class="fs-5 text-light mb-3 fw-bold"><i class="fas fa-money-bill me-2"></i>Total of Sales</h3>
-                                <p class="fs-4 text-light fw-bold">{{Intl.NumberFormat
-                                ('en-PH', { style: 'currency', currency: 'PHP' }).format((sale_total))}}</p>
-                                
+                                <div class="div" v-if="hideInfo == false">
+                                    <p class="fs-4 text-light fw-bold">{{Intl.NumberFormat
+                                    ('en-PH', { style: 'currency', currency: 'PHP' }).format((sale_total))}}</p>
+                                </div>
+
+                                <div class="div" v-else>
+                                    <p class="fs-4 text-light fw-bold">None</p>
+                                </div>                                          
                             </div>
                         </div>
         
@@ -79,16 +81,26 @@
             
 
 
-            <router-link :to="{name: 'records'}" class="col-xxl-2 col-xl-3">
+            <router-link :to="{name: 'records'}" class="col-xxl-3 col-xl-4">
                 <div class="d-flex flex-column">
                     <div class="shadow-sm rounded-5" style="height: 10rem; 
-                    background-color: rgb(192, 64, 207);">
+                    background-color: #04B474;">
 
                         <div class="p-3 d-flex rounded-5 w-100">
                             <div>
-                                <h3 class="fs-5 text-light mb-3 fw-bold"><i class="fas fa-money-bill me-2"></i>Net total of sales</h3>
-                                <p class="fs-4 text-light" v-for="n in netTotal">{{Intl.NumberFormat
-                                ('en-PH', { style: 'currency', currency: 'PHP' }).format((n.total))}}</p>
+
+                                <h3 class="fs-5 text-light mb-3 fw-bold">
+                                <i class="fas fa-money-bill me-2"></i>Net total of sales</h3>
+
+                                <div class="div" v-if="hideInfo == false">
+                                    <p class="fs-4 text-light" v-for="n in netTotal">{{Intl.NumberFormat
+                                    ('en-PH', { style: 'currency', currency: 'PHP' }).format((n.total))}}</p>
+                                </div>
+
+                                <div class="div" v-else>
+                                    <p class="fs-4 text-light fw-bold">None</p>
+                                </div>  
+                                          
                                 
                             </div>
                         </div>
@@ -102,8 +114,8 @@
                 <router-link :to="{name: 'records'}" class="col-xxl-3 col-xl-4">
                     <div class="d-flex flex-column">
 
-                        <div class="p-3 shadow-sm d-flex justify-content-around 
-                        flex-column align-items-center rounded-5" style="height: 12rem; background-color: rgb(55, 161, 197);">
+                        <div class="shadow-sm rounded-5" 
+                        style="height: 10rem; background-color: #c99f22;">
 
                             <div class="p-3 d-flex rounded-5 w-100">
                                 <div>
@@ -123,8 +135,7 @@
 
                 <router-link :to="{name: 'records'}" class="col-xxl-3 col-xl-4">
                     <div class="d-flex flex-column">
-                        <div class="p-3 shadow-sm d-flex justify-content-around 
-                        flex-column align-items-center rounded-5" style="height: 12rem; background-color: rgb(47, 165, 151);">
+                        <div class="shadow-sm rounded-5" style="height: 10rem; background-color: #b80d2d;">
                             <div class="p-3 d-flex rounded-5 w-100">
                                 <div>
                                     <h3 class="fs-5 text-light mb-3">
@@ -143,8 +154,7 @@
 
                 <router-link :to="{name: 'records'}" class="col-xxl-3 col-xl-4">
                     <div class="d-flex flex-column">
-                        <div class="p-3 shadow-sm d-flex justify-content-around flex-column 
-                        align-items-center rounded-5" style="height: 12rem; background-color: rgb(215, 184, 82);">
+                        <div class="shadow-sm rounded-5" style="height: 10rem; background-color: #BC7914;">
                             <div class="p-3 d-flex rounded-5 w-100">
 
                                 <div>
@@ -158,6 +168,24 @@
                         </div>
                     </div>
                 </router-link>
+
+
+                <div class="col-xxl-6 col-xl-12">
+                    <div class="d-flex flex-column">
+                        <div class="shadow-sm rounded-5" style="height: 10rem; background-color: rgb(168, 168, 168);">
+                            <div class="p-3 d-flex rounded-5 w-100">
+
+                                <div>
+                                    <h3 class="fs-5 text-light mb-3">
+                                    <i class="far fa-calendar-xmark me-2"></i>
+                                    Expired Products</h3>
+                                    
+                                    <p class="fs-2 text-light fw-bold">{{ exp_list_count }}</p>                            
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                     <!-- <Bar v-if="isloaded"
                     id="my-chart-id"
@@ -268,9 +296,16 @@ Chart.register(...registerables); */
         let num_total_stock = ref();
         let crit_stocks1 = ref('');
         let sale_total = ref('');
+
+ 
+
+
+
         const isSidebar = ref(true);
-        
         const isloaded = ref(false)
+        const hideInfo = ref(true);
+
+
 
         const items_sold = ref([]);
 
@@ -316,6 +351,8 @@ Chart.register(...registerables); */
 
         const search_box = ref('');
         const netTotal = ref('');
+
+
 
 
         const typing = ref(false);
@@ -445,6 +482,7 @@ Chart.register(...registerables); */
         /* NET SALES */
         const net_sales = async()=> {
             axios_client.get('/netSales').then(response=>{
+
                 netTotal.value = response.data
                
             }).catch(error =>{
@@ -484,6 +522,7 @@ Chart.register(...registerables); */
         const total_sales = async() => {
             axios_client.get('/sales').then(response=>{
                 sale_total.value = response.data.total_sales
+
             }).catch(error =>{
 
             })
@@ -505,7 +544,7 @@ Chart.register(...registerables); */
             })
         }
 
-
+       
     
 
         onMounted( async ()=> {      
@@ -530,7 +569,7 @@ Chart.register(...registerables); */
 
             ,chartData,chartOptions,sold_items,items_sold,isloaded
 
-            ,getNotifications,notifCount,notifLists,lowStocksCount,lowStocks,
+            ,getNotifications,notifCount,notifLists,lowStocksCount,lowStocks,hideInfo,
 
 
             chartData2,chartOptions2,styles,net_sales,netTotal

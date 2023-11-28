@@ -168,13 +168,13 @@
 
                         <div class="input-group me-2">
                             <label class="fw-bold input-group-text">Start Date</label>
-                            <input type="date" class="form-control" v-model="filterMonth" @change="filterMonthly">
+                            <input type="date" class="form-control" v-model="start_month" @change="monthFilter('start',start_month)">
                         </div>
                      
 
                         <div class="input-group">
                             <label class="fw-bold input-group-text">End Date</label>
-                            <input type="date" class="form-control" v-model="filterMonth" @change="filterMonthly">
+                            <input type="date" class="form-control" v-model="end_month" @change="monthFilter('end',end_month)">
                         </div>
 
                         
@@ -189,12 +189,63 @@
                             <table class="table table-hover table-borderless text-center">
                                 <thead class="" style="background-color: #04b4738e;">
                                     <tr>
-                                    <th scope="col" class="fw-bold">Product Name</th>
-                                    <th scope="col" class="fw-bold">Unit Price</th>
-                                    <th scope="col" class="fw-bold">Total Products Sold</th>
-                                    <th scope="col" class="fw-bold">Total Sales</th>
-                                    <th scope="col" class="fw-bold">Date</th>
-                                    <th scope="col" class="fw-bold">Month Of</th>
+
+                                    <th scope="col" class="fw-bold">
+                                    <a role="button" @click="MonthlyGetSort('product_name')">Product Name</a>
+
+                                    <i v-if="sort_direction =='desc' && sortData =='product_name'" 
+                                    class="fas fa-arrow-down-long mx-2"></i>
+                                    <i v-if="sort_direction =='asc' && sortData =='product_name'" 
+                                    class="fas fa-arrow-up-long mx-2"></i>
+                                    </th>
+
+
+                                    <th scope="col" class="fw-bold">
+                                    <a role="button" @click="MonthlyGetSort('selling_price')">Selling Price</a>
+
+                                    <i v-if="sort_direction =='desc' && sortData =='selling_price'" 
+                                    class="fas fa-arrow-down-long mx-2"></i>
+                                    <i v-if="sort_direction =='asc' && sortData =='selling_price'" 
+                                    class="fas fa-arrow-up-long mx-2"></i>
+                                    </th>
+
+                                    <th scope="col" class="fw-bold">
+                                    <a role="button" @click="MonthlyGetSort('total_quantity')">Total Products Sold</a>
+
+                                    <i v-if="sort_direction =='desc' && sortData =='total_quantity'" 
+                                    class="fas fa-arrow-down-long mx-2"></i>
+                                    <i v-if="sort_direction =='asc' && sortData =='total_quantity'" 
+                                    class="fas fa-arrow-up-long mx-2"></i>
+                                    </th>
+
+                                    <th scope="col" class="fw-bold">
+                                    <a role="button" @click="MonthlyGetSort('total_sold')">Total Sales</a>
+
+                                    <i v-if="sort_direction =='desc' && sortData =='total_sold'" 
+                                    class="fas fa-arrow-down-long mx-2"></i>
+                                    <i v-if="sort_direction =='asc' && sortData =='total_sold'" 
+                                    class="fas fa-arrow-up-long mx-2"></i>
+                                    </th>
+
+
+                                    <th scope="col" class="fw-bold">
+                                    <a role="button" @click="MonthlyGetSort('purchase_date1')">Purchase Date</a>
+
+                                    <i v-if="sort_direction =='desc' && sortData =='purchase_date1'" 
+                                    class="fas fa-arrow-down-long mx-2"></i>
+                                    <i v-if="sort_direction =='asc' && sortData =='purchase_date1'" 
+                                    class="fas fa-arrow-up-long mx-2"></i>
+                                    </th>
+
+                                    <th scope="col" class="fw-bold">
+                                    <a role="button" @click="MonthlyGetSort('Month')">Month Of</a>
+
+                                    <i v-if="sort_direction =='desc' && sortData =='Month'" 
+                                    class="fas fa-arrow-down-long mx-2"></i>
+                                    <i v-if="sort_direction =='asc' && sortData =='Month'" 
+                                    class="fas fa-arrow-up-long mx-2"></i>
+                                    </th>
+
                                     </tr>
                                 </thead>
 
@@ -204,7 +255,7 @@
                                     <td>₱ {{m.selling_price}}</td>
                                     <td>{{ m.total_quantity }}</td>          
                                     <td>₱ {{m.total_sold}}</td>  
-                                    <td>{{ m.purchase_date }}</td>                      
+                                    <td>{{ m.purchase_date1 }}</td>                      
                                     <td>{{ m.Month }}</td>
                                 </tr>
 
@@ -242,7 +293,12 @@
                             <table class="table table-hover table-borderless text-center">
                                 <thead class="" style="background-color: #04b4738e;">
                                     <tr>
+
                                     <th scope="col" class="fw-bold">Product Name</th>
+
+
+
+
                                     <th scope="col" class="fw-bold">Unit Price</th>
                                     <th scope="col" class="fw-bold">Total Products Sold</th>
                                     <th scope="col" class="fw-bold">Total Sales</th>
@@ -349,8 +405,17 @@ export default {
         const filterDay = ref('');
 
 
-        const start_date = ref('');
-        const end_date = ref('');
+        const start_month = ref('');
+        const end_month = ref('');
+
+
+        const sortData = ref('');
+        const sort_direction = ref('desc');
+
+        const start_monthParams = ref('');
+        const end_monthParams = ref('');
+
+
 
         
         onMounted(()=> {
@@ -359,6 +424,32 @@ export default {
             filterDaily()
         })
 
+        function monthFilter(start, date){
+            if(start == 'start'){
+                start_monthParams.value = date;
+            }
+
+            if(start == 'end'){
+                end_monthParams.value = date;
+            }
+
+            if(start_monthParams.value && end_monthParams.value){
+                this.filterMonthly()
+            }        
+        }
+
+
+
+        function MonthlyGetSort(sort){
+            if(sortData.value == sort){
+                sort_direction.value = sort_direction.value == 'desc' ? 'asc' : 'desc';
+            }
+
+            sortData.value = sort;
+
+            this.filterMonthly()
+        }
+
 
 
         
@@ -366,9 +457,6 @@ export default {
             if(filterDay.value == ''){
                 axios_client.get('/daily?page=' + page).then(response=>{
                     daily.value = response.data;
-
-                    console.log(response.data)
-
                 }).catch(error =>{
                     console.log(error.response.data)
                 })       
@@ -389,25 +477,14 @@ export default {
 
 
 
-
-
         const filterMonthly = async(page = 1) => {
-            if(filterMonth.value == ''){
-                axios_client.get('/monthly?page=' + page).then(response=>{
-                    montly.value = response.data;
-                }).catch(error =>{
-                    console.log(error.response.data)
-                })       
-            }
-
-            else {
-                axios_client.get('/filter/month/' + filterMonth.value + '?page=').then(response=>{
-                    montly.value = response.data;
-                    
-                }).catch(error =>{
-                    console.log(error.response.data)
-                })
-            }         
+            axios_client.get('/monthly?page=' + page, {params: {sort: sortData.value, sortBy: sort_direction.value
+            ,startDate: start_monthParams.value, endDate: end_monthParams.value   }}).then(response=>{
+                montly.value = response.data;
+            }).catch(error =>{
+                console.log(error.response.data)
+            })       
+        
         }
 
 
@@ -460,7 +537,9 @@ export default {
             user: computed(() => store.state.user.data),logout,isSidebar,daily,yearly,
             formatDate,montly,filterMonth,filterMonthly,filterYearly,filterDaily,filterDay,searchWeekly
 
-            ,start_date,end_date
+            ,start_month,end_month,MonthlyGetSort
+
+            ,sortData,sort_direction,monthFilter
         }
 
 

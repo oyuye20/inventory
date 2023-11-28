@@ -15,7 +15,7 @@
                 <div class="col-12">
                     <span class="fw-bold fs-3 text-white">
                     <i class="fas fa-circle-plus me-3">
-                    </i>Add new inventory</span>
+                    </i>Add new inventory stocks</span>
                 </div>
                
             </div>

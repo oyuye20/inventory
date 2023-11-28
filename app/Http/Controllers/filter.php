@@ -16,18 +16,7 @@ use function PHPUnit\Framework\isNull;
 class filter extends Controller
 {
 
-    /* SEARCH BOX FOR PRODUCT NAME */
-    public function search($data){
-        return product_info::with('category')->where('isArchived', '=', 0)
-        ->where(function($query) use($data)  {
-          return $query
-          ->where('manufacturer','LIKE','%'.$data.'%')
-          ->orWhere('serial_number','LIKE','%'.$data.'%')
-          ->orWhere('product_name','LIKE','%'.$data.'%');
-        })
-        ->paginate(5); 
-    }
-
+   
 
     public function sortProduct($data){
 

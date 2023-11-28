@@ -212,50 +212,72 @@ class stats extends Controller
 
     public function monthlyItems(){
 
-        /* return DB::table('transactions')
-        ->join('customer_orders','transactions.id', '=','customer_orders.transactions_id')
+        $sortname = request('sort');
+        $sortBy = request('sortBy');
 
-        ->select('customer_orders.product_name','customer_orders.price','customer_orders.selling_price',
-        'transactions.purchase_date'
-        ,DB::raw('MONTHNAME(transactions.purchase_date) as Month'))
-
-
-        ->orderBy('transactions.purchase_date','desc')
-        ->paginate(10); */
+        $startDate = request('startDate');
+        $endDate = request('endDate');
 
 
-        return DB::table('transactions')
-        ->join('customer_orders','transactions.id', '=','customer_orders.transactions_id')
+        if($sortname && $sortBy){
+            return DB::table('transactions as t')
+            ->join('customer_orders as c','t.id', '=','c.transactions_id')
+            
+            ->select('c.product_name','c.price','c.selling_price','t.purchase_date',
+            DB::raw('sum(c.quantity) as total_quantity'),DB::raw('sum(c.total) as total_sold'),
+            DB::raw('MONTHNAME(t.purchase_date) as Month'),
+            DB::raw('DATE_FORMAT(t.purchase_date, "%m/%d/%y %r") AS purchase_date1'))
+
+            ->where(function($query) use($startDate, $endDate)  {
+                return $query
+                ->whereBetween('t.purchase_date', [$startDate, $endDate]);
+            })
+
+            ->groupByRaw('c.transactions_id')
+            ->orderBy($sortname,$sortBy)
+            ->paginate(10);
+        }
+
+
+        if($startDate && $endDate){
+
+            return DB::table('transactions as t')
+            ->join('customer_orders as c','t.id', '=','c.transactions_id')
+            
+            ->select('c.product_name','c.price','c.selling_price','t.purchase_date',
+            DB::raw('sum(c.quantity) as total_quantity'),DB::raw('sum(c.total) as total_sold'),
+            DB::raw('MONTHNAME(t.purchase_date) as Month'),
+            DB::raw('DATE_FORMAT(t.purchase_date, "%m/%d/%y %r") AS purchase_date1'))
+
+            ->where(function($query) use($startDate, $endDate)  {
+                return $query
+                ->whereBetween('t.purchase_date', [$startDate, $endDate]);
+            })
+
+
+            ->groupByRaw('c.transactions_id')
+            ->paginate(10);
+
+        }
+
+
+
+        return DB::table('transactions as t')
+        ->join('customer_orders as c','t.id', '=','c.transactions_id')
         
-        ->select('customer_orders.product_name','customer_orders.price','customer_orders.selling_price',
-        'transactions.purchase_date',
-        DB::raw('sum(customer_orders.quantity) as total_quantity'),DB::raw('sum(customer_orders.total) as total_sold')
-        )
+        ->select('c.product_name','c.price','c.selling_price','t.purchase_date',
+        DB::raw('sum(c.quantity) as total_quantity'),DB::raw('sum(c.total) as total_sold'),
+        DB::raw('MONTHNAME(t.purchase_date) as Month'),
+        DB::raw('DATE_FORMAT(t.purchase_date, "%m/%d/%y %r") AS purchase_date1'))
 
-        ->groupByRaw('customer_orders.transactions_id')
-        ->orderBy('transactions.purchase_date','desc')
-
+        ->groupByRaw('c.transactions_id')
+        ->orderBy('t.purchase_date','desc')
         ->paginate(10);
     }
 
 
 
     public function monthlyItemsAnalytics(){
-
-        /* $monthly =  DB::table('transactions')
-        ->join('customer_orders','transactions.id', '=','customer_orders.transactions_id')
-        
-        ->select('customer_orders.product_name','customer_orders.price',
-        DB::raw('DATE_FORMAT(purchase_date, "%m/%d/%y %r") AS purchase_date'),
-        DB::raw('MONTHNAME(transactions.purchase_date) as Month'),
-        DB::raw('sum(customer_orders.quantity) as total_quantity'),DB::raw('sum(customer_orders.total) as total_sold')
-        )
-
-        ->groupByRaw('Month')
-        ->orderBy('transactions.purchase_date')
-
-        ->get(); */
-
         $monthly = DB::table('transactions')
         ->selectRaw('MONTH(purchase_date) as month, sum(net_total) as total_sold')
         ->whereYear('purchase_date', date('Y'))

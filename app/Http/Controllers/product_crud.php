@@ -30,7 +30,41 @@ class product_crud extends Controller
 
     /* READ ALL PRODUCT */
     public function index(){
-        return product_info::with('category')->where('isArchived',0)->orderBy('product_name')->paginate(10);
+
+        $search = request('query');
+        $sortname = request('sort');
+        $sortBy = request('sortBy');
+
+
+        if($sortname && $sortBy){
+            return product_info::with('category')
+            ->where('isArchived',0)
+            ->where(function($query) use($search)  {
+                return $query
+                ->where('manufacturer','LIKE','%'.$search.'%')
+                ->orWhere('serial_number','LIKE','%'.$search.'%')
+                ->orWhere('product_name','LIKE','%'.$search.'%');
+            })
+            ->orderBy($sortname, $sortBy)->paginate(10);
+        }
+
+   
+        return product_info::with('category')
+        ->where('isArchived',0)
+            
+        ->where(function($query) use($search)  {
+            return $query
+            ->where('manufacturer','LIKE','%'.$search.'%')
+            ->orWhere('serial_number','LIKE','%'.$search.'%')
+            ->orWhere('product_name','LIKE','%'.$search.'%');
+        })
+        
+        ->paginate(10);
+        
+  
+        
+        
+        
     }
 
 

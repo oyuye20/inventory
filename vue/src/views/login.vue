@@ -1,6 +1,25 @@
 <template>
     <div>
 
+        <!-- <div class="main">
+            <div class="row container-fluid p-0 m-0 d-flex justify-content-center">
+                <div class="col-5 border border-light">
+                    <h1 class="fw-bold">LOGIN</h1>
+            
+            
+            
+            
+                </div>
+            </div>
+        </div> -->
+
+
+
+
+
+
+
+
 
 
 
@@ -24,15 +43,6 @@
                             {{ errorMsg }}
                         </div>
 
-
-
-                        <!-- <div v-if="Object.keys(errorMsg).length" class="alert alert-danger text-center mt-4 fw-bold p-3">
-                            <div class="div" v-for="(field, i) of Object.keys(errorMsg)" :key="i">
-                                <div class="div" v-for="(error, ind) of errorMsg[field] || []" :key="ind">
-                                    {{ error }}
-                                </div>
-                            </div>
-                        </div> -->
 
 
                         <input type="email" v-model="user.email" 
@@ -63,11 +73,6 @@
 
                        
 
-
-                       <!--  <div class="d-flex justify-content-center">
-                            <a role="button" class="mb-2 fw-bold">Forgot Password?</a>
-                        </div> -->
-                        
                         
                     </form>
                     

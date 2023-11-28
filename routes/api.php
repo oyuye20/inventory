@@ -62,13 +62,36 @@ Route::get('/editAccount/{id}', [login::class, 'editAccount']);
 Route::get('/accounts/lists', [login::class, 'staffLists']);
 Route::post('/accountListEdit/{id}', [login::class, 'editList']);
 /* PRODUCT CRUD */
-Route::post('/add_product', [product_crud::class, 'add_product']);
-Route::post('/update_product/{id}', [product_crud::class, 'action_update_product']);
-Route::get('/products', [product_crud::class, 'index']);
-Route::get('/product/edit/{id}', [product_crud::class, 'index_update_product']);
-Route::put('/delete/{id}', [product_crud::class, 'delete_product']);
-Route::get('/sample/{id}', [product_crud::class, 'show1']);
-Route::post('/checkout', [product_crud::class, 'checkout']);
+
+
+
+
+Route::prefix('products')->group(function () {
+    Route::post('/add_product', [product_crud::class, 'add_product']);
+    Route::post('/update_product/{id}', [product_crud::class, 'action_update_product']);
+    Route::get('/', [product_crud::class, 'index']);
+    Route::get('/edit/{id}', [product_crud::class, 'index_update_product']);
+    Route::put('/delete/{id}', [product_crud::class, 'delete_product']);
+    Route::post('/checkout', [product_crud::class, 'checkout']); 
+});
+
+
+
+
+
+Route::prefix('inventory')->group(function () {
+    
+});
+
+
+
+
+
+
+
+
+
+
 /* INVENTORY */
 Route::get('/inventory', [inventory1::class, 'inventory_index']);
 Route::get('/inventoryLists', [inventory1::class, 'inventoryLists']);
@@ -106,7 +129,9 @@ Route::get('/expiring/products', [stats::class, 'expiringItems']);
 /* SHOW INVOICE */
 Route::get('/showInvoice/{id}', [stats::class, 'showInvoice']);
 /* SEARCH AND FILTER */
-Route::get('/search/{data}', [filter::class, 'search']);
+
+
+
 Route::get('/filter/daily/{date}', [filter::class, 'filterDaily']);
 Route::get('/filter/month/{date}', [filter::class, 'filterMonth']);
 Route::get('/inventory/search/{data}', [filter::class, 'searchInventory']);

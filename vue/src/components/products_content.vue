@@ -36,71 +36,85 @@
 
 
 
-    <h4 class="mt-3 mb-3 w-100 bg-light p-3"><i class="fas fa-box-open me-2"></i>Product Info Lists</h4>
+  
 
     
 
 
 
-    <div class="div">
-        <div class="container-fluid mb-3 d-flex justify-content-between">
-            
+    <div class="container-fluid table-responsive">
+        <h4 class="mt-3 mb-3 bg-light p-3"><i class="fas fa-box-open me-2"></i>Product Info Lists</h4>
+
+
+        <div class="mb-3 d-flex justify-content-between">
+ 
             <div class="input-group rounded w-50 me-2">
-            <input type="search" @keydown.enter="search" role="searchbox" v-model="search_box" 
-            class="form-control rounded" 
-            placeholder="Search"/>
+                <input type="search" @keydown.enter="getProductLists" 
+                role="searchbox" v-model="search_box" class="form-control rounded" 
+                placeholder="Search"/>
             </div>
-
-            
-            <div class="input-group" style="width: 15%;">
-                <label class="input-group-text">Sort By</label>
-                <select class="form-control" id="inputGroupSelect02" v-model="sortData" @change="getSort(sortData)">
-                    <option selected>Choose...</option>
-                    <option value="price_low">Price (Lowest)</option>
-                    <option value="price_high">Price (Highest)</option>
-                    <option value="selPrice_low">Selling Price (Lowest)</option>
-                    <option value="selPrice_high">Selling Price (Highest)</option>
-                    <option value="newest">Newest</option>
-                    <option value="oldest">Oldest</option>
-                </select>    
-            </div>
-
-            
-
+             
         </div>
 
-
-        <table class="table table-hover table-borderless text-center w-100">
+    
+        <table class="table align-middle table-hover border-muted ">
+            
             <thead>
                 <tr>
                     <th scope="col" class="fw-bold">
-                    Product Number          
-                    <a role="button"><i class="fas fa-arrow-up-wide-short mx-1"></i></a>
+                    <a role="button" @click.prevent="getSort('serial_number')">Product Number</a>
+
+                    <i v-if="sort_direction =='desc' && sortData =='serial_number'" 
+                    class="fas fa-arrow-down-long mx-2"></i>
+                    <i v-if="sort_direction =='asc' && sortData =='serial_number'" 
+                    class="fas fa-arrow-up-long mx-2"></i>
+                
                     </th>
 
-                    <th scope="col" class="fw-bold">Category
-                    <a role="button"><i class="fas fa-arrow-up-wide-short mx-1"></i></a>
+
+
+                    <th scope="col" class="fw-bold">
+                    <span class="me-2">Category</span>
                     </th>     
 
 
-                    <th scope="col" class="fw-bold">Manufacturer
-                    <a role="button"><i class="fas fa-arrow-up-wide-short mx-1"></i></a>
+                    <th scope="col" class="fw-bold">
+                        <a role="button" @click.prevent="getSort('manufacturer')">Manufacturer</a>
+
+                        <i v-if="sort_direction =='desc' && sortData =='manufacturer'" 
+                        class="fas fa-arrow-down-long mx-2"></i>
+                        <i v-if="sort_direction =='asc' && sortData =='manufacturer'" 
+                        class="fas fa-arrow-up-long mx-2"></i>
                     </th>
 
-                    <th scope="col" class="fw-bold">Product Name
-                    <a role="button"><i class="fas fa-arrow-up-wide-short mx-1"></i></a>
+                    <th scope="col" class="fw-bold">
+                        <a role="button" @click.prevent="getSort('product_name')">Product Name</a>
+
+                        <i v-if="sort_direction =='desc' && sortData =='product_name'" 
+                        class="fas fa-arrow-down-long mx-2"></i>
+                        <i v-if="sort_direction =='asc' && sortData =='product_name'" 
+                        class="fas fa-arrow-up-long mx-2"></i>
                     </th>
 
-                    <th scope="col" class="fw-bold">Variation
-                    <a role="button"><i class="fas fa-arrow-up-wide-short mx-1"></i></a>
+
+                    <th scope="col" class="fw-bold">Variation</th>
+
+                    <th scope="col" class="fw-bold">
+                        <a role="button" @click.prevent="getSort('selling_price')">Selling Price</a>
+
+                        <i v-if="sort_direction =='desc' && sortData =='selling_price'" 
+                        class="fas fa-arrow-down-long mx-2"></i>
+                        <i v-if="sort_direction =='asc' && sortData =='selling_price'" 
+                        class="fas fa-arrow-up-long mx-2"></i>
                     </th>
 
-                    <th scope="col" class="fw-bold">Selling Price
-                    <a role="button"><i class="fas fa-arrow-up-wide-short mx-1"></i></a>
-                    </th>
+                    <th scope="col" class="fw-bold">
+                        <a role="button" @click.prevent="getSort('price')">Price</a>
 
-                    <th scope="col" class="fw-bold">Price
-                    <a role="button"><i class="fas fa-arrow-up-wide-short mx-1"></i></a>
+                        <i v-if="sort_direction =='desc' && sortData =='price'" 
+                        class="fas fa-arrow-down-long mx-2"></i>
+                        <i v-if="sort_direction =='asc' && sortData =='price'" 
+                        class="fas fa-arrow-up-long mx-2"></i>
                     </th>
 
                     <th class="fw-bold">Actions</th>
@@ -111,7 +125,7 @@
             <tr>                         
                 <td>{{product.serial_number}}</td>
                 <td>{{product.category.category}}</td>
-                <td>{{product.manufacturer}}</td>
+                <td >{{product.manufacturer}}</td>
                 <td>{{product.product_name}}</td>
                 <td>{{product.size}}</td>
 
@@ -124,21 +138,33 @@
                 {{Intl.NumberFormat('en-PH', { style: 'currency', 
                 currency: 'PHP' }).format((product.price))}}
                 </td>  
-                               
+                            
                 <td class="m-3">
-                    <button class="btn btn-primary p-2"><i class="far fa-eye"></i></button>  
-                    <button class="btn btn-success p-2" @click="$emit('editProd', product.id)"><i class="bi bi-pencil-square"></i></button>                         
-                    <button type="button" class="btn btn-warning mx-1 mt-2 p-2" @click.prevent="del_prod(product.id, product.product_name)">
+                    <button class="btn btn-primary p-2 mb-1"
+                    data-mdb-ripple-init data-mdb-tooltip-init data-mdb-placement="top" 
+                    title="View Product"><i class="far fa-eye"></i></button>
+
+                    <button class="btn btn-success p-2 mb-1" 
+                    data-mdb-ripple-init data-mdb-tooltip-init data-mdb-placement="top" title="Edit Product"
+                    @click="$emit('editProd', product.id)">
+                    <i class="bi bi-pencil-square"></i></button>      
+
+                    <button type="button" class="btn btn-warning p-2 mb-1" 
+                    data-mdb-ripple-init data-mdb-tooltip-init data-mdb-placement="top" title="Archive Product"
+                    @click.prevent="del_prod(product.id, product.product_name)">
                     <i class="fas fa-box-archive"></i></button>
                 </td>
             </tr>
             
         </tbody>
         </table>
+   
+
+        
 
         <div class="row container-fluid d-flex justify-content-center">
             <Bootstrap5Pagination :limit="10" :keepLength="true" :data="product_lists" class=""
-            @pagination-change-page="search"/>                 
+            @pagination-change-page="getProductLists"/>                 
         </div>
 
     </div>
@@ -152,7 +178,7 @@
 <div class="table-responsive mt-4">
     <h4 class="mt-3 w-100 bg-light p-3"><i class="fas fa-filter me-2"></i>Category Lists</h4>
 
-    <table class="table table-hover table-borderless text-center w-100">
+    <table class="table align-middle table-hover border-muted">
         <thead>
             <tr>
                 <th scope="col" class="fw-bold">Category Name</th>
@@ -220,61 +246,39 @@ export default {
         let category_lists = ref([]);
 
         const search_box = ref ('');
-        const sortData = ref('');
-
-
         const loading = ref(true);
 
 
-
-
-
-        /* SEARCH FUNCTION */
-        const search  = async(page = 1) => {
-
-            if(search_box.value == ''){
-                axios_client.get('/products?page=' + page)
-                .then(response=>{
-                    product_lists.value = response.data;
-
-                    console.log(response.data)
-
-                    loading.value = false;
-                }).catch(error =>{
-                    console.log(error.response.data)
-                })
-            }
-
-            else {
-                axios_client.get('/search/' + search_box.value + '?page=' + page)
-                .then(response=>{ 
-                    
-                    product_lists.value = response.data;
-                                   
-                }).catch(error =>{
-                    console.log(error.response.data)
-                })
-            }
-        }
-
+        const sortData = ref('');
+        const sort_direction = ref('desc');
+        
 
         function getSort (sort){
 
+            if(sortData.value == sort){
+                sort_direction.value = sort_direction.value == 'desc' ? 'asc' : 'desc';
+            }
+
             sortData.value = sort;
-            /* axios_client.get('/sortProducts/' + sort + '?page=' + page)
-            .then(response=>{
-
-                product_lists.value = response.data;
-
-                console.log(response.data)
-            }).catch(error =>{
-                console.log(error.response.data)
-            })       */
+            this.getProductLists()
         }
 
-        console.log(sortData)
+        
+
+        /* SEARCH PRODUCT LISTS FUNCTION */
+        const getProductLists  = async(page = 1) => {
+            axios_client.get('/products?page=' + page, 
+            {params: {query: search_box.value, sort: sortData.value, sortBy: sort_direction.value}})
+            .then(response=>{
+                product_lists.value = response.data;
+                loading.value = false;
+            }).catch(error =>{
+                console.log(error.response)
+            })             
+        }
 
 
+        
 
         
         /* GET CATEGORY TABLE */
@@ -382,13 +386,13 @@ export default {
 
 
         onMounted(()=> {
-            search()
+            getProductLists()
             getCat()
         })
 
 
-        return {search, getCat, del_cat,showImage, del_prod,product_lists,storageLink,productSearchResults,category_lists
-        ,loading,search_box,getSort,sortData}
+        return {getProductLists, getCat, del_cat,showImage, del_prod,product_lists,storageLink,productSearchResults,category_lists
+        ,loading,search_box,getSort,sortData,sort_direction}
 
     }
     

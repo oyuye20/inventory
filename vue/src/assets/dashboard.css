@@ -28,11 +28,14 @@
   }
  */
 
- @import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter&family=Poppins&display=swap');
+
 
 *{
-  font-family: 'Inter', sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
+
 
 
 @media print {
@@ -56,12 +59,6 @@
 
 
 
-tr td{
-  padding: 0px !important;
-  margin: 0px !important;
-  word-wrap: break-word !important;
-  vertical-align: middle;
-}
 
 
 thead {
@@ -105,7 +102,7 @@ thead {
   }
 
   #page-content-wrapper {
-    background-color: rgb(255, 255, 255)
+    background-color: rgb(244, 244, 244)
   }
 
   .page-active {
@@ -132,7 +129,8 @@ thead {
     -o-transition: margin 0.25s ease-out;
     transition: margin 0.25s ease-out;
     background-color: white;
-    border-right: 1px solid rgb(216, 215, 215);
+    /* border-right: 2px solid rgba(212, 212, 212, 0.595); */
+    
   }
   
 

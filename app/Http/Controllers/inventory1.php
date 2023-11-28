@@ -16,33 +16,8 @@ class inventory1 extends Controller
 {
     public function inventory_index()
     {
-        /* $r =  inventory::with('product')->where('stocks','>',20)->get();
-
-        foreach($r as $as) {
-            echo $as->stocks;
-        }
- */
-
-        return inventory::with('product')->where('stocks','>','0')->orderBy('created_at')->groupBy('product_id')->paginate(5);
-
-        /* return inventory::with('product')->where('stocks','>','0')
-        ->whereHas('product', function ($query) {
-         $query->orderBy('product_name')->groupBy('product_name');
-        })->paginate(5); */
-
-
-        /* return DB::table('product_infos')
-        ->join('inventories','product_infos.id', '=','inventories.product_id')
-
-        ->select('inventories.production_date', 'inventories.expiration_date', 
-        'inventories.product_id', 'product_name', 
-        'price', DB::raw('sum(inventories.stocks) as stocks') )
-   
-        ->groupBy('inventories.product_id','product_infos.price',
-        'product_infos.product_name','inventories.expiration_date',
-        'inventories.production_date')
-
-        ->paginate(2); */
+        return inventory::with('product')->where('stocks','>','0')
+        ->orderBy('created_at')->groupBy('product_id')->paginate(5);
     }
 
 
@@ -145,6 +120,10 @@ class inventory1 extends Controller
     public function create_category(Request $request)
     {
 
+        $validated = $request->validate([
+            'category' => 'unique:categories',
+        ]);
+
         category::create([
             "category" => ucfirst($request->category),
             "description" => ucfirst($request->desc),
@@ -174,7 +153,7 @@ class inventory1 extends Controller
 
     public function select_category()
     {
-        return category::orderBy('id')->where('isArchived',0)->get();
+        return category::where('isArchived',0)->orderBy('category', 'asc')->get();
     }
 
 
@@ -185,7 +164,7 @@ class inventory1 extends Controller
             $query->where('isArchived',0)->where(function($query) use($data)  {
               $query->where('category','=',$data);
             });
-          }) ->get();
+          })->orderBy('product_name', 'asc')->get();
 
 
        /*  return product_info::with('category')->orderBy('id')->where('isArchived',0)->get(); */

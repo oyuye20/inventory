@@ -11,12 +11,12 @@
 
         <div class="div d-flex justify-content-center align-items-center me-3">
             <img v-bind:src="storageLink + image"
-            style="border-radius: 50%;" width="50" class="border">
+            style="border-radius: 50%;" width="60" class="border">
         <!--  <i class="fas fa-circle-user fa-2x"></i> -->
         </div>
 
         <div class="div d-flex flex-column justify-content-end">
-            <span class="fs-5">{{ username }}</span>
+            <span class="fs-5 active_text">{{ username }}</span>
 
             <div class="div" v-if="roleNum == 1">
                 <span class="text-secondary fs-6">Administrator</span>
@@ -35,7 +35,7 @@
     d-flex justify-content-center" @click="toggleNotif">
 
         <div class="div">
-            <i class="fas fa-bell me-3 position-relative">
+            <i class="fas fa-bell me-3 position-relative text-black">
 
             <span class="fs-6 position-absolute top-20 start-80
             fs-7 translate-middle badge rounded-pill badge-danger" :key="updateCount">
@@ -43,14 +43,14 @@
             </span>
             </i>
 
-            <span class="fs-4 active_text ">Notifications</span>
+            <span class="fs-4 active_text text-black">Notifications</span>
         
         </div>        
     
     </div>
 
 
-    <hr v-if="loadingSidebar">
+    <hr v-if="loadingSidebar" >
 
   
     <div v-if="loadingSidebar">
@@ -395,13 +395,18 @@ export default {
 </script>
 
 <style scoped>
+
+.active_text{
+    color: black;
+}
+
 a.router-link-exact-active{
-    background-color: rgb(185, 232, 206); 
+    background-color: rgba(4, 180, 116,20%); 
     pointer-events: none;
     cursor: pointer;
 
     .active_text{
-        color: rgb(57, 164, 59);
+        color: #04B474;
     }
 
 }

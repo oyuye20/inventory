@@ -634,6 +634,21 @@ export default {
 
             }).catch(error =>{
                 loading.value = false;
+
+                let duplicateCatSerial = error.response.data.errors.serial_number;
+
+                if(duplicateCatSerial){
+                    Swal.fire({
+                    title: 'Error!',
+                    text: duplicateCatSerial,
+                    icon: 'error',
+                    confirmButtonText: 'OK',
+                    allowOutsideClick: false
+                    })
+                }
+
+                
+
                 validationErrors.value = error.response.data.errors
             })
             
@@ -651,9 +666,7 @@ export default {
 
 
         function editProdModal(id){
-            console.log(id);
-
-            axios_client.get(`/product/edit/` 
+            axios_client.get(`/products/edit/` 
             + id).then(response=>{
 
                 editProdData.value = response.data
@@ -671,9 +684,8 @@ export default {
             formData.append('image2', imageFile.value);
             formData.append('product_data', JSON.stringify(editProdData.value));
 
-            console.log(editProdData.value)
 
-            axios_client.post(`/update_product/`
+            axios_client.post(`products/update_product/`
             + id, formData, config).then(response=>{
                 loading.value = true;
 
@@ -773,7 +785,16 @@ export default {
 
 
             }).catch(error =>{
-                console.log(error.response.data)
+
+                let duplicateCat = error.response.data.errors.category;
+
+                Swal.fire({
+                    title: 'Error!',
+                    text: duplicateCat,
+                    icon: 'error',
+                    confirmButtonText: 'OK',
+                    allowOutsideClick: false
+                })
             })
         }
 
@@ -831,8 +852,6 @@ export default {
 
 
 
-
-
         onMounted(()=> {
             getCat()
         })
@@ -845,8 +864,8 @@ export default {
 
             /* FOR ADD PRODUCT */
             ,close,serialHide,toggleCam,imageUpload,onScan,add_btn,getCat,filter_input
-            ,loading,showcam,category_lists,noSerial,config
-            ,add_prod,imageFile,imageURL,serialRes,serialField,updateProductLists
+            ,loading,showcam,category_lists,noSerial,config,add_prod,imageFile,
+            imageURL,serialRes,serialField,updateProductLists
             ,measurement
             /* END OF ADD PRODUCT */
 
@@ -858,6 +877,7 @@ export default {
 
             /* FOR EDITING CATEGORY */
             editCategory,editCatModal,categoryData,edit_category
+
         }
 
     }
