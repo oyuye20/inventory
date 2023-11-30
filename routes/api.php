@@ -15,6 +15,8 @@ use App\Http\Controllers\notify;
 
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\NewPasswordController;
+use App\Http\Controllers\supplier2;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -80,7 +82,22 @@ Route::prefix('products')->group(function () {
 
 
 Route::prefix('inventory')->group(function () {
-    
+    Route::get('/', [inventory1::class, 'inventory_index']);
+});
+
+
+
+
+/* SUPPLIER */
+
+Route::prefix('supplier')->group(function () {
+    Route::get('/lists', [supplier2::class, 'index']);
+
+    Route::get('/select', [supplier2::class, 'selectSupplier']);
+
+    Route::post('/add', [supplier2::class, 'add']);
+    Route::get('/update/{id}', [supplier2::class, 'update']);
+    Route::get('/archive', [supplier2::class, 'archive']);
 });
 
 
@@ -88,12 +105,8 @@ Route::prefix('inventory')->group(function () {
 
 
 
-
-
-
-
 /* INVENTORY */
-Route::get('/inventory', [inventory1::class, 'inventory_index']);
+
 Route::get('/inventoryLists', [inventory1::class, 'inventoryLists']);
 Route::get('/index/category', [inventory1::class, 'index_category']);
 Route::get('/stock/history', [inventory1::class, 'stockHistory']);

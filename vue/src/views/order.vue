@@ -591,6 +591,9 @@ export default {
                 $toast.error("Not enough amount", {position: 'top'}); 
             }
 
+            else if (CashAmount.value >= 10000){
+                $toast.error("Maximum Amount", {position: 'top'});
+            }
 
             else {
                 modalCash.value = !modalCash.value

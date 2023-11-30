@@ -1,7 +1,68 @@
 <template>
     <div>
 
-        <div class="row container-fluid main d-flex justify-content-center align-items-center p-3" @submit.prevent="forgotPass(email)">
+
+        <div class="wrapper1">
+            <div class="container main">
+                <div class="row rowLogin">
+
+         
+                        <div class="col-md-6 side-image">
+                            <img src="../assets/jrLogo.png" class="img-fluid imgLogo">
+                        </div>                          
+
+                    
+
+
+                    <form class="col-md-6 right" @submit.prevent="forgotPass(email)">
+                        <div class="input-box">
+                            <header>FORGOT PASSWORD</header>
+
+                            <div class="input-field text-center" v-if="errorMsg">
+                              <p class="fw-bold text-danger fs-6">{{errorMsg}}</p>                         
+                            </div>
+
+
+                            <div class="input-field">
+                                <label for="email">Email</label>
+                                <input type="text" class="input" id="email" v-model="email" required>                               
+                            </div>
+   
+
+                            <div class="input-field">
+                                <button :disabled="loading" class="btn btn-success d-flex justify-content-center">
+                                    <span v-if="loading" class="spinner-border spinner-border-sm me-3 "
+                                    aria-hidden="true"></span>Send Email
+                                </button>     
+                            </div>
+
+                        </div>
+
+                        <!-- <div class="forgot-pass">
+                            <p>Forgot Password?</p>
+                        </div> -->
+                    </form>
+
+
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <!-- <div class="row container-fluid main d-flex justify-content-center align-items-center p-3" @submit.prevent="forgotPass(email)">
 
             <div class="col-xxl-4 col-xl-5 col-lg-6 col-md-8 col-sm-9 bg-light m-4 p-0 rounded-8 h-100">
 
@@ -36,12 +97,6 @@
                         :disabled="loading">
                         <span v-if="loading" class="spinner-border spinner-border-sm me-3" 
                         aria-hidden="true"></span>Send Link</button>
-
-
-                       <!--  <div class="d-flex justify-content-center">
-                            <a role="button" class="mb-2 fw-bold">Forgot Password?</a>
-                        </div> -->
-                        
                         
                     </form>
                     
@@ -51,7 +106,7 @@
 
             </div>
  
-        </div>
+        </div> -->
 
 
     </div>

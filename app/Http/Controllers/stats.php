@@ -228,10 +228,10 @@ class stats extends Controller
             DB::raw('MONTHNAME(t.purchase_date) as Month'),
             DB::raw('DATE_FORMAT(t.purchase_date, "%m/%d/%y %r") AS purchase_date1'))
 
-            ->where(function($query) use($startDate, $endDate)  {
+            /* ->where(function($query) use($startDate, $endDate)  {
                 return $query
                 ->whereBetween('t.purchase_date', [$startDate, $endDate]);
-            })
+            }) */
 
             ->groupByRaw('c.transactions_id')
             ->orderBy($sortname,$sortBy)

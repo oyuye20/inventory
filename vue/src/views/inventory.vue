@@ -41,9 +41,9 @@
             </div>
 
             <div class="col-12">
-                <label for="" class="fw-bold mb-2">Supplier Name</label>
-                <select class="form-control mb-3">
-                <option>1</option>
+                <label for="" class="fw-bold mb-2" >Supplier Name</label>
+                <select class="form-control mb-3" v-model="inventory.supplier">
+                    <option selected v-for="s in supplierSelect" :value="s.id">{{s.supplier_name}}</option>
                 </select>
             </div>
 
@@ -126,6 +126,62 @@
 
 
 
+<transition name="modalAnim">
+<div v-if="modalSupplier" class="p-3" id="modal-main">
+    
+    <div class="row d-flex justify-content-center align-items-center p-3" 
+    id="modal-content">
+
+            <div class="col-xxl-7 col-md-8 text-start p-3" 
+            style="background-color: rgb(4, 180, 116);">
+
+
+                <div class="col-12">
+                    <span class="fw-bold fs-3 text-white">
+                    <i class="fas fa-circle-plus me-3">
+                    </i>Add new supplier</span>
+                </div>
+               
+            </div>
+
+            <div class="col-xxl-7 col-md-8 text-start p-3 bg-light">
+
+                <div class="col-12 mb-1">
+                    <label for="" class="fw-bold mb-2">Supplier Name</label>
+                    <input type="text" class="form-control mb-3" v-model="supplier.name" placeholder="Supplier Name" >
+                </div>
+
+                <div class="col-12 mb-1">
+                    <label for="" class="fw-bold mb-2">Supplier Contact Number</label>
+                    <input type="text" class="form-control mb-3" v-model="supplier.number" placeholder="Supplier Contact Number" 
+                    @input="filter_input" >
+                </div>
+
+                <div class="col-12 mb-1">
+                    <label for="" class="fw-bold mb-2">Supplier Email</label>
+                    <input type="email" class="form-control mb-3" v-model="supplier.email" placeholder="Supplier Email">
+                </div>
+
+                
+                <div class="col-12 d-flex justify-content-end">
+                
+                <button role="button" class="btn btn-danger mt-3 fw-bold" @click="modalSupplier =! modalSupplier">Close</button>
+
+                <form @submit.prevent="add_supplier">
+                    <button type="submit" class="btn btn-success 
+                    mt-3 fw-bold">Add new supplier</button>
+                </form>
+
+                </div>
+
+
+        
+            </div>      
+    </div>
+</div>
+</transition>
+
+
 
 <body>
     <div class="d-flex" id="wrapper">
@@ -158,7 +214,7 @@
                 <div class="container-fluid mb-3">
                     <button class="btn btn-dark fw-bold" @click="toggleModal">Add new stocks</button>
 
-                    <button class="btn btn-dark fw-bold" @click="toggleModal">Add new supplier</button>
+                    <button class="btn btn-dark fw-bold" @click="modalSupplier =! modalSupplier">Add new supplier</button>
 
                     <button @click="exportExcel" class="btn 
                     btn-success modal-add"><i class="far fa-file-excel me-2">         
@@ -219,9 +275,14 @@ export default {
         const isSidebar = ref(false);
         const modalActive = ref(false);
         const catRes = ref(false);
+        const modalSupplier = ref(false);
 
         const category_lists = ref([]);
         const productinfo = ref([]);
+
+
+        const supplierSelect = ref([]);
+        
 
         const expire_radio = ref('1');
         const username = ref('');
@@ -230,14 +291,20 @@ export default {
         const inventory  = reactive({
           category: '',
           product_info: '',
-          stocks: '',
-          safetyStocks: '',
+          stocks: "",
+          safetyStocks: "",
           prod_date: '',
           exp_date: '',
           supplier: '',
-          supplierEmail: '',
-          supplierNumber: ''
         })
+
+        const supplier  = ref({
+          name: '',
+          number: '',
+          email: '',
+        })
+
+
 
         function filter_input(){
           this.inventory.stocks = this.inventory.stocks.replace(/[^0-9]/g, "");
@@ -255,6 +322,38 @@ export default {
                 console.log(error.response.data)
             })
         }
+
+
+        function add_supplier(){
+            console.log('hello')
+
+          let formData = new FormData();
+          formData.append('supplier_name', supplier.value.name);
+          formData.append('supplier_number', supplier.value.number);
+          formData.append('supplier_email', supplier.value.email);
+ 
+
+          let url = '/supplier/add';
+            axios_client.post(url,formData).then(response => {
+
+                refreshComponent.value += 1;
+
+                console.log(response.data)
+
+                $toast.success("Supplier added successfully", {position: 'top'}); 
+
+            }).catch(error =>{
+                console.log(error.response.data)
+            })
+
+
+        }
+
+
+
+
+
+
 
         function add_inventory(){
           
@@ -276,14 +375,18 @@ export default {
           let prod_date = this.inventory.prod_date
           let exp_date1 = this.inventory.exp_date
 
+
+          let safeStocks = this.inventory.safetyStocks
+          let stocks1 = this.inventory.stocks
+
           
 
             if((expire_radio.value == '1') && ((prod_date > dateNow) || (exp_date1 <= dateNow))){
-            $toast.error("Please enter valid date for production or expiration date", {position: 'top'}); 
+                $toast.error("Please enter valid date for production or expiration date", {position: 'top'}); 
             }
           
-            else if(this.inventory.safetyStocks >= this.inventory.stocks){
-            $toast.error("Safety Stocks must less than stock value", {position: 'top'}); 
+            else if(safeStocks >= stocks1 ){
+                $toast.error("Safety Stocks must less than stock value", {position: 'top'}); 
             }
 
             else{
@@ -315,8 +418,14 @@ export default {
         }
 
 
-        function addSupplier(){
-            
+        function getSupplierLists(){
+            axios_client.get('/supplier/select')
+            .then(response=>{
+                supplierSelect.value = response.data;
+                console.log(response.data)
+            }).catch(error =>{
+                console.log(error.response.data)
+            })
         }
 
 
@@ -381,9 +490,9 @@ export default {
 
     
         onMounted(()=> {
-            getCat()
+            getCat()    
             userData()
-          
+            getSupplierLists()
         })
 
 
@@ -398,7 +507,8 @@ export default {
             user: computed(() => store.state.user.data),logout,getSelectedCat,
             isSidebar,toggleModal,modalActive,inventory,add_inventory,filter_input,userData
 
-            ,category_lists,productinfo,catRes,getCat,expire_radio,refreshComponent,exportExcel
+            ,category_lists,productinfo,catRes,getCat,expire_radio,refreshComponent,exportExcel,modalSupplier,add_supplier
+            ,supplier,getSupplierLists,supplierSelect
         }
 
 

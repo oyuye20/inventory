@@ -20,8 +20,10 @@ return new class extends Migration
             $table->string('gross_total');
             $table->string('discount');
             $table->string('net_total');
+            $table->string('amount');
             $table->string('change');
             $table->timestamp('purchase_date');
+            $table->string('orderedBy');
             $table->string('status');
         });
 
@@ -31,8 +33,10 @@ return new class extends Migration
             $table->increments('id');
             $table->unsignedInteger('transactions_id');
             $table->string('product_name');
+            $table->string('serial_number');
             $table->string('quantity');
             $table->string('price');
+            $table->string('selling_price');
             $table->string('total');
             $table->foreign('transactions_id')
             ->references('id')

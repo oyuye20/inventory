@@ -13,8 +13,7 @@ class inventory extends Model
 
     protected $fillable = [
         'product_id','category','stocks','status',
-        'supplier','safety_stocks','production_date','expiration_date','supplier_email','supplier_number'
-        ,'stock_by','updated_by'
+        'supplier_id','safety_stocks','production_date','expiration_date','stock_by','updated_by'
     ];
 
     protected $casts = [
@@ -27,5 +26,10 @@ class inventory extends Model
 
     public function product(){
         return $this->belongsTo(product_info::class);
+    }
+
+
+    public function supplier(){
+        return $this->belongsTo(supplier::class);
     }
 }

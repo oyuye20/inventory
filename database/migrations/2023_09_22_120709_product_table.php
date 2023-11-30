@@ -20,6 +20,15 @@ return new class extends Migration
         });
 
 
+        Schema::create('suppliers', function(Blueprint $table){
+            $table->increments('id');
+            $table->string('supplier_name');
+            $table->string('supplier_number');
+            $table->boolean('supplier_email');
+            $table->timestamps();
+        });
+
+
         Schema::create('product_infos', function(Blueprint $table){
             $table->increments('id');
             $table->unsignedInteger('category_id');
@@ -29,6 +38,7 @@ return new class extends Migration
             $table->string('product_name');
             $table->string('description');
             $table->string('price');
+            $table->string('selling_price');
             $table->string('size');
             $table->boolean('isArchived');
             $table->timestamps();
@@ -43,6 +53,7 @@ return new class extends Migration
         Schema::create('inventories', function(Blueprint $table){
             $table->increments('id');
             $table->unsignedInteger('product_id');
+            $table->unsignedInteger('supplier_id');
             $table->string('category');
             $table->string('supplier');
             $table->string('supplier_email');
@@ -60,6 +71,12 @@ return new class extends Migration
             $table->foreign('product_id')
             ->references('id')
             ->on('product_infos')
+            ->onDelete('cascade');
+
+
+            $table->foreign('supplier_id')
+            ->references('id')
+            ->on('suppliers')
             ->onDelete('cascade');
         });
 

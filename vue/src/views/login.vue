@@ -1,29 +1,67 @@
 <template>
     <div>
 
-        <!-- <div class="main">
-            <div class="row container-fluid p-0 m-0 d-flex justify-content-center">
-                <div class="col-5 border border-light">
-                    <h1 class="fw-bold">LOGIN</h1>
-            
-            
-            
-            
+
+        <div class="wrapper1">
+            <div class="container main">
+                <div class="row rowLogin">
+
+         
+                        <div class="col-md-6 side-image">
+                            <img src="../assets/jrLogo.png" class="img-fluid imgLogo">
+                        </div>                          
+
+                    
+
+
+                    <form class="col-md-6 right" @submit.prevent="login">
+                        <div class="input-box">
+                            <header>LOGIN</header>
+
+                            <div class="input-field text-center" v-if="errorMsg">
+                              <p class="fw-bold text-danger fs-6">{{errorMsg}}</p>                         
+                            </div>
+
+
+                            <div class="input-field">
+                                <label for="email">Email</label>
+                                <input type="text" class="input" id="email" v-model="user.email" required>                               
+                            </div>
+                            
+                            <div class="input-field">
+                                <label for="password">Password</label>
+                                <input type="password" class="input" id="password" v-model="user.password" required>                             
+                            </div>
+
+                            
+
+                            <div class="input-field">
+                                <button :disabled="loading" class="btn btn-success d-flex justify-content-center">
+                                    <span v-if="loading" class="spinner-border spinner-border-sm me-3 "
+                                    aria-hidden="true"></span>Sign IN
+                                </button>     
+                            </div>
+
+                            <router-link :to="{name: 'forgotPassword'}" class="input-field mt-3 text-center">
+                                <a role="button">Forgot Password?</a>
+                            </router-link>
+                        </div>
+
+                        <!-- <div class="forgot-pass">
+                            <p>Forgot Password?</p>
+                        </div> -->
+                    </form>
+
+
                 </div>
             </div>
-        </div> -->
+        </div>
 
 
 
 
 
-
-
-
-
-
-
-        <div class="row container-fluid main d-flex justify-content-center align-items-center p-3" @submit.prevent="login">
+        <!-- <div class="row container-fluid main d-flex justify-content-center align-items-center p-3" @submit.prevent="login">
 
             <div class="col-xxl-4 col-xl-5 col-lg-6 col-md-8 col-sm-9 bg-light m-4 p-0 rounded-8 h-100">
 
@@ -82,7 +120,7 @@
 
             </div>
  
-        </div>
+        </div> -->
 
 
     </div>
@@ -154,13 +192,10 @@ export default {
 
         
             if(error.response.status === 422){
-
                 if(error.response.data){
                     errorMsg.value  = error.response.data
                 }
-
-
-               
+         
             }
 
 
@@ -182,34 +217,6 @@ export default {
 
 }
 
-
-/* const router = useRouter();
-
-const loading = ref(false);
-
-const user = {
-    email: '',
-    password: ''
-}
-
-
-let errorMsg = ref('');
-
-
-function login(ev){
-    ev.preventDefault();
-    loading.value = true;
-    store.dispatch('login', user).then(() => {
-        loading.value = false;
-        router.push({
-            name: 'dashboard'
-        })
-    }).catch(error => {
-        loading.value = false;
-        errorMsg.value = error.response.data
-    })
-
-} */
 
 
 

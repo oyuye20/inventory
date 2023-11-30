@@ -193,16 +193,10 @@
                     :data="chartData"/> -->
 
 
-                        <div class="mt-4" style=" position: relative;
+                        <div class="mt-4" v-if="hideInfo == false" style=" position: relative;
                         margin: auto; height: 50vh; width: 80vw;">
                     
-                                <!-- <Bar
-                                id="my-chart-id"
-                                :options="chartOptions"
-                                :data="chartData" :style="styles"
-                                /> -->
-        
-
+                            <h4 class="text-center fw-bold">Total sold products each month</h4>
                                 <Line
                                 id="my-chart-id2"
                                 :options="chartOptions2"

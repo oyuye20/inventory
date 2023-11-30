@@ -22,20 +22,43 @@ class inventory1 extends Controller
 
 
     public function inventoryLists(){
-        /* return inventory::with('product')->where('stocks','>','0')->orderBy('id','ASC')->paginate(5); */
+        $search = request('query');
+        $sortname = request('sort');
+        $sortBy = request('sortBy');
+
+
+        if($sortname && $sortBy){
+            return DB::table('inventories as i')
+            ->join('product_infos as p', 'i.product_id','=','p.id')
+            ->join('suppliers as s', 'i.supplier_id','=','s.id')
+
+            ->select('p.product_name','p.serial_number','p.image',
+            'p.price','p.selling_price','i.category', 's.supplier_name','s.supplier_number'
+            ,'s.supplier_email',
+            'i.expiration_date')
+
+
+            ->where(function($query) use($search)  {
+                return $query
+                ->where('manufacturer','LIKE','%'.$search.'%')
+                ->orWhere('serial_number','LIKE','%'.$search.'%')
+                ->orWhere('product_name','LIKE','%'.$search.'%');
+            })
+
+            ->where('stocks','>','0')->orderBy($sortname, $sortBy)->paginate(10);
+        }
 
 
 
-        return DB::table('inventories')
-        ->join('product_infos', 'inventories.product_id','=','product_infos.id')
+        return DB::table('inventories as i')
+        ->join('product_infos as p', 'i.product_id','=','p.id')
+        ->join('suppliers as s', 'i.supplier_id','=','s.id')
 
-        ->select('product_infos.product_name','product_infos.serial_number','product_infos.image',
-        'product_infos.price','product_infos.selling_price','inventories.category',
-        'inventories.supplier','inventories.supplier_number','inventories.production_date'
-        ,'inventories.expiration_date',DB::raw('SUM(stocks) as stocksTotal, SUM(safety_stocks) as 
-        safety_stocksTotal'))
-        ->where('stocks','>','0')
-        ->groupBy('inventories.product_id')->paginate(5);
+        ->select('p.product_name','p.serial_number','p.image',
+        'p.price','p.selling_price','i.category', 's.supplier_name','s.supplier_number'
+        ,'s.supplier_email',
+        'i.expiration_date')
+        ->where('stocks','>','0')->paginate(5);
 
 
         /* return inventory::with('product')->where('stocks','>','0')
@@ -98,10 +121,7 @@ class inventory1 extends Controller
             "production_date" => $request->prod_date,
             "expiration_date" => $request->exp_date,
 
-            "supplier" => $request->supplier,
-            "supplier_email" => $request->supplierEmail,
-            "supplier_number" => $request->supplierNumber,
-
+            "supplier_id" => $request->supplier,
 
             "stock_by" => $request->stockBy,
             "updated_by" => $request->updatedBy,

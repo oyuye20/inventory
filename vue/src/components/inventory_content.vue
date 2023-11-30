@@ -29,18 +29,54 @@
 
 <div class="container-fluid mt-3 table-responsive">
 
-
-
-    <table class="table text-center mb-0 bg-white">
+<table class="table text-center mb-0 bg-white">
   <thead>
     <tr>
             <th class="fw-bold" style="color: rgba(0, 0, 0, 0.915);">Image</th>
-            <th class="fw-bold" style="color: rgba(0, 0, 0, 0.915);">Serial Number</th>
-            <th class="fw-bold" style="color: rgba(0, 0, 0, 0.915);">Product Name</th>
-            <!-- <th class="fw-bold" style="color: rgba(0, 0, 0, 0.915);">Supplier</th> -->
+            <th class="fw-bold" style="color: rgba(0, 0, 0, 0.915);">       
+              <a role="button" @click.prevent="getSort('serial_number')">Product Number</a>
+                  <i v-if="sort_direction =='desc' && sortData =='serial_number'" 
+                  class="fas fa-arrow-down-long mx-2"></i>
+                  <i v-if="sort_direction =='asc' && sortData =='serial_number'" 
+                  class="fas fa-arrow-up-long mx-2"></i>
+            </th>
+
+
+            <th class="fw-bold" style="color: rgba(0, 0, 0, 0.915);">       
+              <a role="button" @click.prevent="getSort('product_name')">Product Name</a>
+                  <i v-if="sort_direction =='desc' && sortData =='product_name'" 
+                  class="fas fa-arrow-down-long mx-2"></i>
+                  <i v-if="sort_direction =='asc' && sortData =='product_name'" 
+                  class="fas fa-arrow-up-long mx-2"></i>
+            </th>
+
+            <th class="fw-bold" style="color: rgba(0, 0, 0, 0.915);">Supplier Name</th>
             <th class="fw-bold" style="color: rgba(0, 0, 0, 0.915);">Category</th>
-            <th class="fw-bold" style="color: rgba(0, 0, 0, 0.915);">Price</th>
-            <th class="fw-bold" style="color: rgba(0, 0, 0, 0.915);">Selling Price</th>
+
+
+
+
+            <th class="fw-bold" style="color: rgba(0, 0, 0, 0.915);">       
+              <a role="button" @click.prevent="getSort('price')">Price</a>
+                  <i v-if="sort_direction =='desc' && sortData =='price'" 
+                  class="fas fa-arrow-down-long mx-2"></i>
+                  <i v-if="sort_direction =='asc' && sortData =='price'" 
+                  class="fas fa-arrow-up-long mx-2"></i>
+            </th>
+
+
+            <th class="fw-bold" style="color: rgba(0, 0, 0, 0.915);">       
+              <a role="button" @click.prevent="getSort('selling_price')">Selling Price</a>
+                  <i v-if="sort_direction =='desc' && sortData =='selling_price'" 
+                  class="fas fa-arrow-down-long mx-2"></i>
+                  <i v-if="sort_direction =='asc' && sortData =='selling_price'" 
+                  class="fas fa-arrow-up-long mx-2"></i>
+            </th>
+
+
+
+
+
             <th class="fw-bold" style="color: rgba(0, 0, 0, 0.915);">Stocks</th>
             <th class="fw-bold" style="color: rgba(0, 0, 0, 0.915);">Safety Stocks</th>
             <th class="fw-bold" style="color: rgba(0, 0, 0, 0.915);">Production Date</th>
@@ -58,9 +94,10 @@
         width="100" height="100">
       </td>
 
-      <td>{{i.serial_number}}</td>
+      <td>   {{i.serial_number}}</td>
 
       <td>{{i.product_name}}</td>
+      <td>{{i.supplier_name}}</td>
       <!-- <td>{{i.supplier}}</td> -->
       <td>{{i.category}}</td>
 
@@ -74,8 +111,8 @@
         currency: 'PHP' }).format((i.selling_price))}}              
       </td>
 
-      <td>{{i.stocksTotal}}</td>
-      <td>{{i.safety_stocksTotal}}</td>
+      <td>{{i.stocks}}</td>
+      <td>{{i.safety_stocks}}</td>
 
 
       <td v-if="i.production_date == null">
@@ -106,7 +143,13 @@
 
 
 
+
+
+
+
 </div>
+
+
 
 
 </template>
@@ -147,6 +190,21 @@ export default {
         const $toast = useToast();
         const storageLink = inject('$storageLink');
 
+
+        const sortData = ref('');
+        const sort_direction = ref('desc');
+        
+
+        function getSort (sort){
+
+            if(sortData.value == sort){
+                sort_direction.value = sort_direction.value == 'desc' ? 'asc' : 'desc';
+            }
+
+            sortData.value = sort;
+            this.getInventory()
+        }
+
   
 
         function showImage(image, product) {
@@ -163,26 +221,15 @@ export default {
     
         /* GET PRODUCT TABLE */
         const getInventory = async(page = 1) => {
+            axios_client.get('/inventoryLists?page=' + page, 
+            {params: {query: search_box.value, sort: sortData.value,
+            sortBy: sort_direction.value}}).then(response=>{
 
-          if(search_box.value == ''){
-            axios_client.get('/inventoryLists?page=' + page).then(response=>{
-                  inv_lists.value = response.data
-
-              }).catch(error =>{
-                  console.log(error.response.data)
-              })
-           
-            }
-
-            else {
-              axios_client.get('/inventoryLists/search/' + search_box.value  + '?page=' + page).then(response=>{
-                  inv_lists.value = response.data
+              inv_lists.value = response.data
 
               }).catch(error =>{
                   console.log(error.response.data)
-              })
-      
-            }
+              })       
 
         }
 
@@ -240,7 +287,10 @@ export default {
         })
 
         return {showImage,getInventory,inv_lists,category_lists,productinfo,
-        storageLink,search_box,expire_radio,userData,username,catRes,getCat,getSelectedCat}
+        storageLink,search_box,expire_radio,userData,username,catRes,getCat,getSelectedCat
+      
+        ,getSort,sortData,sort_direction
+        }
 
     }
 
