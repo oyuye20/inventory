@@ -97,7 +97,7 @@ Route::prefix('supplier')->group(function () {
 
     Route::post('/add', [supplier2::class, 'add']);
     Route::get('/update/{id}', [supplier2::class, 'update']);
-    Route::get('/archive', [supplier2::class, 'archive']);
+    Route::put('/archive/{id}', [supplier2::class, 'archive']);
 });
 
 

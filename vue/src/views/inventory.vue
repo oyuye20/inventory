@@ -422,7 +422,7 @@ export default {
             axios_client.get('/supplier/select')
             .then(response=>{
                 supplierSelect.value = response.data;
-                console.log(response.data)
+                
             }).catch(error =>{
                 console.log(error.response.data)
             })

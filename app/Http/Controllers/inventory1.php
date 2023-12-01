@@ -34,7 +34,7 @@ class inventory1 extends Controller
 
             ->select('p.product_name','p.serial_number','p.image',
             'p.price','p.selling_price','i.category', 's.supplier_name','s.supplier_number'
-            ,'s.supplier_email',
+            ,'s.supplier_email','i.stocks','i.expiration_date','i.safety_stocks',
             'i.expiration_date')
 
 
@@ -56,8 +56,16 @@ class inventory1 extends Controller
 
         ->select('p.product_name','p.serial_number','p.image',
         'p.price','p.selling_price','i.category', 's.supplier_name','s.supplier_number'
-        ,'s.supplier_email',
+        ,'s.supplier_email','i.stocks','i.expiration_date','i.safety_stocks',
         'i.expiration_date')
+
+        ->where(function($query) use($search)  {
+            return $query
+            ->where('manufacturer','LIKE','%'.$search.'%')
+            ->orWhere('serial_number','LIKE','%'.$search.'%')
+            ->orWhere('product_name','LIKE','%'.$search.'%');
+        })
+        
         ->where('stocks','>','0')->paginate(5);
 
 

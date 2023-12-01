@@ -152,6 +152,89 @@
 
 
 
+
+<div class="container-fluid mt-4 table-responsive">
+
+  <h4 class="fw-bold">Supplier Lists</h4>
+
+<table class="table text-center mb-0 bg-white">
+  <thead>
+    <tr>
+            <th class="fw-bold" style="color: rgba(0, 0, 0, 0.915);">       
+              <a role="button" @click.prevent="getSortSupplier('supplier_name')">Supplier Name</a>
+                  <i v-if="sort_directionS =='desc' && sortDataS =='supplier_name'" 
+                  class="fas fa-arrow-down-long mx-2"></i>
+                  <i v-if="sort_directionS =='asc' && sortDataS =='supplier_name'" 
+                  class="fas fa-arrow-up-long mx-2"></i>
+            </th>
+
+
+            <th class="fw-bold" style="color: rgba(0, 0, 0, 0.915);">       
+              <a role="button" @click.prevent="getSortSupplier('supplier_number')">Supplier Contact Number</a>
+                  <i v-if="sort_directionS =='desc' && sortDataS =='supplier_number'" 
+                  class="fas fa-arrow-down-long mx-2"></i>
+                  <i v-if="sort_directionS =='asc' && sortDataS =='supplier_number'" 
+                  class="fas fa-arrow-up-long mx-2"></i>
+            </th>
+
+     
+
+            <th class="fw-bold" style="color: rgba(0, 0, 0, 0.915);">       
+              <a role="button" @click.prevent="getSortSupplier('supplier_email')">Supplier Email</a>
+                  <i v-if="sort_directionS =='desc' && sortDataS =='supplier_email'" 
+                  class="fas fa-arrow-down-long mx-2"></i>
+                  <i v-if="sort_directionS =='asc' && sortDataS =='supplier_email'" 
+                  class="fas fa-arrow-up-long mx-2"></i>
+            </th>
+
+            <th class="fw-bold" style="color: rgba(0, 0, 0, 0.915);">Action</th>
+
+
+    </tr>
+  </thead>
+
+
+  <tbody v-for="s in supplierLists1.data">
+    <tr>
+      <td>{{s.supplier_name}}</td>
+      <td>{{s.supplier_number}}</td>
+      <td>{{s.supplier_email}}</td>
+
+      <td class="m-3">
+          <button class="btn btn-success p-2 mb-1" 
+          data-mdb-ripple-init data-mdb-tooltip-init data-mdb-placement="top" title="Edit Product"
+          @click="$emit()">
+          <i class="bi bi-pencil-square"></i></button>      
+
+          <button type="button" class="btn btn-warning p-2 mb-1" 
+          data-mdb-ripple-init data-mdb-tooltip-init data-mdb-placement="top" title="Archive Product"
+          @click.prevent="archiveSupplier(s.supplier_name, s.id)">
+          <i class="fas fa-box-archive"></i></button>
+      </td>
+
+    </tr>
+  </tbody>
+  
+</table>
+
+<div class="d-flex justify-content-end align-items-center mt-3 fw-bold" >
+    <Bootstrap5Pagination :limit="1" :keepLength="true" :data="inv_lists" class="shadow-sm"  
+    @pagination-change-page="getSupplier"
+    />
+</div>
+
+
+
+
+
+
+
+
+</div>
+
+
+
+
 </template>
 
 
@@ -180,7 +263,10 @@ export default {
         const inv_lists = ref([]);
         const category_lists = ref([]);
         const productinfo = ref([]);
-        const search_box = ref('');
+        const supplierLists1 = ref([]);
+
+        
+        const search_box = ref("");
 
         const expire_radio = ref('1');
         const username = ref('');
@@ -195,8 +281,8 @@ export default {
         const sort_direction = ref('desc');
         
 
-        function getSort (sort){
 
+        function getSort (sort){
             if(sortData.value == sort){
                 sort_direction.value = sort_direction.value == 'desc' ? 'asc' : 'desc';
             }
@@ -204,6 +290,22 @@ export default {
             sortData.value = sort;
             this.getInventory()
         }
+
+
+
+        const sortDataS = ref('');
+        const sort_directionS = ref('desc');
+
+        function getSortSupplier (sort){
+            if(sortDataS.value == sort){
+                sort_directionS.value = sort_directionS.value == 'desc' ? 'asc' : 'desc';
+            }
+
+            sortDataS.value = sort;
+            this.getSupplier()
+        }
+
+
 
   
 
@@ -217,6 +319,50 @@ export default {
             })
         }
 
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: 'btn btn-success',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false
+        })
+
+
+
+
+        function archiveSupplier(s, id){
+
+          swalWithBootstrapButtons.fire({
+            title: 'Are you sure you want to archive ' + s + '?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No',
+            reverseButtons: true
+
+            }).then((result) => {
+
+            if (result.isConfirmed) {
+
+            let url = '/supplier/archive/' + id;
+            axios_client.put(url).then(response => {
+                this.getSupplier()
+            }).catch(error => {
+                console.log(error.response.data)
+            })
+
+            swalWithBootstrapButtons.fire(
+            'Archived!',
+            'Your supplier has been archived successfuly.',
+            'success'
+            )
+            } 
+            
+            else (result.dismiss === Swal.DismissReason.cancel) 
+            })
+
+        }
 
     
         /* GET PRODUCT TABLE */
@@ -227,10 +373,10 @@ export default {
 
               inv_lists.value = response.data
 
+
               }).catch(error =>{
                   console.log(error.response.data)
               })       
-
         }
 
 
@@ -243,6 +389,19 @@ export default {
                 console.log(error.response.data)
             })
         }
+
+
+        /* GET SUPPLIER LISTS */
+        const getSupplier = async(page = 1) => {
+            axios_client.get('/supplier/lists?page=' + page , {params: {query: search_box.value, sort: sortDataS.value,
+            sortBy: sort_directionS.value}} )
+            .then(response=>{
+                supplierLists1.value = response.data
+            }).catch(error =>{
+                console.log(error.response.data)
+            })
+        }
+
 
 
         const getCat = async() => {
@@ -267,16 +426,6 @@ export default {
         
 
 
-        /* function getSelectedCat(category, page = 1){     
-          axios_client.get('/inventoryLists/category/' + category + '?page=' + page)
-            .then(response=>{
-              inv_lists.value = response.data
-            }).catch(error =>{
-                console.log(error.response.data)
-            })
-        } */
-
-        
 
 
 
@@ -284,12 +433,15 @@ export default {
             getInventory()
             userData()
             getCat()
+            getSupplier()
         })
 
         return {showImage,getInventory,inv_lists,category_lists,productinfo,
         storageLink,search_box,expire_radio,userData,username,catRes,getCat,getSelectedCat
       
-        ,getSort,sortData,sort_direction
+        ,getSort,sortData,sort_direction,getSupplier,supplierLists1,archiveSupplier
+
+        ,getSortSupplier,sortDataS,sort_directionS
         }
 
     }
